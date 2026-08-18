@@ -313,443 +313,6 @@ function parseSheetRows(data, type = 'array') { const wb = XLSX.read(data, { typ
 } return rows; }
 
 const h = React.createElement;
-const DEFAULT_APP_UI = {
-  search: {
-    dbButton: 'Cerca nel database',
-    aiButton: 'Ricerca con AI',
-    aiWorking: 'Ricerca con AI…',
-    gramsLabel: 'Grammi',
-    gramsPlaceholder: 'facoltativi se esiste una porzione standard'
-  },
-  recipe: {
-    interpretButton: 'Interpreta e verifica',
-    aiEstimateButton: 'Ricerca con AI',
-    dbSearchButton: 'Ricerche DB'
-  }
-};
-
-const DEFAULT_SEARCH_POLICY = {
-  portionPolicy: {
-    catalogFirst: true,
-    aiEstimateWhenCatalogMissing: true,
-    defaultNaturalUnitCount: 1,
-    defaultNaturalUnitSize: 'medium',
-    autoApplyCatalog: true,
-    autoApplyAiConfidence: ['high', 'medium'],
-    maxAiRelativeRange: 0.55,
-    neverAutoApplyKinds: [
-      'dish',
-      'plate',
-      'bowl',
-      'serving',
-      'pizza',
-      'slice_variable',
-      'piece_variable',
-      'unknown'
-    ],
-    showAssumption: true
-  },
-  ambiguityPolicy: {
-    askOnlyIfMaterial: true
-  }
-};
-
-const DEFAULT_PORTION_CATALOG = {
-  items: []
-};
-
-async function loadJsonConfig(url, fallback) {
-  try {
-    const response = await fetch(url, {
-      cache: 'no-cache'
-    });
-
-    if (!response.ok) {
-      return fallback;
-    }
-
-    return await response.json();
-  } catch {
-    return fallback;
-  }
-}
-
-function matchStandardPortion(text, catalog) {
-  const q = norm(text);
-
-  if (!q) return null;
-
-  let best = null;
-  let bestLength = 0;
-
-  for (const item of catalog?.items || []) {
-    for (const alias of item.aliases || []) {
-      const a = norm(alias);
-
-      if (
-        a &&
-        (
-          q === a ||
-          hasTerm(q, a)
-        ) &&
-        a.length > bestLength
-      ) {
-        best = item;
-        bestLength = a.length;
-      }
-    }
-  }
-
-  return best;
-}
-
-function portionSizeFromText(text) {
-  const q = norm(text);
-
-  if (
-    q.includes('piccola') ||
-    q.includes('piccolo') ||
-    q.includes('small')
-  ) {
-    return 'small';
-  }
-
-  if (
-    q.includes('grande') ||
-    q.includes('large')
-  ) {
-    return 'large';
-  }
-
-  return 'medium';
-}
-
-function portionCountFromText(text) {
-  const q = norm(text);
-
-  const numeric = q.match(
-    /(?:^|\s)(\d+(?:[.,]\d+)?)(?:\s|$)/
-  );
-
-  if (numeric) {
-    const value = Number(
-      numeric[1].replace(',', '.')
-    );
-
-    if (
-      Number.isFinite(value) &&
-      value > 0 &&
-      value <= 100
-    ) {
-      return value;
-    }
-  }
-
-  const words = {
-    un: 1,
-    uno: 1,
-    una: 1,
-    due: 2,
-    tre: 3,
-    quattro: 4,
-    cinque: 5,
-    sei: 6,
-    sette: 7,
-    otto: 8,
-    nove: 9,
-    dieci: 10
-  };
-
-  for (const [word, value] of Object.entries(words)) {
-    const re = new RegExp(
-      `(?:^|\\s)${word}(?:\\s|$)`
-    );
-
-    if (re.test(q)) {
-      return value;
-    }
-  }
-
-  return 1;
-}
-
-function resolveCatalogPortion(
-  text,
-  catalog,
-  policy,
-  countOverride = null,
-  sizeOverride = null
-) {
-  const item =
-    matchStandardPortion(text, catalog);
-
-  if (
-    !item ||
-    item.kind !== 'natural_unit'
-  ) {
-    return null;
-  }
-
-  const count =
-    Number(countOverride) ||
-    portionCountFromText(text) ||
-    Number(
-      policy?.portionPolicy
-        ?.defaultNaturalUnitCount
-    ) ||
-    1;
-
-  const size =
-    (
-      sizeOverride &&
-      sizeOverride !== 'unspecified'
-    )
-      ? sizeOverride
-      : portionSizeFromText(text);
-
-  const selected =
-    item.sizes?.[size] ||
-    item.sizes?.[item.defaultSize] ||
-    item.sizes?.medium;
-
-  if (
-    !selected ||
-    !(Number(selected.grams) > 0) ||
-    selected.autoApply === false ||
-    policy?.portionPolicy
-      ?.autoApplyCatalog === false
-  ) {
-    return null;
-  }
-
-  return {
-    grams:
-      Number(selected.grams) * count,
-
-    gramsEach:
-      Number(selected.grams),
-
-    count,
-
-    size,
-
-    confidence:
-      selected.confidence || 'medium',
-
-    source: 'catalog',
-
-    note:
-      `${count} × ${size} · ` +
-      `${Number(selected.grams)} g cad.`
-  };
-}
-
-function resolveAiPortion(
-  ingredient,
-  policy
-) {
-  if (Number(ingredient?.grams) > 0) {
-    return {
-      grams: Number(ingredient.grams),
-      source: 'explicit',
-      confidence: 'exact',
-      note: 'peso indicato'
-    };
-  }
-
-  const p =
-    policy?.portionPolicy ||
-    DEFAULT_SEARCH_POLICY.portionPolicy;
-
-  if (
-    ingredient?.unit_kind !==
-    'natural_unit'
-  ) {
-    return null;
-  }
-
-  if (
-    (
-      p.neverAutoApplyKinds || []
-    ).includes(ingredient.unit_kind)
-  ) {
-    return null;
-  }
-
-  const confidence =
-    ingredient?.portion_confidence ||
-    'none';
-
-  if (
-    !(
-      p.autoApplyAiConfidence || []
-    ).includes(confidence)
-  ) {
-    return null;
-  }
-
-  const gramsEach =
-    Number(
-      ingredient?.estimated_piece_grams
-    );
-
-  const min =
-    Number(
-      ingredient?.estimated_piece_min_g
-    );
-
-  const max =
-    Number(
-      ingredient?.estimated_piece_max_g
-    );
-
-  if (!(gramsEach > 0)) {
-    return null;
-  }
-
-  /*
-   * Se il range stimato è troppo ampio,
-   * non applichiamo automaticamente
-   * la porzione AI.
-   */
-  if (
-    min > 0 &&
-    max > min &&
-    (
-      (max - min) / gramsEach
-    ) >
-      Number(
-        p.maxAiRelativeRange || 0.55
-      )
-  ) {
-    return null;
-  }
-
-  const count =
-    Number(ingredient?.count) || 1;
-
-  return {
-    grams: gramsEach * count,
-
-    gramsEach,
-
-    count,
-
-    size:
-      ingredient?.size || 'medium',
-
-    confidence,
-
-    source: 'ai_portion',
-
-    min,
-
-    max,
-
-    note:
-      `${count} × ${gramsEach} g` +
-      (
-        min > 0 && max > 0
-          ? ` · range ${min}–${max} g`
-          : ''
-      )
-  };
-}
-
-function resolveIngredientPortion(
-  ingredient,
-  catalog,
-  policy
-) {
-  /*
-   * 1. Peso esplicitamente scritto
-   *    dall'utente: ha sempre priorità.
-   */
-  if (Number(ingredient?.grams) > 0) {
-    return {
-      ...ingredient,
-
-      portionSource: 'explicit',
-
-      portionConfidence: 'exact',
-
-      portionAssumption:
-        'Peso indicato dall’utente'
-    };
-  }
-
-  /*
-   * 2. Catalogo NutriTrace.
-   */
-  const catalogResult =
-    resolveCatalogPortion(
-      ingredient?.name ||
-        ingredient?.raw ||
-        '',
-      catalog,
-      policy,
-      ingredient?.count,
-      ingredient?.size
-    );
-
-  if (catalogResult) {
-    return {
-      ...ingredient,
-
-      grams: catalogResult.grams,
-
-      portionSource:
-        catalogResult.source,
-
-      portionConfidence:
-        catalogResult.confidence,
-
-      portionAssumption:
-        `Porzione standard: ` +
-        catalogResult.note
-    };
-  }
-
-  /*
-   * 3. Solo se il catalogo non copre
-   *    l'alimento proviamo la stima AI.
-   */
-  if (
-    policy?.portionPolicy
-      ?.aiEstimateWhenCatalogMissing !==
-    false
-  ) {
-    const aiResult =
-      resolveAiPortion(
-        ingredient,
-        policy
-      );
-
-    if (aiResult) {
-      return {
-        ...ingredient,
-
-        grams: aiResult.grams,
-
-        portionSource:
-          aiResult.source,
-
-        portionConfidence:
-          aiResult.confidence,
-
-        portionAssumption:
-          `Porzione stimata: ` +
-          aiResult.note
-      };
-    }
-  }
-
-  /*
-   * Nessun peso sufficientemente
-   * affidabile: resta irrisolto.
-   */
-  return ingredient;
-}
 
 const MICRO_CATALOG = [
   { group:'Vitamine', id:'Vitamina A', name:'Vitamina A', unit:'µg', kind:'minimum' },
@@ -978,6 +541,112 @@ function parseJsonDataset(source,text){
 }
 
 const MASTER_BASE='./data/master';
+const DEFAULT_APP_CONFIG={
+  ui:{
+    search:{
+      title:'Ricerca alimenti',
+      dbButton:'Cerca nel database',
+      aiButton:'Ricerca con AI',
+      aiWorking:'Ricerca con AI…',
+      manualButton:'Inserisci manualmente',
+      gramsLabel:'Grammi',
+      gramsPlaceholder:'facoltativi se esiste una porzione standard',
+      notFound:'Nessuna corrispondenza nel Master DB o nei database personali.'
+    },
+    recipe:{
+      title:'Voce libera / ricetta',
+      subtitle:'L’AI interpreta alimento, quantità e preparazione; nutrienti e porzioni vengono risolti separatamente.',
+      interpretButton:'Interpreta e verifica',
+      aiEstimateButton:'Ricerca con AI',
+      dbSearchButton:'Ricerche DB'
+    }
+  },
+  searchPolicy:{
+    portionPolicy:{
+      catalogFirst:true,
+      aiEstimateWhenCatalogMissing:true,
+      defaultNaturalUnitCount:1,
+      defaultNaturalUnitSize:'medium',
+      autoApplyCatalog:true,
+      autoApplyAiConfidence:['high','medium'],
+      maxAiRelativeRange:.55,
+      neverAutoApplyKinds:['dish','plate','bowl','serving','pizza','slice_variable','piece_variable','unknown'],
+      showAssumption:true
+    },
+    ambiguityPolicy:{askOnlyIfMaterial:true}
+  },
+  standardPortions:{items:[]}
+};
+function cfgGet(obj,path,fallback){let cur=obj;for(const k of String(path||'').split('.')){if(cur==null||typeof cur!=='object'||!(k in cur))return fallback;cur=cur[k];}return cur===undefined?fallback:cur;}
+async function loadJsonConfig(url,fallback){
+  try{
+    const r=await fetch(`${url}?v=${Date.now()}`,{cache:'no-store'});
+    if(!r.ok)throw new Error(`config ${r.status}`);
+    return await r.json();
+  }catch{
+    return fallback;
+  }
+}
+async function loadAppConfig(){
+  const [ui,searchPolicy,standardPortions]=await Promise.all([
+    loadJsonConfig('./config/ui.it.json',DEFAULT_APP_CONFIG.ui),
+    loadJsonConfig('./config/search-policy.json',DEFAULT_APP_CONFIG.searchPolicy),
+    loadJsonConfig('./config/standard-portions.json',DEFAULT_APP_CONFIG.standardPortions)
+  ]);
+  return {ui,searchPolicy,standardPortions};
+}
+function naturalCount(text,def=1){const n=norm(text);const m=n.match(/(?:^| )(\d+(?:[.,]\d+)?)(?: |$)/);if(m)return Number(m[1].replace(',','.'));const words={un:1,uno:1,una:1,due:2,tre:3,quattro:4,cinque:5,sei:6,sette:7,otto:8,nove:9,dieci:10};for(const [w,v] of Object.entries(words))if(hasTerm(n,w))return v;return def;}
+function textSize(text){const n=norm(text);if(['piccolo','piccola','small'].some(x=>hasTerm(n,x)))return 'small';if(['grande','large'].some(x=>hasTerm(n,x)))return 'large';if(['medio','media','medium'].some(x=>hasTerm(n,x)))return 'medium';return 'medium';}
+function findPortionCatalog(text,config,sizeOverride='',countOverride=null){
+  const items=config?.standardPortions?.items||[];
+  const size=sizeOverride&&sizeOverride!=='unspecified'?sizeOverride:textSize(text);
+  const count=Number(countOverride)||naturalCount(text,cfgGet(config,'searchPolicy.portionPolicy.defaultNaturalUnitCount',1));
+  for(const item of items){
+    if(item.kind!=='natural_unit')continue;
+    if(!(item.aliases||[]).some(a=>hasTerm(text,a)))continue;
+    const chosen=item.sizes?.[size]||item.sizes?.[item.defaultSize||'medium']||item.sizes?.medium;
+    if(!chosen||!(Number(chosen.grams)>0)||chosen.autoApply===false||cfgGet(config,'searchPolicy.portionPolicy.autoApplyCatalog',true)===false)continue;
+    return {
+      grams:Number(chosen.grams)*count,
+      count,
+      size,
+      confidence:chosen.confidence||'medium',
+      source:item.source?.name||item.sourceNote||'catalogo porzioni',
+      range:[
+        Number(chosen.p10||chosen.grams)*count,
+        Number(chosen.p90||chosen.grams)*count
+      ],
+      kind:item.kind,
+      catalogId:item.id,
+      assumption:`${count} × ${size==='medium'?'porzione media':size} ≈ ${fmt(Number(chosen.grams)*count,1)} g edibili`
+    };
+  }
+  return null;
+}
+function aiPortionUsable(ing,config){
+  if(!ing||ing.unit_kind!=='natural_unit'||!Number(ing.estimated_piece_grams))return null;
+  const policy=cfgGet(config,'searchPolicy.portionPolicy',{});
+  if((policy.neverAutoApplyKinds||[]).includes(ing.unit_kind))return null;
+  const confidence=ing.portion_confidence||'none';
+  if(!(policy.autoApplyAiConfidence||['high','medium']).includes(confidence))return null;
+  const mid=Number(ing.estimated_piece_grams);
+  const lo=Number(ing.estimated_piece_min_g||mid);
+  const hi=Number(ing.estimated_piece_max_g||mid);
+  const spread=(hi-lo)/Math.max(1,mid);
+  if(spread>Number(policy.maxAiRelativeRange??.55))return null;
+  const count=Number(ing.count)||1;
+  return {
+    grams:mid*count,
+    count,
+    size:ing.size||'medium',
+    confidence,
+    source:'AI · stima porzione',
+    range:[lo*count,hi*count],
+    kind:ing.unit_kind,
+    assumption:`${count} × porzione ${ing.size&&ing.size!=='unspecified'?ing.size:'media'} ≈ ${fmt(mid*count,1)} g (stima AI ${confidence})`
+  };
+}
+function applyPortionPolicy(ing,config){if(Number(ing?.grams)>0)return {...ing,portionResolution:{type:'explicit',grams:Number(ing.grams)}};const cat=findPortionCatalog(`${ing?.raw||''} ${ing?.name||''}`,config,ing?.size,ing?.count);if(cat)return {...ing,grams:cat.grams,requires_weight_confirmation:false,portion_assumption:cat.assumption,portionResolution:{type:'catalog',...cat}};const ai=aiPortionUsable(ing,config);if(ai)return {...ing,grams:ai.grams,requires_weight_confirmation:false,portion_assumption:ai.assumption,portionResolution:{type:'ai_portion',...ai}};return ing;}
 const masterChunkCache=new Map();
 const MASTER_MICRO_SPECS={
   'Vitamina A':{ids:['vitamin_a_rae'],unit:'µg'},
@@ -1117,8 +786,8 @@ function nutrientTotalFromLogs(logs,foods,name,toUnit='mg',form='*',mode='displa
   }
   return sum;
 }
-async function parseFoodEntry(text){
-  const r=await fetch('/api/parse-food-entry',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({text})}); let d={};try{d=await r.json();}catch{}
+async function parseFoodEntry(text,context='diary'){
+  const r=await fetch('/api/parse-food-entry',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({text,context})}); let d={};try{d=await r.json();}catch{}
   if(!r.ok)throw new Error(d.error||`AI ${r.status}`); return d;
 }
 
@@ -1162,7 +831,7 @@ function GoalRow({g,index,goals,setGoals,weight,current}){
 
 function Home(){
   const [foods,setFoods]=useState([]), [logs,setLogs]=useState([]), [goals,setGoals]=useState(buildDefaultGoals()), [profile,setProfile]=useState(structuredClone(DEFAULT_PROFILE));
-  const [tab,setTab]=useState('oggi'), [foodDraft,setFoodDraft]=useState(null), [grams,setGrams]=useState(100), [loaded,setLoaded]=useState(false);
+  const [tab,setTab]=useState('oggi'), [foodDraft,setFoodDraft]=useState(null), [grams,setGrams]=useState(''), [loaded,setLoaded]=useState(false);
   const [query,setQuery]=useState(''), [results,setResults]=useState([]), [searchError,setSearchError]=useState(''), [searching,setSearching]=useState(false);
   const [quickQuery,setQuickQuery]=useState(''), [datasetMsg,setDatasetMsg]=useState(''), [datasets,setDatasets]=useState({}), [datasetMeta,setDatasetMeta]=useState([]), [newDatasetName,setNewDatasetName]=useState('CREA Italia'), [newDatasetFile,setNewDatasetFile]=useState(null);
   const [aiBusy,setAiBusy]=useState(''), [aiMsg,setAiMsg]=useState('');
@@ -1170,15 +839,8 @@ function Home(){
   const [masterManifest,setMasterManifest]=useState(null), [masterIndex,setMasterIndex]=useState([]), [masterStatus,setMasterStatus]=useState('Caricamento Master DB…'), [masterOfflineMsg,setMasterOfflineMsg]=useState('');
   const [recipeText,setRecipeText]=useState(''), [recipeReview,setRecipeReview]=useState(null), [recipeBusy,setRecipeBusy]=useState(''), [recipeMsg,setRecipeMsg]=useState('');
   const [showAllDeficits,setShowAllDeficits]=useState(false), [masterMigrationDone,setMasterMigrationDone]=useState(false);
-    const [appUi, setAppUi] =
-  useState(DEFAULT_APP_UI);
+  const [appConfig,setAppConfig]=useState(DEFAULT_APP_CONFIG);
 
-const [searchPolicy, setSearchPolicy] =
-  useState(DEFAULT_SEARCH_POLICY);
-
-const [portionCatalog, setPortionCatalog] =
-  useState(DEFAULT_PORTION_CATALOG);
-    
   useEffect(()=>{ try{
     setFoods(JSON.parse(localStorage.getItem('nutritrace_foods')||'[]'));
     setLogs(JSON.parse(localStorage.getItem('nutritrace_logs')||'[]'));
@@ -1201,87 +863,7 @@ const [portionCatalog, setPortionCatalog] =
   } finally { setLoaded(true); }
   if('serviceWorker' in navigator) navigator.serviceWorker.register('./sw.js').catch(()=>{});
   },[]);
-    useEffect(() => {
-  let alive = true;
-
-  Promise.all([
-    loadJsonConfig(
-      './config/ui.it.json',
-      DEFAULT_APP_UI
-    ),
-
-    loadJsonConfig(
-      './config/search-policy.json',
-      DEFAULT_SEARCH_POLICY
-    ),
-
-    loadJsonConfig(
-      './config/standard-portions.json',
-      DEFAULT_PORTION_CATALOG
-    )
-  ]).then(
-    ([
-      ui,
-      policy,
-      portions
-    ]) => {
-      if (!alive) return;
-
-      setAppUi(
-        ui || DEFAULT_APP_UI
-      );
-
-      setSearchPolicy(
-        policy || DEFAULT_SEARCH_POLICY
-      );
-
-      setPortionCatalog(
-        portions ||
-        DEFAULT_PORTION_CATALOG
-      );
-    }
-  );
-
-  return () => {
-    alive = false;
-  };
-}, []);
-      useEffect(() => {
-    let alive = true;
-
-    Promise.all([
-      loadJsonConfig(
-        './config/ui.it.json',
-        DEFAULT_APP_UI
-      ),
-      loadJsonConfig(
-        './config/search-policy.json',
-        DEFAULT_SEARCH_POLICY
-      ),
-      loadJsonConfig(
-        './config/standard-portions.json',
-        DEFAULT_PORTION_CATALOG
-      )
-    ]).then(([ui, policy, portions]) => {
-      if (!alive) return;
-
-      setAppUi(
-        ui || DEFAULT_APP_UI
-      );
-
-      setSearchPolicy(
-        policy || DEFAULT_SEARCH_POLICY
-      );
-
-      setPortionCatalog(
-        portions || DEFAULT_PORTION_CATALOG
-      );
-    });
-
-    return () => {
-      alive = false;
-    };
-  }, []);
+  useEffect(()=>{let alive=true;loadAppConfig().then(c=>{if(alive)setAppConfig(c||DEFAULT_APP_CONFIG)});return()=>{alive=false};},[]);
   useEffect(()=>{ let alive=true; loadMasterBundle().then(({manifest,index})=>{ if(!alive)return; setMasterManifest(manifest); setMasterIndex(index); setMasterStatus(`${Number(manifest.food_count||index.length).toLocaleString('it-IT')} alimenti · Runtime ${manifest.runtime_version||'v1'} auditato pronto`); }).catch(e=>alive&&setMasterStatus(`Master DB non disponibile: ${e.message}`)); return()=>{alive=false}; },[]);
   useEffect(()=>{ if(!loaded||!masterManifest||!masterIndex.length||masterMigrationDone)return; let alive=true; (async()=>{
     const byId=new Map(masterIndex.map(r=>[String(r.id),r])); const stale=foods.filter(f=>f.mergeMeta?.importedFrom==='MASTER'&&f.masterId&&String(f.masterVersion||'')!==String(masterManifest.runtime_version||masterManifest.schema||''));
@@ -1331,6 +913,7 @@ const [portionCatalog, setPortionCatalog] =
   const validationOnlySources=masterSources.filter(x=>x.inclusion_status==='validation_only');
   const missingMasterSources=masterSources.filter(x=>x.inclusion_status==='missing_input');
   const draftNdRows=foodDraft?Object.entries(foodDraft.nutrientStatus||{}).filter(([,x])=>!['numeric','ai_estimate'].includes(x?.status)):[];
+  const ui=(path,fallback)=>cfgGet(appConfig?.ui,path,fallback);
 
   function valueForGoal(g,ag){ if(Object.keys(MACROS).includes(g.id)) return ag[g.id]||0; const v=nutrientTotal(ag,g.name,g.unit,g.form||'*'); if(v===0 && g.name==='Sodio' && ag.salt>0) return convert(ag.salt/2.5,'g',g.unit); return v; }
   function saveFood(){ if(!foodDraft?.name?.trim()) return; const f={...foodDraft,additives:parseAdditives(foodDraft.ingredients)}; setFoods(p=>[...p.filter(x=>x.id!==f.id),f]); setFoodDraft(null); }
@@ -1342,12 +925,14 @@ const [portionCatalog, setPortionCatalog] =
     return masterToFood(r,detail,masterManifest,alias);
   }
   async function quickAdd(r){
-    if(Number(grams)<=0)return;
-    if(r.resultType==='personal'){addFoodLog(r.id);setQuickQuery('');return;}
+    let useGrams=Number(grams); let portion=null;
+    if(!(useGrams>0)){portion=findPortionCatalog(`${quickQuery} ${r?.name||''}`,appConfig);if(portion)useGrams=portion.grams;}
+    if(!(useGrams>0)){setAiMsg('Peso non definito: indica i grammi oppure usa “Ricerca con AI” per una porzione naturale/standard.');return;}
+    if(r.resultType==='personal'){addFoodLog(r.id,useGrams,portion?{portionAssumption:portion.assumption}:{});setQuickQuery('');setGrams('');if(portion)setAiMsg(`Porzione standard applicata: ${portion.assumption}.`);return;}
     if(r.resultType==='master'){
-      try{setRecipeBusy('quick');const existing=foods.find(f=>String(f.masterId||'')===String(r.id));const f=existing||await masterFoodFromResult(r,quickQuery||r.name);if(!existing)setFoods(p=>[...p,f]);setLogs(p=>[...p,{id:newId(),date:selectedDate,foodId:f.id,grams:Number(grams)}]);setQuickQuery('');}catch(e){setAiMsg(e.message)}finally{setRecipeBusy('')};return;
+      try{setRecipeBusy('quick');const existing=foods.find(f=>String(f.masterId||'')===String(r.id));const f=existing||await masterFoodFromResult(r,quickQuery||r.name);if(!existing)setFoods(p=>[...p,f]);setLogs(p=>[...p,{id:newId(),date:selectedDate,foodId:f.id,grams:useGrams,...(portion?{portionAssumption:portion.assumption}:{})}]);setQuickQuery('');setGrams('');if(portion)setAiMsg(`Porzione standard applicata: ${portion.assumption}.`);}catch(e){setAiMsg(e.message)}finally{setRecipeBusy('')};return;
     }
-    const f=materializeImported(r,quickQuery||r.name); setFoods(p=>[...p,f]); setLogs(p=>[...p,{id:newId(),date:selectedDate,foodId:f.id,grams:Number(grams)}]); setQuickQuery('');
+    const f=materializeImported(r,quickQuery||r.name); setFoods(p=>[...p,f]); setLogs(p=>[...p,{id:newId(),date:selectedDate,foodId:f.id,grams:useGrams,...(portion?{portionAssumption:portion.assumption}:{})}]); setQuickQuery('');setGrams('');if(portion)setAiMsg(`Porzione standard applicata: ${portion.assumption}.`);
   }
   function materializeImported(f,alias=''){ const source=f.sourceInfo||f.source; const useAlias=alias.trim(); return {...emptyFood(),source:f.source||'',sourceId:f.sourceId||'',name:useAlias?alias.trim():f.name,officialName:f.officialName||f.name,aliases:[...new Set([...(f.aliases||[]),...(useAlias?[alias.trim()]:[])])],brand:f.brand||'',servingGrams:f.servingGrams||100,label:f.label||emptyFood().label,ingredients:f.ingredients||'',nutrients:f.nutrients||[],sources:[source],mergeMeta:{importedFrom:f.source||source?.name}}; }
   function openImported(f,alias=query){ const same=foods.find(z=>(z.sourceId&&z.sourceId===f.sourceId)||(norm(z.name)===norm(f.name)&&norm(z.brand||'')===norm(f.brand||''))); if(same) setFoodDraft({...structuredClone(same),mergeMeta:{mode:'review',candidate:f}}); else setFoodDraft(materializeImported(f,alias)); setTab('alimenti'); }
@@ -1355,7 +940,7 @@ const [portionCatalog, setPortionCatalog] =
     if(r.resultType!=='master'){openImported(r,alias);return;}
     setSearching(true);setSearchError('');try{const existing=foods.find(f=>String(f.masterId||'')===String(r.id));setFoodDraft(existing?structuredClone(existing):await masterFoodFromResult(r,alias));setTab('alimenti');}catch(e){setSearchError(e.message)}finally{setSearching(false)}
   }
-  async function searchFoods(){ if(!query.trim()) return; setSearching(true); setSearchError(''); try{ const master=searchMasterIndex(query,masterIndex,30); const local=searchLocalDataset(query,datasets,12).map(f=>({...f,resultType:'local'})); setResults([...master,...local].slice(0,40)); if(!master.length&&!local.length) setSearchError('Nessun risultato nel Master DB o nei database personali. L’AI resta un fallback esplicitamente stimato.'); } finally{ setSearching(false); } }
+  async function searchFoods(){ if(!query.trim()) return; setSearching(true); setSearchError(''); try{ const master=searchMasterIndex(query,masterIndex,30); const local=searchLocalDataset(query,datasets,12).map(f=>({...f,resultType:'local'})); setResults([...master,...local].slice(0,40)); if(!master.length&&!local.length) setSearchError(ui('search.notFound','Nessun risultato nel Master DB o nei database personali.')); } finally{ setSearching(false); } }
   async function createWithAI(name){ setAiBusy('search'); setAiMsg(''); try{ let f={...emptyFood(),name:name.trim(),aliases:[name.trim()]}; const ai=await aiEnrich(f,SAFE_AI_DEFAULT); f=mergeAiFood(f,ai); for(const x of MICRO_CATALOG) if(!f.nutrientStatus[x.name])f.nutrientStatus[x.name]={status:'nd',reason:'N/D: non stimato in assenza di una fonte strutturata'}; setFoodDraft(f); setTab('alimenti'); }catch(e){ setAiMsg(e.message); }finally{ setAiBusy(''); } }
   async function enrichDraft(){ if(!foodDraft?.name) return; setAiBusy('draft'); setAiMsg(''); try{ const selected=(foodDraft.aiRequested||[]).slice(0,8); setFoodDraft(mergeAiFood(foodDraft,await aiEnrich(foodDraft,selected))); }catch(e){ setAiMsg(e.message); }finally{ setAiBusy(''); } }
   function toggleAiRequest(name){ const a=[...(foodDraft.aiRequested||[])],i=a.indexOf(name); if(i>=0)a.splice(i,1); else if(a.length<8)a.push(name); else {setAiMsg('Per controllo qualità puoi richiedere al massimo 8 micronutrienti per volta.');return;} setFoodDraft({...foodDraft,aiRequested:a}); }
@@ -1366,10 +951,25 @@ const [portionCatalog, setPortionCatalog] =
     let selectedKey=''; if(ambiguity!=='needs_detail'&&candidates.length){const top=candidates[0],second=candidates[1];if(top.score>=75&&(!second||top.score-second.score>=8))selectedKey=top.candidateKey;}
     return {candidates,selectedKey};
   }
+  async function interpretText(text,context='diary'){
+    const parsed=await parseFoodEntry(text,context);
+    const ingredients=(parsed.ingredients||[]).map(x=>{
+      const weighted=applyPortionPolicy(x,appConfig);
+      return {...weighted,...ingredientCandidates(weighted.name,weighted.ambiguity)};
+    });
+    const unresolvedErrors=(parsed.errors||[]).filter(err=>!ingredients.some(ing=>Number(ing.grams)>0&&String(err).toLowerCase().includes(String(ing.name||'').toLowerCase())));
+    return {...parsed,ingredients,errors:unresolvedErrors,yieldOverride:parsed.final_recipe_weight_g||''};
+  }
   async function interpretRecipe(){
     if(!recipeText.trim())return;setRecipeBusy('parse');setRecipeMsg('');setRecipeReview(null);
-    try{const parsed=await parseFoodEntry(recipeText);const ingredients=(parsed.ingredients||[]).map(x=>({...x,...ingredientCandidates(x.name,x.ambiguity)}));setRecipeReview({...parsed,ingredients,yieldOverride:parsed.final_recipe_weight_g||''}); if(parsed.errors?.length)setRecipeMsg(parsed.errors.join(' · '));}
+    try{const review=await interpretText(recipeText,'recipe');setRecipeReview(review);if(review.errors?.length)setRecipeMsg(review.errors.join(' · '));}
     catch(e){setRecipeMsg(e.message)}finally{setRecipeBusy('')}
+  }
+  async function quickSearchWithAI(){
+    if(!quickQuery.trim())return;setRecipeBusy('parse');setRecipeMsg('');setRecipeReview(null);try{const review=await interpretText(quickQuery,'quick');setRecipeText(quickQuery);setRecipeReview(review);if(review.errors?.length)setRecipeMsg(review.errors.join(' · '));}catch(e){setRecipeMsg(e.message)}finally{setRecipeBusy('')}
+  }
+  async function searchFoodsWithAI(){
+    if(!query.trim())return;setAiBusy('search-ai');setAiMsg('');setSearchError('');try{const review=await interpretText(query,'search');const ing=review.ingredients?.[0];if(!ing)throw new Error('L’AI non ha individuato un alimento.');const master=searchMasterIndex(ing.name,masterIndex,30);const local=searchLocalDataset(ing.name,datasets,12).map(f=>({...f,resultType:'local'}));setResults([...master,...local].slice(0,40));const assumption=ing.portion_assumption||ing.assumptions?.join(' · ');setAiMsg(`Interpretato come “${ing.name}”${assumption?` · ${assumption}`:''}.`);if(!master.length&&!local.length)setSearchError('Alimento interpretato, ma non trovato nel Master DB: puoi aprire una scheda manuale o stimata con AI.');}catch(e){setSearchError(e.message)}finally{setAiBusy('')}
   }
   function updateRecipeIngredient(i,patch){const rr=structuredClone(recipeReview);rr.ingredients[i]={...rr.ingredients[i],...patch};setRecipeReview(rr);}
   function rerunRecipeCandidates(i){const ing=recipeReview.ingredients[i],r=ingredientCandidates(ing.name,'none');updateRecipeIngredient(i,r);}
@@ -1419,20 +1019,21 @@ const [portionCatalog, setPortionCatalog] =
   );
 
   return h('main',null,
-    h('header',{className:'hero'},h('div',null,h('div',{className:'eyebrow'},'DIARIO NUTRIZIONALE PERSONALE · V2.1 AUDITED RUNTIME'),h('h1',null,'NutriTrace'),h('p',null,'Diario per data, Master Food DB multi-fonte, N/D espliciti e AI usata come interprete/fallback controllato.')),h('div',{className:'privacy'},'● Local-first · Master DB primario · AI tracciata')),
+    h('header',{className:'hero'},h('div',null,h('div',{className:'eyebrow'},'DIARIO NUTRIZIONALE PERSONALE · V2.1 AUDITED RUNTIME'),h('h1',null,'NutriTrace'),h('p',null,'Diario per data, Master Food DB multi-fonte, N/D espliciti e AI usata come interprete e ricerca assistita.')),h('div',{className:'privacy'},'● Local-first · Master DB primario · AI tracciata')),
     h('nav',{className:'tabs'},['oggi','ricerca','alimenti','obiettivi','dati'].map(x=>h('button',{key:x,className:tab===x?'active':'',onClick:()=>setTab(x)},x[0].toUpperCase()+x.slice(1)))),
 
     tab==='oggi'&&h('section',null,
       dateNavigator,
       h('div',{className:'grid5'},[['kcal','Energia','kcal'],['protein','Proteine','g'],['carbs','Carboidrati','g'],['fat','Grassi','g'],['fiber','Fibre','g']].map(([id,n,u],i)=>{const g=goals.find(x=>x.id===id),cov=macroCoverage(dayLogs,foods,id);return h('article',{className:`metric ${i===0?'primary':''}`,key:id},h('span',null,n),h(Progress,{value:totals[id],goal:effectiveTarget(g||{},profile.weight),unit:u,kind:g?.kind}),dayLogs.length&&cov<.999?h('small',{className:'metricCoverage'},`totale parziale · dati ${fmt(cov*100,0)}%`):null);})),
       h('article',{className:'card quickDiary'},h('div',{className:'cardTitle'},h('div',null,h('h2',null,selectedDate===deviceToday?'Cosa hai mangiato oggi?':`Aggiungi al ${shortDate(selectedDate)}`),h('p',null,'Il Master DB è la fonte primaria. Ogni voce resta associata al giorno selezionato.'))),
-        h('div',{className:'quickInputs'},h('label',null,'Alimento',h('input',{value:quickQuery,placeholder:'es. banana cruda, salmone cotto, pane integrale…',onChange:e=>setQuickQuery(e.target.value)})),h('label',null,'Grammi',h('input',{type:'number',min:'1',step:'any',value:grams,onChange:e=>setGrams(e.target.value)}))),
+        h('div',{className:'quickInputs'},h('label',null,'Alimento',h('input',{value:quickQuery,placeholder:'es. banana, 2 uova, cetriolo, salmone cotto…',onChange:e=>setQuickQuery(e.target.value)})),h('label',null,ui('search.gramsLabel','Grammi (facoltativi)'),h('input',{type:'number',min:'1',step:'any',value:grams,placeholder:ui('search.gramsPlaceholder','automatici per porzioni standard'),onChange:e=>setGrams(e.target.value)}))),
         h('div',{className:'masterStatusLine'},h('span',{className:`masterBadge ${masterManifest?'ok':'loading'}`},masterStatus),h('small',null,'N/D ≠ 0 · valori multi-fonte quando esiste corrispondenza sicura')),
-        quickSuggestions.length?h('div',{className:'quickSuggestions'},quickSuggestions.map(r=>h('button',{className:'quickChoice',key:r.resultType==='master'?`m:${r.id}`:(r.id||r.localId),onClick:()=>quickAdd(r),disabled:recipeBusy==='quick'},h('span',null,h('b',null,r.name),h('small',null,r.resultType==='personal'?'Archivio personale':r.resultType==='master'?`Master DB · ${r.sc||1} ${Number(r.sc||1)===1?'fonte':'fonti'} · ${(r.sources||[]).join(', ')}`:(SOURCE_META[r.source]?.name||'Database locale'))),h('strong',null,recipeBusy==='quick'?'…':'+ Aggiungi')))):quickQuery.trim()?h('div',{className:'emptyAction'},h('span',{className:'muted'},'Nessuna corrispondenza nel Master DB o nei database personali.'),h('div',{className:'inlineActions'},h('button',{className:'ghost',onClick:()=>{setFoodDraft({...emptyFood(),name:quickQuery.trim(),aliases:[quickQuery.trim()]});setTab('alimenti');}},'Inserisci manualmente'),h('button',{className:'cta',disabled:aiBusy==='search',onClick:()=>createWithAI(quickQuery)},aiBusy==='search'?'Fallback AI…':'Fallback AI controllato'))):null,
+        quickSuggestions.length?h('div',{className:'quickSuggestions'},quickSuggestions.map(r=>h('button',{className:'quickChoice',key:r.resultType==='master'?`m:${r.id}`:(r.id||r.localId),onClick:()=>quickAdd(r),disabled:recipeBusy==='quick'},h('span',null,h('b',null,r.name),h('small',null,r.resultType==='personal'?'Archivio personale':r.resultType==='master'?`Master DB · ${r.sc||1} ${Number(r.sc||1)===1?'fonte':'fonti'} · ${(r.sources||[]).join(', ')}`:(SOURCE_META[r.source]?.name||'Database locale'))),h('strong',null,recipeBusy==='quick'?'…':'+ Aggiungi')))):quickQuery.trim()?h('div',{className:'emptyAction'},h('span',{className:'muted'},ui('search.notFound','Nessuna corrispondenza nel Master DB o nei database personali.')),h('div',{className:'inlineActions'},h('button',{className:'ghost',onClick:()=>{setFoodDraft({...emptyFood(),name:quickQuery.trim(),aliases:[quickQuery.trim()]});setTab('alimenti');}},ui('search.manualButton','Inserisci manualmente')))):null,
+        quickQuery.trim()&&h('div',{className:'inlineActions'},h('button',{className:'cta',disabled:recipeBusy==='parse',onClick:quickSearchWithAI},recipeBusy==='parse'?ui('search.aiWorking','Ricerca AI…'):ui('search.aiButton','Ricerca con AI'))),
         h('div',{className:'recipeComposer'},
-          h('div',{className:'recipeComposerHead'},h('div',null,h('b',null,'Voce libera / ricetta'),h('p',{className:'muted tiny'},'Scrivi una frase naturale: l’AI interpreta quantità e ingredienti; i nutrienti vengono poi presi dal Master DB.')),h('span',{className:'aiRole'},'AI = parser')),
+          h('div',{className:'recipeComposerHead'},h('div',null,h('b',null,ui('recipe.title','Ricerca con AI / ricetta')),h('p',{className:'muted tiny'},ui('recipe.subtitle','Scrivi alimenti, quantità o una ricetta. L’AI interpreta il testo; nutrienti e porzioni standard vengono risolti separatamente.'))),h('span',{className:'aiRole'},'AI = interprete')),
           h('textarea',{rows:3,value:recipeText,onChange:e=>setRecipeText(e.target.value),placeholder:'es. Ho mangiato 200 g di torta fatta con 100 g zucchero, 200 g farina 00, 50 g cacao e …'}),
-          h('div',{className:'inlineActions'},h('button',{className:'cta',onClick:interpretRecipe,disabled:recipeBusy==='parse'||!recipeText.trim()},recipeBusy==='parse'?'Interpretazione…':'Interpreta e verifica'),h('small',{className:'muted'},'Pesi mancanti o alimenti realmente ambigui vengono fermati prima del calcolo.')),
+          h('div',{className:'inlineActions'},h('button',{className:'cta',onClick:interpretRecipe,disabled:recipeBusy==='parse'||!recipeText.trim()},recipeBusy==='parse'?'Interpretazione…':ui('recipe.interpretButton','Interpreta e verifica')),h('small',{className:'muted'},'Pesi mancanti o alimenti realmente ambigui vengono fermati prima del calcolo.')),
           recipeMsg&&h('p',{className:recipeMsg.startsWith('Ricetta aggiunta')?'statusMsg':'errorText'},recipeMsg),
           recipeReview&&h('div',{className:'recipeReview'},
             h('div',{className:'recipeSummary'},h('div',null,h('b',null,recipeReview.recipe_name||'Voce libera'),h('small',null,recipeReview.mode==='recipe'?'Ricetta composta':'Alimento singolo')),h('div',null,h('small',null,'Porzione dichiarata'),h('strong',null,recipeReview.consumed_grams?`${fmt(recipeReview.consumed_grams)} g`:'non specificata'))),
@@ -1447,8 +1048,9 @@ const [portionCatalog, setPortionCatalog] =
                   h('label',{className:'candidateSelect'},'Corrispondenza database',h('select',{value:ing.selectedKey||'',onChange:e=>updateRecipeIngredient(i,{selectedKey:e.target.value,ambiguity:e.target.value?'none':ing.ambiguity})},h('option',{value:''},'— seleziona —'),...(ing.candidates||[]).map(c=>h('option',{key:c.candidateKey,value:c.candidateKey},`${c.name} · ${c.resultType==='master'?`Master ${c.sc||1} fonti`:'personale'}`))))
                 ),
                 ing.preparation&&h('small',{className:'muted'},`Preparazione: ${ing.preparation}`),
+                ing.portion_assumption&&h('small',{className:'muted portionAssumption'},`Porzione applicata: ${ing.portion_assumption}`),
                 ing.ambiguity_reason&&h('p',{className:'errorText tiny'},ing.ambiguity_reason),
-                h('div',{className:'recipeActions'},h('button',{className:'ghost',onClick:()=>rerunRecipeCandidates(i)},'Ricerche DB'),!(ing.candidates||[]).length?h('button',{className:'ghost',disabled:recipeBusy===`ai-${i}`,onClick:()=>estimateRecipeIngredient(i)},recipeBusy===`ai-${i}`?'Fallback…':'Fallback AI raro'):null)
+                h('div',{className:'recipeActions'},h('button',{className:'ghost',onClick:()=>rerunRecipeCandidates(i)},ui('recipe.dbSearchButton','Ricerche DB')),!(ing.candidates||[]).length?h('button',{className:'ghost',disabled:recipeBusy===`ai-${i}`,onClick:()=>estimateRecipeIngredient(i)},recipeBusy===`ai-${i}`?'Stima…':ui('recipe.aiEstimateButton','Ricerca con AI')):null)
               );
             })),
             h('div',{className:'recipeFinalize'},
@@ -1475,11 +1077,11 @@ const [portionCatalog, setPortionCatalog] =
       h('div',{className:'sectionHead'},h('div',null,h('h2',null,'Ricerca alimenti'),h('p',null,'Runtime Food DB auditato a 14 fonti prima, archivio personale e database aggiunti da te come fonti complementari.'))),
       h('article',{className:'card'},
         h('div',{className:'masterStatusLine'},h('span',{className:`masterBadge ${masterManifest?'ok':'loading'}`},masterStatus),masterManifest&&h('small',null,`${includedMasterSources.length} sorgenti nazionali derivate · ${validationOnlySources.length} solo validazione`)),
-        h('div',{className:'searchBox'},h('input',{value:query,placeholder:'Cerca un alimento…',onChange:e=>setQuery(e.target.value),onKeyDown:e=>e.key==='Enter'&&searchFoods()}),h('button',{className:'cta',onClick:searchFoods,disabled:searching},searching?'Ricerca…':'Cerca')),
+        h('div',{className:'searchBox'},h('input',{value:query,placeholder:'Cerca un alimento…',onChange:e=>setQuery(e.target.value),onKeyDown:e=>e.key==='Enter'&&searchFoods()}),h('button',{className:'cta',onClick:searchFoods,disabled:searching},searching?'Ricerca…':ui('search.dbButton','Cerca')),h('button',{className:'ghost',onClick:searchFoodsWithAI,disabled:aiBusy==='search-ai'||!query.trim()},aiBusy==='search-ai'?ui('search.aiWorking','Ricerca AI…'):ui('search.aiButton','Ricerca con AI'))),
         datasetMeta.length?h('div',{className:'sourceBadges'},datasetMeta.map(m=>h('span',{className:'online',key:m.id},`${m.name} · ${datasets[m.id]?.length||0}`))):h('p',{className:'muted tiny'},'Nessun database personale aggiuntivo: il Master DB integrato resta disponibile.'),
         searchError&&h('p',{className:'errorText'},searchError),
         results.map(r=>h('div',{className:'searchResult',key:r.resultType==='master'?`m:${r.id}`:(r.localId||r.sourceId||r.id)},h('div',null,h('b',null,r.name),h('small',null,r.resultType==='master'?`NutriTrace Master DB · ${r.sc||1} ${Number(r.sc||1)===1?'fonte':'fonti'} · ${(r.sources||[]).join(', ')}`:`${SOURCE_META[r.source]?.name||'Database locale'}${r.brand?` · ${r.brand}`:''}`)),h('button',{className:'ghost',onClick:()=>openResult(r,query)},r.resultType==='master'?'Apri Master':'Apri / importa'))),
-        query.trim()&&!results.length&&h('div',{className:'aiFallback'},h('div',null,h('b',null,'Alimento non trovato nel database?'),h('p',{className:'muted'},'Solo come ultima risorsa puoi creare una scheda AI. Le stime ad alto rischio vengono rifiutate e restano N/D.')),h('button',{className:'cta',disabled:aiBusy==='search',onClick:()=>createWithAI(query)},aiBusy==='search'?'Fallback in corso…':'Fallback AI controllato')),
+        query.trim()&&!results.length&&h('div',{className:'aiFallback'},h('div',null,h('b',null,'Alimento non trovato nel database?'),h('p',{className:'muted'},'Puoi usare la Ricerca con AI per interpretare meglio il nome/porzione oppure creare una scheda stimata se il Master non contiene davvero l’alimento.')),h('div',{className:'inlineActions'},h('button',{className:'ghost',disabled:aiBusy==='search-ai',onClick:searchFoodsWithAI},ui('search.aiButton','Ricerca con AI')),h('button',{className:'cta',disabled:aiBusy==='search',onClick:()=>createWithAI(query)},aiBusy==='search'?'Stima in corso…':'Crea scheda con AI'))),
         aiMsg&&h('p',{className:'errorText'},aiMsg)
       )
     ),
@@ -1535,7 +1137,7 @@ const [portionCatalog, setPortionCatalog] =
         h('article',{className:'card'},h('h2',null,'Backup diario'),h('button',{className:'cta',onClick:exportData},'Esporta JSON'),h('label',{className:'importLabel'},'Importa backup',h('input',{type:'file',accept:'application/json',onChange:importBackup})),h('p',{className:'muted tiny'},'Il Master DB è distribuito con l’app e non viene duplicato nel backup. I database personali voluminosi restano in IndexedDB.'))
       ),
       h('article',{className:'card addDbCard'},h('div',{className:'cardTitle'},h('div',null,h('h2',null,'Aggiungi un tuo database'),h('p',null,'Nome libero e possibilità di rimozione. Il database viene aggiunto come fonte complementare, non sostituisce automaticamente il Master.'))),h('div',{className:'addDbGrid'},h('label',null,'Nome database',h('input',{value:newDatasetName,onChange:e=>setNewDatasetName(e.target.value),placeholder:'es. CREA Italia'})),h('label',null,'File',h('input',{type:'file',accept:'.csv,.xlsx,.xls,.ods,.json,.jsonl',onChange:e=>setNewDatasetFile(e.target.files?.[0]||null)})),h('button',{className:'cta',onClick:importCustomDataset,disabled:!newDatasetFile},'+ Aggiungi')),datasetMsg&&h('p',{className:'statusMsg'},datasetMsg),h('p',{className:'muted tiny'},'Per import CREA: macro a zero restano validi; gli zero nei campi di dettaglio/micronutrienti sono trattati conservativamente come N/D quando non è possibile distinguerli da “non disponibile”. Percentuali di acidi grassi e aminoacidi vengono convertite sulla quantità reale di lipidi/proteine.')),
-      h('article',{className:'card notice'},h('h3',null,'Ruolo dell’AI dopo il Master DB'),h('p',null,'OpenRouter serve soprattutto a interpretare testo libero, ricette e ambiguità. Il fallback numerico è l’ultima risorsa: non sovrascrive dati strutturati, non usa 0 per “sconosciuto”, impone unità lato codice e rifiuta stime a bassa confidenza o nutrienti ad alto rischio. OPENROUTER_API_KEY resta esclusivamente nella Vercel Function.'))
+      h('article',{className:'card notice'},h('h3',null,'Ruolo dell’AI dopo il Master DB'),h('p',null,'OpenRouter serve soprattutto a interpretare testo libero, ricette e ambiguità. La stima numerica AI è l’ultima risorsa: non sovrascrive dati strutturati, non usa 0 per “sconosciuto”, impone unità lato codice e rifiuta stime a bassa confidenza o nutrienti ad alto rischio. OPENROUTER_API_KEY resta esclusivamente nella Vercel Function.'))
     ),
 
     showAllDeficits&&h('div',{className:'modalBackdrop'},h('div',{className:'modal allDeficits'},
@@ -1557,7 +1159,7 @@ const [portionCatalog, setPortionCatalog] =
       h('div',{className:'cardTitle aiTitle'},h('h3',null,'Etichetta / macro'),h('button',{className:'ghost',disabled:aiBusy==='draft',onClick:enrichDraft},aiBusy==='draft'?'Completamento…':'Completa macro / N/D selezionati')),
       aiMsg&&h('p',{className:'errorText'},aiMsg),
       h('div',{className:'formGrid'},Object.entries(MACROS).map(([k,l])=>h('label',{key:k},l,h('input',{type:'number',step:'any',value:foodDraft.label?.[k]??'',onChange:e=>setFoodDraft({...foodDraft,label:{...foodDraft.label,[k]:e.target.value}})})))),
-      draftNdRows.length?h('div',{className:'ndPanel'},h('div',{className:'cardTitle'},h('div',null,h('h3',null,'Campi N/D'),h('p',null,'N/D significa dato non disponibile, non zero. Puoi chiedere un fallback AI su massimo 8 voci; le categorie ad alto rischio resteranno comunque N/D.')),h('span',{className:'coverageTag'},`${(foodDraft.aiRequested||[]).length}/8 selezionati`)),h('div',{className:'ndList'},draftNdRows.map(([name,st])=>h('label',{className:'ndItem',key:name},h('input',{type:'checkbox',checked:(foodDraft.aiRequested||[]).includes(name),onChange:()=>toggleAiRequest(name)}),h('span',null,h('b',null,name),h('small',null,st?.reason||'Dato non disponibile')),h('strong',null,'N/D'))))):null,
+      draftNdRows.length?h('div',{className:'ndPanel'},h('div',{className:'cardTitle'},h('div',null,h('h3',null,'Campi N/D'),h('p',null,'N/D significa dato non disponibile, non zero. Puoi chiedere un completamento AI su massimo 8 voci; le categorie ad alto rischio resteranno comunque N/D.')),h('span',{className:'coverageTag'},`${(foodDraft.aiRequested||[]).length}/8 selezionati`)),h('div',{className:'ndList'},draftNdRows.map(([name,st])=>h('label',{className:'ndItem',key:name},h('input',{type:'checkbox',checked:(foodDraft.aiRequested||[]).includes(name),onChange:()=>toggleAiRequest(name)}),h('span',null,h('b',null,name),h('small',null,st?.reason||'Dato non disponibile')),h('strong',null,'N/D'))))):null,
       h('h3',null,'Ingredienti completi'),h('label',null,'Lista come in etichetta',h('textarea',{rows:4,value:foodDraft.ingredients||'',onChange:e=>setFoodDraft({...foodDraft,ingredients:e.target.value})})),
       parseAdditives(foodDraft.ingredients).length>0&&h('div',{className:'chips'},parseAdditives(foodDraft.ingredients).map(a=>h('span',{key:a},a))),
       h('div',{className:'cardTitle'},h('div',null,h('h3',null,'Nutrienti specifici / forme'),h('p',null,'Quantità riferite alla base indicata sopra.')),h('button',{className:'ghost',onClick:addNutrient},'+ Aggiungi')),
