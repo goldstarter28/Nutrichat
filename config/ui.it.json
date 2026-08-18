@@ -1,5 +1,5 @@
 {
-  "version": "1.0",
+  "version": "2.2.0",
   "search": {
     "title": "Ricerca alimenti",
     "dbButton": "Cerca nel database",
@@ -7,10 +7,12 @@
     "aiWorking": "Ricerca con AI…",
     "manualButton": "Inserisci manualmente",
     "gramsLabel": "Grammi",
-    "gramsPlaceholder": "facoltativi se esiste una porzione standard"
+    "gramsPlaceholder": "facoltativi per alimenti con porzione risolvibile",
+    "notFound": "Nessuna corrispondenza sufficientemente affidabile nel database."
   },
   "recipe": {
-    "title": "Voce libera / ricetta",
+    "title": "Voce libera / lista / ricetta",
+    "subtitle": "Scrivi uno o più alimenti oppure una vera ricetta. L’AI interpreta il testo; pesi e corrispondenze database vengono poi validati dal codice.",
     "interpretButton": "Interpreta e verifica",
     "aiEstimateButton": "Ricerca con AI",
     "dbSearchButton": "Ricerche DB"

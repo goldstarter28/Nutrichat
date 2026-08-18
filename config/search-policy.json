@@ -1,15 +1,14 @@
 {
-  "version": "1.0",
+  "version": "2.2.0",
   "portionPolicy": {
     "catalogFirst": true,
     "aiEstimateWhenCatalogMissing": true,
+    "validateExplicitMassFromRawText": true,
+    "ignoreAiGramsWithoutExplicitMass": true,
     "defaultNaturalUnitCount": 1,
     "defaultNaturalUnitSize": "medium",
     "autoApplyCatalog": true,
-    "autoApplyAiConfidence": [
-      "high",
-      "medium"
-    ],
+    "autoApplyAiConfidence": ["high", "medium"],
     "maxAiRelativeRange": 0.55,
     "neverAutoApplyKinds": [
       "dish",
@@ -22,6 +21,13 @@
       "unknown"
     ],
     "showAssumption": true
+  },
+  "databaseMatchPolicy": {
+    "requireLexicalEvidence": true,
+    "minCandidateScore": 42,
+    "minAutoSelectScore": 92,
+    "minAutoSelectGap": 14,
+    "neverAutoSelectOnMaterialAmbiguity": true
   },
   "ambiguityPolicy": {
     "askOnlyIfMaterial": true
