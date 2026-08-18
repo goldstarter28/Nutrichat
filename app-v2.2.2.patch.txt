@@ -1,0 +1,101 @@
+NUTRICHAT V2.2.2 — PATCH app.js
+====================================
+Questa patch è GENERAL-PURPOSE: nessuna regola specifica uva/ravioli è necessaria.
+
+A) SUBITO DOPO candidateExactSemanticMatch(...) AGGIUNGI:
+
+function semanticLookupQueries(ingredient){
+  const ing=typeof ingredient==='string'?{name:ingredient}:ingredient||{};
+  const ordered=[
+    ing.lookup_name_en,
+    ...(ing.search_terms_en||[]),
+    ing.name,
+    ...(ing.broader_terms_en||[])
+  ];
+  return ordered.map(clean).filter(Boolean)
+    .filter((x,i,a)=>a.findIndex(y=>norm(y)===norm(x))===i)
+    .slice(0,20);
+}
+function candidateSemanticGate(ingredient,candidate,matchedQuery=''){
+  const ing=typeof ingredient==='string'?{name:ingredient}:ingredient||{};
+  const text=norm(`${candidate?.name||''} ${candidate?.officialName||''} ${candidate?.name_en||''} ${(candidate?.aliases||[]).join(' ')}`);
+  if(!text)return false;
+  const must=(ing.must_terms_en||[]).map(norm).filter(Boolean);
+  const exclude=(ing.exclude_terms_en||[]).map(norm).filter(Boolean);
+  if(exclude.some(t=>hasTerm(text,t)))return false;
+  if(must.length && !must.some(t=>hasTerm(text,t)))return false;
+  const queries=semanticLookupQueries(ing);
+  return queries.some(q=>candidateLexicalEvidence(q,candidate)||candidateExactSemanticMatch(q,candidate)) ||
+         (matchedQuery && candidateLexicalEvidence(matchedQuery,candidate));
+}
+
+B) NELLA function ingredientCandidates(ingredient,ambiguity='none')
+SOSTITUISCI:
+
+const queries=[ing.name,ing.lookup_name_en].map(clean).filter(Boolean).filter((x,i,a)=>a.findIndex(y=>norm(y)===norm(x))===i);
+
+CON:
+
+const queries=semanticLookupQueries(ing);
+
+Poi SOSTITUISCI:
+
+if(policy.requireLexicalEvidence!==false)candidates=candidates.filter(c=>queries.some(q=>candidateLexicalEvidence(q,c)));
+
+CON:
+
+if(policy.requireLexicalEvidence!==false)
+  candidates=candidates.filter(c=>candidateSemanticGate(ing,c,c.matchedQuery));
+
+C) NELLA function searchFoodsWithAI()
+SOSTITUISCI:
+
+const queries=[ing.name,ing.lookup_name_en].map(clean).filter(Boolean).filter((x,i,a)=>a.findIndex(y=>norm(y)===norm(x))===i);
+
+CON:
+
+const queries=semanticLookupQueries(ing);
+
+Poi SOSTITUISCI:
+
+if(policy.requireLexicalEvidence!==false)found=found.filter(r=>queries.some(q=>candidateLexicalEvidence(q,r)));
+
+CON:
+
+if(policy.requireLexicalEvidence!==false)
+  found=found.filter(r=>candidateSemanticGate(ing,r,r.matchedQuery));
+
+IMPORTANTE: nel loop di searchFoodsWithAI conserva matchedQuery.
+SOSTITUISCI:
+
+for(const r of searchMasterIndex(q,masterIndex,30)){const k=`m:${r.id}`,prev=byKey.get(k);if(!prev||r.score>prev.score)byKey.set(k,r);}
+
+CON:
+
+for(const r0 of searchMasterIndex(q,masterIndex,30)){
+  const r={...r0,matchedQuery:q};
+  const k=`m:${r.id}`,prev=byKey.get(k);
+  if(!prev||r.score>prev.score)byKey.set(k,r);
+}
+
+E per i dataset locali SOSTITUISCI:
+
+for(const r0 of searchLocalDataset(q,datasets,12)){const r={...r0,resultType:'local'}, ...
+
+CON:
+
+for(const r0 of searchLocalDataset(q,datasets,12)){
+  const r={...r0,resultType:'local',matchedQuery:q};
+  const k=`l:${r.localId||r.sourceId||r.id}`,prev=byKey.get(k);
+  if(!prev||r.score>prev.score)byKey.set(k,r);
+}
+
+D) NON aggiungere mapping specifici tipo uva=>grapes o raviolo=>ravioli.
+IT_SYNONYMS rimane solo fast-path/offline. Il nuovo parser genera dinamicamente:
+lookup_name_en + search_terms_en + broader_terms_en + must_terms_en + exclude_terms_en
+per QUALSIASI alimento.
+
+E) FACOLTATIVO MA CONSIGLIATO: cambia nell'header:
+V2.2 SMART PORTIONS
+in:
+V2.2.2 SMART PORTIONS + SEMANTIC RESOLVER
