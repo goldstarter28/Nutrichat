@@ -1246,7 +1246,42 @@ const [portionCatalog, setPortionCatalog] =
     alive = false;
   };
 }, []);
-    
+      useEffect(() => {
+    let alive = true;
+
+    Promise.all([
+      loadJsonConfig(
+        './config/ui.it.json',
+        DEFAULT_APP_UI
+      ),
+      loadJsonConfig(
+        './config/search-policy.json',
+        DEFAULT_SEARCH_POLICY
+      ),
+      loadJsonConfig(
+        './config/standard-portions.json',
+        DEFAULT_PORTION_CATALOG
+      )
+    ]).then(([ui, policy, portions]) => {
+      if (!alive) return;
+
+      setAppUi(
+        ui || DEFAULT_APP_UI
+      );
+
+      setSearchPolicy(
+        policy || DEFAULT_SEARCH_POLICY
+      );
+
+      setPortionCatalog(
+        portions || DEFAULT_PORTION_CATALOG
+      );
+    });
+
+    return () => {
+      alive = false;
+    };
+  }, []);
   useEffect(()=>{ let alive=true; loadMasterBundle().then(({manifest,index})=>{ if(!alive)return; setMasterManifest(manifest); setMasterIndex(index); setMasterStatus(`${Number(manifest.food_count||index.length).toLocaleString('it-IT')} alimenti · Runtime ${manifest.runtime_version||'v1'} auditato pronto`); }).catch(e=>alive&&setMasterStatus(`Master DB non disponibile: ${e.message}`)); return()=>{alive=false}; },[]);
   useEffect(()=>{ if(!loaded||!masterManifest||!masterIndex.length||masterMigrationDone)return; let alive=true; (async()=>{
     const byId=new Map(masterIndex.map(r=>[String(r.id),r])); const stale=foods.filter(f=>f.mergeMeta?.importedFrom==='MASTER'&&f.masterId&&String(f.masterVersion||'')!==String(masterManifest.runtime_version||masterManifest.schema||''));
