@@ -1,0 +1,18 @@
+{
+  "version": "1.0",
+  "search": {
+    "title": "Ricerca alimenti",
+    "dbButton": "Cerca nel database",
+    "aiButton": "Ricerca con AI",
+    "aiWorking": "Ricerca con AI…",
+    "manualButton": "Inserisci manualmente",
+    "gramsLabel": "Grammi",
+    "gramsPlaceholder": "facoltativi se esiste una porzione standard"
+  },
+  "recipe": {
+    "title": "Voce libera / ricetta",
+    "interpretButton": "Interpreta e verifica",
+    "aiEstimateButton": "Ricerca con AI",
+    "dbSearchButton": "Ricerche DB"
+  }
+}
