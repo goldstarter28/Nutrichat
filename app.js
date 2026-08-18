@@ -374,6 +374,383 @@ async function loadJsonConfig(url, fallback) {
   }
 }
 
+function matchStandardPortion(text, catalog) {
+  const q = norm(text);
+
+  if (!q) return null;
+
+  let best = null;
+  let bestLength = 0;
+
+  for (const item of catalog?.items || []) {
+    for (const alias of item.aliases || []) {
+      const a = norm(alias);
+
+      if (
+        a &&
+        (
+          q === a ||
+          hasTerm(q, a)
+        ) &&
+        a.length > bestLength
+      ) {
+        best = item;
+        bestLength = a.length;
+      }
+    }
+  }
+
+  return best;
+}
+
+function portionSizeFromText(text) {
+  const q = norm(text);
+
+  if (
+    q.includes('piccola') ||
+    q.includes('piccolo') ||
+    q.includes('small')
+  ) {
+    return 'small';
+  }
+
+  if (
+    q.includes('grande') ||
+    q.includes('large')
+  ) {
+    return 'large';
+  }
+
+  return 'medium';
+}
+
+function portionCountFromText(text) {
+  const q = norm(text);
+
+  const numeric = q.match(
+    /(?:^|\s)(\d+(?:[.,]\d+)?)(?:\s|$)/
+  );
+
+  if (numeric) {
+    const value = Number(
+      numeric[1].replace(',', '.')
+    );
+
+    if (
+      Number.isFinite(value) &&
+      value > 0 &&
+      value <= 100
+    ) {
+      return value;
+    }
+  }
+
+  const words = {
+    un: 1,
+    uno: 1,
+    una: 1,
+    due: 2,
+    tre: 3,
+    quattro: 4,
+    cinque: 5,
+    sei: 6,
+    sette: 7,
+    otto: 8,
+    nove: 9,
+    dieci: 10
+  };
+
+  for (const [word, value] of Object.entries(words)) {
+    const re = new RegExp(
+      `(?:^|\\s)${word}(?:\\s|$)`
+    );
+
+    if (re.test(q)) {
+      return value;
+    }
+  }
+
+  return 1;
+}
+
+function resolveCatalogPortion(
+  text,
+  catalog,
+  policy,
+  countOverride = null,
+  sizeOverride = null
+) {
+  const item =
+    matchStandardPortion(text, catalog);
+
+  if (
+    !item ||
+    item.kind !== 'natural_unit'
+  ) {
+    return null;
+  }
+
+  const count =
+    Number(countOverride) ||
+    portionCountFromText(text) ||
+    Number(
+      policy?.portionPolicy
+        ?.defaultNaturalUnitCount
+    ) ||
+    1;
+
+  const size =
+    (
+      sizeOverride &&
+      sizeOverride !== 'unspecified'
+    )
+      ? sizeOverride
+      : portionSizeFromText(text);
+
+  const selected =
+    item.sizes?.[size] ||
+    item.sizes?.[item.defaultSize] ||
+    item.sizes?.medium;
+
+  if (
+    !selected ||
+    !(Number(selected.grams) > 0) ||
+    selected.autoApply === false ||
+    policy?.portionPolicy
+      ?.autoApplyCatalog === false
+  ) {
+    return null;
+  }
+
+  return {
+    grams:
+      Number(selected.grams) * count,
+
+    gramsEach:
+      Number(selected.grams),
+
+    count,
+
+    size,
+
+    confidence:
+      selected.confidence || 'medium',
+
+    source: 'catalog',
+
+    note:
+      `${count} × ${size} · ` +
+      `${Number(selected.grams)} g cad.`
+  };
+}
+
+function resolveAiPortion(
+  ingredient,
+  policy
+) {
+  if (Number(ingredient?.grams) > 0) {
+    return {
+      grams: Number(ingredient.grams),
+      source: 'explicit',
+      confidence: 'exact',
+      note: 'peso indicato'
+    };
+  }
+
+  const p =
+    policy?.portionPolicy ||
+    DEFAULT_SEARCH_POLICY.portionPolicy;
+
+  if (
+    ingredient?.unit_kind !==
+    'natural_unit'
+  ) {
+    return null;
+  }
+
+  if (
+    (
+      p.neverAutoApplyKinds || []
+    ).includes(ingredient.unit_kind)
+  ) {
+    return null;
+  }
+
+  const confidence =
+    ingredient?.portion_confidence ||
+    'none';
+
+  if (
+    !(
+      p.autoApplyAiConfidence || []
+    ).includes(confidence)
+  ) {
+    return null;
+  }
+
+  const gramsEach =
+    Number(
+      ingredient?.estimated_piece_grams
+    );
+
+  const min =
+    Number(
+      ingredient?.estimated_piece_min_g
+    );
+
+  const max =
+    Number(
+      ingredient?.estimated_piece_max_g
+    );
+
+  if (!(gramsEach > 0)) {
+    return null;
+  }
+
+  /*
+   * Se il range stimato è troppo ampio,
+   * non applichiamo automaticamente
+   * la porzione AI.
+   */
+  if (
+    min > 0 &&
+    max > min &&
+    (
+      (max - min) / gramsEach
+    ) >
+      Number(
+        p.maxAiRelativeRange || 0.55
+      )
+  ) {
+    return null;
+  }
+
+  const count =
+    Number(ingredient?.count) || 1;
+
+  return {
+    grams: gramsEach * count,
+
+    gramsEach,
+
+    count,
+
+    size:
+      ingredient?.size || 'medium',
+
+    confidence,
+
+    source: 'ai_portion',
+
+    min,
+
+    max,
+
+    note:
+      `${count} × ${gramsEach} g` +
+      (
+        min > 0 && max > 0
+          ? ` · range ${min}–${max} g`
+          : ''
+      )
+  };
+}
+
+function resolveIngredientPortion(
+  ingredient,
+  catalog,
+  policy
+) {
+  /*
+   * 1. Peso esplicitamente scritto
+   *    dall'utente: ha sempre priorità.
+   */
+  if (Number(ingredient?.grams) > 0) {
+    return {
+      ...ingredient,
+
+      portionSource: 'explicit',
+
+      portionConfidence: 'exact',
+
+      portionAssumption:
+        'Peso indicato dall’utente'
+    };
+  }
+
+  /*
+   * 2. Catalogo NutriTrace.
+   */
+  const catalogResult =
+    resolveCatalogPortion(
+      ingredient?.name ||
+        ingredient?.raw ||
+        '',
+      catalog,
+      policy,
+      ingredient?.count,
+      ingredient?.size
+    );
+
+  if (catalogResult) {
+    return {
+      ...ingredient,
+
+      grams: catalogResult.grams,
+
+      portionSource:
+        catalogResult.source,
+
+      portionConfidence:
+        catalogResult.confidence,
+
+      portionAssumption:
+        `Porzione standard: ` +
+        catalogResult.note
+    };
+  }
+
+  /*
+   * 3. Solo se il catalogo non copre
+   *    l'alimento proviamo la stima AI.
+   */
+  if (
+    policy?.portionPolicy
+      ?.aiEstimateWhenCatalogMissing !==
+    false
+  ) {
+    const aiResult =
+      resolveAiPortion(
+        ingredient,
+        policy
+      );
+
+    if (aiResult) {
+      return {
+        ...ingredient,
+
+        grams: aiResult.grams,
+
+        portionSource:
+          aiResult.source,
+
+        portionConfidence:
+          aiResult.confidence,
+
+        portionAssumption:
+          `Porzione stimata: ` +
+          aiResult.note
+      };
+    }
+  }
+
+  /*
+   * Nessun peso sufficientemente
+   * affidabile: resta irrisolto.
+   */
+  return ingredient;
+}
+
 const MICRO_CATALOG = [
   { group:'Vitamine', id:'Vitamina A', name:'Vitamina A', unit:'µg', kind:'minimum' },
   { group:'Vitamine', id:'Tiamina B1', name:'Tiamina B1', unit:'mg', kind:'minimum' },
