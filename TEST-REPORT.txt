@@ -1,0 +1,27 @@
+NutriChat V2.2 automated/static verification
+
+Syntax:
+  app.js                    OK
+  api/parse-food-entry.js   OK
+  sw.js                     OK
+  all JSON config           OK
+
+Deterministic portion tests:
+  una banana -> ignores AI grams=1, catalog 118g             PASS
+  2 pesche -> catalog 322g                                   PASS
+  un'arancia -> catalog 140g                                 PASS
+  mandarino 50g -> explicit 50g                              PASS
+  2 cetrioli -> catalogo natural-unit, mai 2g                   PASS
+  manual grams 95g -> 95g                                    PASS
+  un piatto di pasta -> no automatic grams                   PASS
+
+Matching tests:
+  cetriolo -> basilico lexical evidence                      FALSE (PASS)
+  cetriolo -> cucumber lexical evidence                      TRUE (PASS)
+  Italian -> English synonyms and reverse                    PASS
+
+Parser invariants:
+  una banana + erroneous AI grams=1 -> grams=null             PASS
+  2 cetrioli + erroneous AI grams=2 -> grams=null             PASS
+  un mandarino di 50g -> grams=50                             PASS
+  preparation none -> hidden/empty                            PASS

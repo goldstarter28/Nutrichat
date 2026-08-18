@@ -22,28 +22,60 @@ function num(v) {
 // Espansioni volutamente semplici: aiutano la ricerca in italiano nei dataset EN/FR/DK.
 // Dopo il primo utilizzo l'alias italiano viene salvato nell'archivio personale, quindi non serve più tradurre.
 const IT_SYNONYMS = {
-    pasta: ['pasta', 'spaghetti', 'macaroni', 'noodle', 'noodles', 'pates'], petto: ['breast'], coscia: ['thigh'],
-    integrale: ['whole wheat', 'wholewheat', 'whole grain', 'wholegrain', 'wholemeal', 'complet', 'complete', 'complets', 'completes'],
-    riso: ['rice', 'riz', 'ris'], pollo: ['chicken', 'poulet', 'kylling'], tacchino: ['turkey', 'dinde', 'kalkun'],
-    salmone: ['salmon', 'saumon', 'laks'], tonno: ['tuna', 'thon', 'tun'], merluzzo: ['cod', 'cabillaud', 'torsk'],
-    mela: ['apple', 'pomme', 'aeble'], pera: ['pear', 'poire', 'paere'], banana: ['banana', 'banane'], arancia: ['orange'],
-    fragola: ['strawberry', 'fraise', 'jordbaer'], mirtilli: ['blueberry', 'blueberries', 'myrtille'],
-    uovo: ['egg', 'oeuf', 'aeg'], uova: ['eggs', 'oeufs', 'aeg'], latte: ['milk', 'lait', 'maelk'],
-    yogurt: ['yogurt', 'yoghurt', 'yaourt'], formaggio: ['cheese', 'fromage', 'ost'], pane: ['bread', 'pain', 'brod'],
-    avena: ['oat', 'oats', 'avoine', 'havre'], farro: ['farro', 'spelt', 'épeautre', 'épeautre'],
-    lenticchie: ['lentil', 'lentils', 'lentille', 'linser'], ceci: ['chickpea', 'chickpeas', 'pois chiche', 'kikært'],
-    fagioli: ['bean', 'beans', 'haricot', 'bonner'], patata: ['potato', 'pomme de terre', 'kartoffel'], patate: ['potatoes', 'pommes de terre', 'kartofler'],
-    pomodoro: ['tomato', 'tomate'], pomodori: ['tomatoes', 'tomates'], carota: ['carrot', 'carotte', 'gulerod'],
-    zucchina: ['zucchini', 'courgette', 'squash'], broccoli: ['broccoli'], spinaci: ['spinach', 'epinard', 'spinat'],
-    mandorle: ['almond', 'almonds', 'amande', 'mandler'], noci: ['walnut', 'walnuts', 'noix', 'valnod'],
-    arachidi: ['peanut', 'peanuts', 'cacahuete', 'jordnod'], olio: ['oil', 'huile', 'olie'], oliva: ['olive'],
-    manzo: ['beef', 'boeuf', 'okse'], maiale: ['pork', 'porc', 'svin'], crudo: ['raw', 'cru'], cotto: ['cooked', 'boiled', 'cuit'],
-    bollito: ['boiled', 'cooked', 'bouilli'], grigliato: ['grilled', 'grille'], secco: ['dry', 'dried', 'sec'],
+    pasta:['pasta','spaghetti','macaroni','noodle','noodles','pates'], petto:['breast'], coscia:['thigh'],
+    integrale:['whole wheat','wholewheat','whole grain','wholegrain','wholemeal','complet','complete','complets','completes'],
+    riso:['rice','riz','ris'], pollo:['chicken','poulet','kylling'], tacchino:['turkey','dinde','kalkun'],
+    salmone:['salmon','saumon','laks'], tonno:['tuna','thon','tun'], merluzzo:['cod','cabillaud','torsk'],
+    mela:['apple','pomme','aeble'], mele:['apples'], pera:['pear','poire','paere'], pere:['pears'], banana:['banana','banane','bananas'],
+    arancia:['orange'], arance:['oranges'], mandarino:['mandarin','tangerine','clementine'], mandarini:['mandarins','tangerines','clementines'],
+    pesca:['peach'], pesche:['peaches'], nettarina:['nectarine'], nettarine:['nectarines'], albicocca:['apricot'], albicocche:['apricots'],
+    prugna:['plum'], prugne:['plums'], kiwi:['kiwi','kiwifruit'], mango:['mango'], limone:['lemon'], limoni:['lemons'], lime:['lime'],
+    pompelmo:['grapefruit'], pompelmi:['grapefruits'], melone:['melon','cantaloupe'], meloni:['melons','cantaloupes'],
+    fragola:['strawberry','fraise','jordbaer'], fragole:['strawberries'], mirtillo:['blueberry'], mirtilli:['blueberry','blueberries','myrtille'],
+    uovo:['egg','oeuf','aeg'], uova:['eggs','oeufs','aeg'], latte:['milk','lait','maelk'], yogurt:['yogurt','yoghurt','yaourt'],
+    formaggio:['cheese','fromage','ost'], pane:['bread','pain','brod'], avena:['oat','oats','avoine','havre'], farro:['farro','spelt','épeautre'],
+    lenticchie:['lentil','lentils','lentille','linser'], ceci:['chickpea','chickpeas','pois chiche','kikært'], fagioli:['bean','beans','haricot','bonner'],
+    patata:['potato','pomme de terre','kartoffel'], patate:['potatoes','pommes de terre','kartofler'],
+    pomodoro:['tomato','tomate'], pomodori:['tomatoes','tomates'], cetriolo:['cucumber','concombre'], cetrioli:['cucumbers','concombres'],
+    carota:['carrot','carotte','gulerod'], carote:['carrots'], zucchina:['zucchini','courgette','squash'], zucchine:['zucchini','courgettes'],
+    broccolo:['broccoli'], broccoli:['broccoli'], spinacio:['spinach'], spinaci:['spinach','epinard','spinat'],
+    lattuga:['lettuce'], sedano:['celery'], peperone:['pepper','bell pepper'], peperoni:['peppers','bell peppers'],
+    cipolla:['onion'], cipolle:['onions'], aglio:['garlic'], fungo:['mushroom'], funghi:['mushrooms'],
+    ravanello:['radish'], ravanelli:['radishes'], barbabietola:['beet','beetroot'], barbabietole:['beets','beetroots'],
+    carciofo:['artichoke'], carciofi:['artichokes'], asparago:['asparagus'], asparagi:['asparagus'], avocado:['avocado','avocados'],
+    mandorle:['almond','almonds','amande','mandler'], noci:['walnut','walnuts','noix','valnod'], arachidi:['peanut','peanuts','cacahuete','jordnod'],
+    oliva:['olive'], olive:['olives'], olio:['oil','huile','olie'],
+    manzo:['beef','boeuf','okse'], maiale:['pork','porc','svin'], crudo:['raw','cru'], cotto:['cooked','boiled','cuit'],
+    bollito:['boiled','cooked','bouilli'], grigliato:['grilled','grille'], secco:['dry','dried','sec']
 };
-function queryTokens(q) { const stop = new Set(['di', 'del', 'della', 'dei', 'degli', 'delle', 'a', 'al', 'alla', 'con', 'senza', 'e', 'o']); return norm(q).split(' ').filter(x => x && !stop.has(x)); }
-function tokenAlternatives(token) { return [token, ...(IT_SYNONYMS[token] || [])].map(norm); }
+function queryTokens(q){
+    const stop=new Set(['di','del','della','dei','degli','delle','a','al','alla','con','senza','e','ed','o','un','uno','una','il','lo','la','i','gli','le','da','circa','medio','media','medie','medi','piccolo','piccola','piccoli','piccole','grande','grandi','pezzo','pezzi']);
+    return norm(q).split(' ').filter(x=>x&&!stop.has(x)&&!/^\d+(?:[.,]\d+)?$/.test(x)&&!['g','gr','grammi','grammo','kg','chilogrammi','chilogrammo'].includes(x));
+}
+function tokenAlternatives(token){
+    const t=norm(token),out=new Set(t?[t]:[]);
+    for(const [key,values] of Object.entries(IT_SYNONYMS)){
+        const group=[key,...(values||[])].map(norm).filter(Boolean);
+        if(group.includes(t))for(const x of group)out.add(x);
+    }
+    return [...out];
+}
 // Phrase/token matching is boundary-aware: e.g. Italian “pollo” must not match English “pollock”.
 function hasTerm(text, term) { const t=norm(text), q=norm(term); return Boolean(q) && (t===q || t.startsWith(`${q} `) || t.endsWith(` ${q}`) || t.includes(` ${q} `)); }
+function candidateLexicalEvidence(query,candidate){
+    const tokens=queryTokens(query);
+    if(!tokens.length)return false;
+    const text=norm(`${candidate?.name||''} ${candidate?.officialName||''} ${candidate?.name_en||''} ${(candidate?.aliases||[]).join(' ')}`);
+    return tokens.some(token=>tokenAlternatives(token).some(alt=>hasTerm(text,alt)));
+}
+function candidateExactSemanticMatch(query,candidate){
+    const q=norm(query); if(!q)return false;
+    const names=[candidate?.name,candidate?.officialName,candidate?.name_en,...(candidate?.aliases||[])].map(norm).filter(Boolean);
+    if(names.includes(q))return true;
+    const qt=queryTokens(query);
+    if(qt.length!==1)return false;
+    return tokenAlternatives(qt[0]).some(alt=>names.some(name=>name===alt));
+}
 function phraseAlternatives(q) {
     const n = norm(q);
     const out = [n];
@@ -551,11 +583,11 @@ const DEFAULT_APP_CONFIG={
       manualButton:'Inserisci manualmente',
       gramsLabel:'Grammi',
       gramsPlaceholder:'facoltativi se esiste una porzione standard',
-      notFound:'Nessuna corrispondenza nel Master DB o nei database personali.'
+      notFound:'Nessuna corrispondenza sufficientemente affidabile nel Master DB.'
     },
     recipe:{
-      title:'Voce libera / ricetta',
-      subtitle:'L’AI interpreta alimento, quantità e preparazione; nutrienti e porzioni vengono risolti separatamente.',
+      title:'Voce libera / lista / ricetta',
+      subtitle:'L’AI interpreta il testo; peso e corrispondenza database vengono poi validati dal codice.',
       interpretButton:'Interpreta e verifica',
       aiEstimateButton:'Ricerca con AI',
       dbSearchButton:'Ricerche DB'
@@ -565,6 +597,8 @@ const DEFAULT_APP_CONFIG={
     portionPolicy:{
       catalogFirst:true,
       aiEstimateWhenCatalogMissing:true,
+      validateExplicitMassFromRawText:true,
+      ignoreAiGramsWithoutExplicitMass:true,
       defaultNaturalUnitCount:1,
       defaultNaturalUnitSize:'medium',
       autoApplyCatalog:true,
@@ -573,6 +607,13 @@ const DEFAULT_APP_CONFIG={
       neverAutoApplyKinds:['dish','plate','bowl','serving','pizza','slice_variable','piece_variable','unknown'],
       showAssumption:true
     },
+    databaseMatchPolicy:{
+      requireLexicalEvidence:true,
+      minCandidateScore:42,
+      minAutoSelectScore:92,
+      minAutoSelectGap:14,
+      neverAutoSelectOnMaterialAmbiguity:true
+    },
     ambiguityPolicy:{askOnlyIfMaterial:true}
   },
   standardPortions:{items:[]}
@@ -580,12 +621,10 @@ const DEFAULT_APP_CONFIG={
 function cfgGet(obj,path,fallback){let cur=obj;for(const k of String(path||'').split('.')){if(cur==null||typeof cur!=='object'||!(k in cur))return fallback;cur=cur[k];}return cur===undefined?fallback:cur;}
 async function loadJsonConfig(url,fallback){
   try{
-    const r=await fetch(`${url}?v=${Date.now()}`,{cache:'no-store'});
+    const r=await fetch(url,{cache:'no-store'});
     if(!r.ok)throw new Error(`config ${r.status}`);
     return await r.json();
-  }catch{
-    return fallback;
-  }
+  }catch{return fallback;}
 }
 async function loadAppConfig(){
   const [ui,searchPolicy,standardPortions]=await Promise.all([
@@ -595,58 +634,89 @@ async function loadAppConfig(){
   ]);
   return {ui,searchPolicy,standardPortions};
 }
-function naturalCount(text,def=1){const n=norm(text);const m=n.match(/(?:^| )(\d+(?:[.,]\d+)?)(?: |$)/);if(m)return Number(m[1].replace(',','.'));const words={un:1,uno:1,una:1,due:2,tre:3,quattro:4,cinque:5,sei:6,sette:7,otto:8,nove:9,dieci:10};for(const [w,v] of Object.entries(words))if(hasTerm(n,w))return v;return def;}
-function textSize(text){const n=norm(text);if(['piccolo','piccola','small'].some(x=>hasTerm(n,x)))return 'small';if(['grande','large'].some(x=>hasTerm(n,x)))return 'large';if(['medio','media','medium'].some(x=>hasTerm(n,x)))return 'medium';return 'medium';}
-function findPortionCatalog(text,config,sizeOverride='',countOverride=null){
-  const items=config?.standardPortions?.items||[];
-  const size=sizeOverride&&sizeOverride!=='unspecified'?sizeOverride:textSize(text);
-  const count=Number(countOverride)||naturalCount(text,cfgGet(config,'searchPolicy.portionPolicy.defaultNaturalUnitCount',1));
-  for(const item of items){
-    if(item.kind!=='natural_unit')continue;
-    if(!(item.aliases||[]).some(a=>hasTerm(text,a)))continue;
-    const chosen=item.sizes?.[size]||item.sizes?.[item.defaultSize||'medium']||item.sizes?.medium;
-    if(!chosen||!(Number(chosen.grams)>0)||chosen.autoApply===false||cfgGet(config,'searchPolicy.portionPolicy.autoApplyCatalog',true)===false)continue;
-    return {
-      grams:Number(chosen.grams)*count,
-      count,
-      size,
-      confidence:chosen.confidence||'medium',
-      source:item.source?.name||item.sourceNote||'catalogo porzioni',
-      range:[
-        Number(chosen.p10||chosen.grams)*count,
-        Number(chosen.p90||chosen.grams)*count
-      ],
-      kind:item.kind,
-      catalogId:item.id,
-      assumption:`${count} × ${size==='medium'?'porzione media':size} ≈ ${fmt(Number(chosen.grams)*count,1)} g edibili`
-    };
-  }
+function explicitMassFromText(text){
+  const s=String(text??'').toLowerCase().replace(/(\d),(\d)/g,'$1.$2');
+  const m=s.match(/(?:^|\s|\b)(\d+(?:\.\d+)?)\s*(kg|chilogrammi?|kilogrammi?|g|gr|grammi?|grammo)\b/i);
+  if(!m)return null;
+  const value=Number(m[1]);if(!(value>0))return null;
+  return /^(kg|chilogram|kilogram)/i.test(m[2])?value*1000:value;
+}
+function countFromText(text){
+  let s=String(text??'').toLowerCase().replace(/(\d),(\d)/g,'$1.$2');
+  s=s.replace(/\d+(?:\.\d+)?\s*(?:kg|chilogrammi?|kilogrammi?|g|gr|grammi?|grammo)\b/gi,' ');
+  const n=norm(s);
+  const m=n.match(/(?:^| )(\d+(?:\.\d+)?)(?: |$)/);
+  if(m){const v=Number(m[1]);if(Number.isFinite(v)&&v>0&&v<=100)return v;}
+  const words={un:1,uno:1,una:1,due:2,tre:3,quattro:4,cinque:5,sei:6,sette:7,otto:8,nove:9,dieci:10};
+  for(const [w,v] of Object.entries(words))if(hasTerm(n,w))return v;
   return null;
 }
-function aiPortionUsable(ing,config){
+function naturalCount(text,def=1){return countFromText(text)??def;}
+function textSize(text){const n=norm(text);if(['piccolo','piccola','small'].some(x=>hasTerm(n,x)))return 'small';if(['grande','large'].some(x=>hasTerm(n,x)))return 'large';if(['medio','media','medium'].some(x=>hasTerm(n,x)))return 'medium';return 'medium';}
+function findPortionCatalog(textOrTexts,config,sizeOverride='',countOverride=null){
+  const items=config?.standardPortions?.items||[];
+  const texts=(Array.isArray(textOrTexts)?textOrTexts:[textOrTexts]).map(clean).filter(Boolean);
+  if(!texts.length)return null;
+  const joined=texts.join(' '), size=sizeOverride&&sizeOverride!=='unspecified'?sizeOverride:textSize(joined);
+  const count=Number(countOverride)>0?Number(countOverride):naturalCount(joined,cfgGet(config,'searchPolicy.portionPolicy.defaultNaturalUnitCount',1));
+  let best=null,bestScore=-1;
+  for(const item of items){
+    if(item.kind!=='natural_unit')continue;
+    for(const aliasRaw of [...(item.aliases||[]),item.canonicalName].filter(Boolean)){
+      const alias=norm(aliasRaw);if(!alias)continue;
+      for(const text of texts){
+        const nt=norm(text);let score=0;
+        if(nt===alias)score=10000+alias.length;
+        else if(hasTerm(nt,alias))score=1000+alias.length;
+        else continue;
+        if(score>bestScore){best={item,matchedAlias:aliasRaw};bestScore=score;}
+      }
+    }
+  }
+  if(!best)return null;
+  const item=best.item;
+  const chosen=item.sizes?.[size]||item.sizes?.[item.defaultSize||'medium']||item.sizes?.medium;
+  if(!chosen||!(Number(chosen.grams)>0)||chosen.autoApply===false||cfgGet(config,'searchPolicy.portionPolicy.autoApplyCatalog',true)===false)return null;
+  const perLo=Number(chosen.range_g?.[0]??chosen.p10??chosen.grams),perHi=Number(chosen.range_g?.[1]??chosen.p90??chosen.grams);
+  const sizeLabel=size==='small'?'piccola':size==='large'?'grande':'media';
+  return {
+    grams:Number(chosen.grams)*count,count,size,confidence:chosen.confidence||'medium',
+    source:item.source?.name||item.sourceNote||'catalogo porzioni',
+    range:[perLo*count,perHi*count],kind:item.kind,catalogId:item.id,
+    assumption:`${count} × unità ${sizeLabel} ≈ ${fmt(Number(chosen.grams)*count,1)} g edibili`
+  };
+}
+function aiPortionUsable(ing,config,countOverride=null){
   if(!ing||ing.unit_kind!=='natural_unit'||!Number(ing.estimated_piece_grams))return null;
   const policy=cfgGet(config,'searchPolicy.portionPolicy',{});
   if((policy.neverAutoApplyKinds||[]).includes(ing.unit_kind))return null;
   const confidence=ing.portion_confidence||'none';
   if(!(policy.autoApplyAiConfidence||['high','medium']).includes(confidence))return null;
-  const mid=Number(ing.estimated_piece_grams);
-  const lo=Number(ing.estimated_piece_min_g||mid);
-  const hi=Number(ing.estimated_piece_max_g||mid);
-  const spread=(hi-lo)/Math.max(1,mid);
-  if(spread>Number(policy.maxAiRelativeRange??.55))return null;
-  const count=Number(ing.count)||1;
-  return {
-    grams:mid*count,
-    count,
-    size:ing.size||'medium',
-    confidence,
-    source:'AI · stima porzione',
-    range:[lo*count,hi*count],
-    kind:ing.unit_kind,
-    assumption:`${count} × porzione ${ing.size&&ing.size!=='unspecified'?ing.size:'media'} ≈ ${fmt(mid*count,1)} g (stima AI ${confidence})`
-  };
+  const mid=Number(ing.estimated_piece_grams),lo=Number(ing.estimated_piece_min_g||mid),hi=Number(ing.estimated_piece_max_g||mid);
+  if((hi-lo)/Math.max(1,mid)>Number(policy.maxAiRelativeRange??.55))return null;
+  const count=Number(countOverride)>0?Number(countOverride):(Number(ing.count)||1);
+  const sizeLabel=ing.size==='small'?'piccola':ing.size==='large'?'grande':'media';
+  return {grams:mid*count,count,size:ing.size||'medium',confidence,source:'AI · stima porzione',range:[lo*count,hi*count],kind:ing.unit_kind,assumption:`${count} × unità ${sizeLabel} ≈ ${fmt(mid*count,1)} g (stima AI ${confidence})`};
 }
-function applyPortionPolicy(ing,config){if(Number(ing?.grams)>0)return {...ing,portionResolution:{type:'explicit',grams:Number(ing.grams)}};const cat=findPortionCatalog(`${ing?.raw||''} ${ing?.name||''}`,config,ing?.size,ing?.count);if(cat)return {...ing,grams:cat.grams,requires_weight_confirmation:false,portion_assumption:cat.assumption,portionResolution:{type:'catalog',...cat}};const ai=aiPortionUsable(ing,config);if(ai)return {...ing,grams:ai.grams,requires_weight_confirmation:false,portion_assumption:ai.assumption,portionResolution:{type:'ai_portion',...ai}};return ing;}
+function applyPortionPolicy(ing,config){
+  const fragment=`${ing?.raw||''} ${ing?.quantity_text||''}`.trim();
+  const explicit=explicitMassFromText(fragment);
+  const textCount=countFromText(fragment);
+  const parserCount=Number(ing?.count);
+  const count=textCount||(!explicit&&parserCount>0&&parserCount<=100?parserCount:1);
+  const normalized={...ing,count,grams:null};
+  if(ing?.gramsUserEdited&&Number(ing.grams)>0){const manual=Number(ing.grams);return {...normalized,grams:manual,gramsUserEdited:true,requires_weight_confirmation:false,portion_assumption:`Peso inserito manualmente: ${fmt(manual,1)} g`,portionResolution:{type:'manual',grams:manual,count}};}
+  if(explicit){
+    return {...normalized,grams:explicit,requires_weight_confirmation:false,portion_assumption:`Peso indicato dall’utente: ${fmt(explicit,1)} g`,portionResolution:{type:'explicit',grams:explicit,count}};
+  }
+  const cat=findPortionCatalog([ing?.raw,ing?.name,ing?.lookup_name_en],config,ing?.size,count);
+  if(cat)return {...normalized,grams:cat.grams,requires_weight_confirmation:false,portion_assumption:cat.assumption,portionResolution:{type:'catalog',...cat}};
+  if(cfgGet(config,'searchPolicy.portionPolicy.aiEstimateWhenCatalogMissing',true)!==false){
+    const ai=aiPortionUsable(normalized,config,count);
+    if(ai)return {...normalized,grams:ai.grams,requires_weight_confirmation:false,portion_assumption:ai.assumption,portionResolution:{type:'ai_portion',...ai}};
+  }
+  return {...normalized,requires_weight_confirmation:true};
+}
 const masterChunkCache=new Map();
 const MASTER_MICRO_SPECS={
   'Vitamina A':{ids:['vitamin_a_rae'],unit:'µg'},
@@ -926,7 +996,7 @@ function Home(){
   }
   async function quickAdd(r){
     let useGrams=Number(grams); let portion=null;
-    if(!(useGrams>0)){portion=findPortionCatalog(`${quickQuery} ${r?.name||''}`,appConfig);if(portion)useGrams=portion.grams;}
+    if(!(useGrams>0)){portion=findPortionCatalog([quickQuery,r?.name],appConfig,'',countFromText(quickQuery)||1);if(portion)useGrams=portion.grams;}
     if(!(useGrams>0)){setAiMsg('Peso non definito: indica i grammi oppure usa “Ricerca con AI” per una porzione naturale/standard.');return;}
     if(r.resultType==='personal'){addFoodLog(r.id,useGrams,portion?{portionAssumption:portion.assumption}:{});setQuickQuery('');setGrams('');if(portion)setAiMsg(`Porzione standard applicata: ${portion.assumption}.`);return;}
     if(r.resultType==='master'){
@@ -944,21 +1014,41 @@ function Home(){
   async function createWithAI(name){ setAiBusy('search'); setAiMsg(''); try{ let f={...emptyFood(),name:name.trim(),aliases:[name.trim()]}; const ai=await aiEnrich(f,SAFE_AI_DEFAULT); f=mergeAiFood(f,ai); for(const x of MICRO_CATALOG) if(!f.nutrientStatus[x.name])f.nutrientStatus[x.name]={status:'nd',reason:'N/D: non stimato in assenza di una fonte strutturata'}; setFoodDraft(f); setTab('alimenti'); }catch(e){ setAiMsg(e.message); }finally{ setAiBusy(''); } }
   async function enrichDraft(){ if(!foodDraft?.name) return; setAiBusy('draft'); setAiMsg(''); try{ const selected=(foodDraft.aiRequested||[]).slice(0,8); setFoodDraft(mergeAiFood(foodDraft,await aiEnrich(foodDraft,selected))); }catch(e){ setAiMsg(e.message); }finally{ setAiBusy(''); } }
   function toggleAiRequest(name){ const a=[...(foodDraft.aiRequested||[])],i=a.indexOf(name); if(i>=0)a.splice(i,1); else if(a.length<8)a.push(name); else {setAiMsg('Per controllo qualità puoi richiedere al massimo 8 micronutrienti per volta.');return;} setFoodDraft({...foodDraft,aiRequested:a}); }
-  function ingredientCandidates(name,ambiguity='none'){
-    const personal=searchPersonalFoods(name,foods,3).map(x=>({...x,candidateKey:`p:${x.id}`}));
-    const master=searchMasterIndex(name,masterIndex,5).map(x=>({...x,candidateKey:`m:${x.id}`}));
-    const candidates=[...personal,...master].sort((a,b)=>b.score-a.score).slice(0,6);
-    let selectedKey=''; if(ambiguity!=='needs_detail'&&candidates.length){const top=candidates[0],second=candidates[1];if(top.score>=75&&(!second||top.score-second.score>=8))selectedKey=top.candidateKey;}
+  function ingredientCandidates(ingredient,ambiguity='none'){
+    const ing=typeof ingredient==='string'?{name:ingredient}:ingredient||{};
+    const queries=[ing.name,ing.lookup_name_en].map(clean).filter(Boolean).filter((x,i,a)=>a.findIndex(y=>norm(y)===norm(x))===i);
+    const policy=cfgGet(appConfig,'searchPolicy.databaseMatchPolicy',{});
+    const byKey=new Map();
+    for(const q of queries){
+      for(const x of searchPersonalFoods(q,foods,5)){
+        const candidate={...x,candidateKey:`p:${x.id}`,matchedQuery:q};const prev=byKey.get(candidate.candidateKey);if(!prev||candidate.score>prev.score)byKey.set(candidate.candidateKey,candidate);
+      }
+      for(const x of searchMasterIndex(q,masterIndex,8)){
+        const candidate={...x,candidateKey:`m:${x.id}`,matchedQuery:q};const prev=byKey.get(candidate.candidateKey);if(!prev||candidate.score>prev.score)byKey.set(candidate.candidateKey,candidate);
+      }
+    }
+    let candidates=[...byKey.values()];
+    if(policy.requireLexicalEvidence!==false)candidates=candidates.filter(c=>queries.some(q=>candidateLexicalEvidence(q,c)));
+    const minScore=Number(policy.minCandidateScore??42);
+    candidates=candidates.filter(c=>Number(c.score)>=minScore).sort((a,b)=>b.score-a.score).slice(0,8);
+    let selectedKey='';
+    const materialAmbiguity=(ambiguity||ing.ambiguity)==='needs_detail';
+    if(!materialAmbiguity&&candidates.length){
+      const top=candidates[0],second=candidates[1],exact=queries.some(q=>candidateExactSemanticMatch(q,top));
+      const minAuto=Number(policy.minAutoSelectScore??92),gap=Number(policy.minAutoSelectGap??14);
+      if(exact || (top.score>=minAuto&&(!second||top.score-second.score>=gap)))selectedKey=top.candidateKey;
+    }
     return {candidates,selectedKey};
   }
   async function interpretText(text,context='diary'){
     const parsed=await parseFoodEntry(text,context);
     const ingredients=(parsed.ingredients||[]).map(x=>{
       const weighted=applyPortionPolicy(x,appConfig);
-      return {...weighted,...ingredientCandidates(weighted.name,weighted.ambiguity)};
+      return {...weighted,...ingredientCandidates(weighted,weighted.ambiguity)};
     });
     const unresolvedErrors=(parsed.errors||[]).filter(err=>!ingredients.some(ing=>Number(ing.grams)>0&&String(err).toLowerCase().includes(String(ing.name||'').toLowerCase())));
-    return {...parsed,ingredients,errors:unresolvedErrors,yieldOverride:parsed.final_recipe_weight_g||''};
+    const mode=parsed.mode==='recipe'?'recipe':ingredients.length>1?'multi':'single';
+    return {...parsed,mode,ingredients,errors:unresolvedErrors,yieldOverride:parsed.final_recipe_weight_g||''};
   }
   async function interpretRecipe(){
     if(!recipeText.trim())return;setRecipeBusy('parse');setRecipeMsg('');setRecipeReview(null);
@@ -969,30 +1059,68 @@ function Home(){
     if(!quickQuery.trim())return;setRecipeBusy('parse');setRecipeMsg('');setRecipeReview(null);try{const review=await interpretText(quickQuery,'quick');setRecipeText(quickQuery);setRecipeReview(review);if(review.errors?.length)setRecipeMsg(review.errors.join(' · '));}catch(e){setRecipeMsg(e.message)}finally{setRecipeBusy('')}
   }
   async function searchFoodsWithAI(){
-    if(!query.trim())return;setAiBusy('search-ai');setAiMsg('');setSearchError('');try{const review=await interpretText(query,'search');const ing=review.ingredients?.[0];if(!ing)throw new Error('L’AI non ha individuato un alimento.');const master=searchMasterIndex(ing.name,masterIndex,30);const local=searchLocalDataset(ing.name,datasets,12).map(f=>({...f,resultType:'local'}));setResults([...master,...local].slice(0,40));const assumption=ing.portion_assumption||ing.assumptions?.join(' · ');setAiMsg(`Interpretato come “${ing.name}”${assumption?` · ${assumption}`:''}.`);if(!master.length&&!local.length)setSearchError('Alimento interpretato, ma non trovato nel Master DB: puoi aprire una scheda manuale o stimata con AI.');}catch(e){setSearchError(e.message)}finally{setAiBusy('')}
+    if(!query.trim())return;setAiBusy('search-ai');setAiMsg('');setSearchError('');
+    try{
+      const review=await interpretText(query,'search');const ing=review.ingredients?.[0];if(!ing)throw new Error('L’AI non ha individuato un alimento.');
+      const queries=[ing.name,ing.lookup_name_en].map(clean).filter(Boolean).filter((x,i,a)=>a.findIndex(y=>norm(y)===norm(x))===i);
+      const byKey=new Map();
+      for(const q of queries){
+        for(const r of searchMasterIndex(q,masterIndex,30)){const k=`m:${r.id}`,prev=byKey.get(k);if(!prev||r.score>prev.score)byKey.set(k,r);}
+        for(const r0 of searchLocalDataset(q,datasets,12)){const r={...r0,resultType:'local'},k=`l:${r.localId||r.sourceId||r.id}`,prev=byKey.get(k);if(!prev||r.score>prev.score)byKey.set(k,r);}
+      }
+      const policy=cfgGet(appConfig,'searchPolicy.databaseMatchPolicy',{});
+      let found=[...byKey.values()];
+      if(policy.requireLexicalEvidence!==false)found=found.filter(r=>queries.some(q=>candidateLexicalEvidence(q,r)));
+      found=found.filter(r=>Number(r.score)>=Number(policy.minCandidateScore??42)).sort((a,b)=>b.score-a.score).slice(0,40);
+      setResults(found);
+      const assumption=ing.portion_assumption;setAiMsg(`Interpretato come “${ing.name}”${assumption?` · ${assumption}`:''}.`);
+      if(!found.length)setSearchError('Alimento interpretato, ma nessuna corrispondenza database sufficientemente affidabile.');
+    }catch(e){setSearchError(e.message)}finally{setAiBusy('')}
   }
   function updateRecipeIngredient(i,patch){const rr=structuredClone(recipeReview);rr.ingredients[i]={...rr.ingredients[i],...patch};setRecipeReview(rr);}
-  function rerunRecipeCandidates(i){const ing=recipeReview.ingredients[i],r=ingredientCandidates(ing.name,'none');updateRecipeIngredient(i,r);}
+  function rerunRecipeCandidates(i){const ing=recipeReview.ingredients[i],r=ingredientCandidates(ing,'none');updateRecipeIngredient(i,r);}
   async function estimateRecipeIngredient(i){
-    const ing=recipeReview.ingredients[i];setRecipeBusy(`ai-${i}`);setRecipeMsg('');try{let f={...emptyFood(),name:ing.name,aliases:[ing.name]};f=mergeAiFood(f,await aiEnrich(f,SAFE_AI_DEFAULT));setFoods(p=>[...p,f]);const rr=structuredClone(recipeReview);rr.ingredients[i].candidates=[{...f,resultType:'personal',candidateKey:`p:${f.id}`,score:999}];rr.ingredients[i].selectedKey=`p:${f.id}`;setRecipeReview(rr);}catch(e){setRecipeMsg(e.message)}finally{setRecipeBusy('')}
+    const ing=recipeReview.ingredients[i];setRecipeBusy(`ai-${i}`);setRecipeMsg('');
+    try{
+      const parsed=await parseFoodEntry(ing.name,'search');const raw=parsed.ingredients?.[0];if(!raw)throw new Error('L’AI non ha reinterpretato l’alimento.');
+      const weighted=applyPortionPolicy({...ing,...raw,grams:ing.grams||raw.grams},appConfig);const match=ingredientCandidates(weighted,weighted.ambiguity);
+      updateRecipeIngredient(i,{...weighted,...match});
+      if(!match.candidates.length)setRecipeMsg(`AI: “${weighted.name}” interpretato, ma nessuna corrispondenza DB affidabile.`);
+    }catch(e){setRecipeMsg(e.message)}finally{setRecipeBusy('')}
   }
   async function commitRecipe(){
-    if(!recipeReview)return;setRecipeBusy('commit');setRecipeMsg('');try{
-      const bad=recipeReview.ingredients.filter(x=>!(Number(x.grams)>0)||!x.selectedKey);if(bad.length)throw new Error('Completa il peso in grammi e seleziona un alimento per ogni ingrediente evidenziato.');
-      const ingredientSum=recipeReview.ingredients.reduce((a,x)=>a+Number(x.grams),0),yieldG=Number(recipeReview.yieldOverride)||ingredientSum,consumed=Number(recipeReview.consumed_grams)||yieldG;if(!(yieldG>0)||!(consumed>0))throw new Error('Peso totale/porzione non valido.');
-      const factor=consumed/yieldG,groupId=newId(),created=[];const newLogs=[];
-      for(const ing of recipeReview.ingredients){
-        let f;if(ing.selectedKey.startsWith('p:'))f=foods.find(x=>x.id===ing.selectedKey.slice(2))||created.find(x=>x.id===ing.selectedKey.slice(2));
-        else {const id=Number(ing.selectedKey.slice(2)),row=(ing.candidates||[]).find(x=>Number(x.id)===id)||masterIndex.find(x=>Number(x.id)===id);f=foods.find(x=>String(x.masterId||'')===String(id))||created.find(x=>String(x.masterId||'')===String(id));if(!f){const detail=await loadMasterDetail(row);f=masterToFood(row,detail,masterManifest,ing.name);created.push(f);}}
-        if(!f)throw new Error(`Alimento non risolto: ${ing.name}`);
-        newLogs.push({id:newId(),date:selectedDate,foodId:f.id,grams:Number(ing.grams)*factor,recipeGroupId:groupId,recipeName:recipeReview.recipe_name||'Ricetta',recipeIngredient:ing.name});
+    if(!recipeReview)return;setRecipeBusy('commit');setRecipeMsg('');
+    try{
+      const bad=recipeReview.ingredients.filter(x=>!(Number(x.grams)>0)||!x.selectedKey||x.ambiguity==='needs_detail');
+      if(bad.length)throw new Error('Completa il peso e seleziona una corrispondenza database affidabile per ogni alimento evidenziato.');
+      const isRecipe=recipeReview.mode==='recipe';
+      const ingredientSum=recipeReview.ingredients.reduce((a,x)=>a+Number(x.grams),0);
+      let factor=1,consumed=ingredientSum,groupId=null;
+      if(isRecipe){
+        const yieldG=Number(recipeReview.yieldOverride)||ingredientSum;consumed=Number(recipeReview.consumed_grams)||yieldG;
+        if(!(yieldG>0)||!(consumed>0))throw new Error('Peso totale/porzione non valido.');
+        factor=consumed/yieldG;groupId=newId();
       }
-      if(created.length)setFoods(p=>[...p,...created.filter(f=>!p.some(x=>x.id===f.id||String(x.masterId||'')===String(f.masterId||'')))]);setLogs(p=>[...p,...newLogs]);setRecipeText('');setRecipeReview(null);setRecipeMsg(`Ricetta aggiunta: ${fmt(consumed)} g registrati nel giorno selezionato.`);
+      const created=[],newLogs=[];
+      for(const ing of recipeReview.ingredients){
+        let f;
+        if(ing.selectedKey.startsWith('p:'))f=foods.find(x=>x.id===ing.selectedKey.slice(2))||created.find(x=>x.id===ing.selectedKey.slice(2));
+        else {
+          const id=Number(ing.selectedKey.slice(2)),row=(ing.candidates||[]).find(x=>Number(x.id)===id)||masterIndex.find(x=>Number(x.id)===id);
+          f=foods.find(x=>String(x.masterId||'')===String(id))||created.find(x=>String(x.masterId||'')===String(id));
+          if(!f){if(!row)throw new Error(`Corrispondenza Master non trovata: ${ing.name}`);const detail=await loadMasterDetail(row);f=masterToFood(row,detail,masterManifest,ing.name);created.push(f);}
+        }
+        if(!f)throw new Error(`Alimento non risolto: ${ing.name}`);
+        newLogs.push({id:newId(),date:selectedDate,foodId:f.id,grams:Number(ing.grams)*factor,...(isRecipe?{recipeGroupId:groupId,recipeName:recipeReview.recipe_name||'Ricetta',recipeIngredient:ing.name}:{}),...(ing.portion_assumption?{portionAssumption:ing.portion_assumption}:{})});
+      }
+      if(created.length)setFoods(p=>[...p,...created.filter(f=>!p.some(x=>x.id===f.id||String(x.masterId||'')===String(f.masterId||'')))]);
+      setLogs(p=>[...p,...newLogs]);setRecipeText('');setRecipeReview(null);
+      setRecipeMsg(isRecipe?`Ricetta aggiunta: ${fmt(consumed)} g registrati nel giorno selezionato.`:newLogs.length>1?`Alimenti aggiunti: ${newLogs.length} voci registrate nel giorno selezionato.`:'Alimento aggiunto nel giorno selezionato.');
     }catch(e){setRecipeMsg(e.message)}finally{setRecipeBusy('')}
   }
   async function downloadMasterOffline(){
     if(!masterManifest||!('caches' in window)){setMasterOfflineMsg('Cache offline non disponibile in questo browser.');return;}
-    const count=Number(masterManifest.chunk_count||0),cache=await caches.open('nutritrace-v21-runtime-audited');
+    const count=Number(masterManifest.chunk_count||0),cache=await caches.open('nutritrace-v22-runtime-audited');
     try{
       if(navigator.storage?.persist) navigator.storage.persist().catch(()=>{});
       for(let i=0;i<count;i++){
@@ -1019,7 +1147,7 @@ function Home(){
   );
 
   return h('main',null,
-    h('header',{className:'hero'},h('div',null,h('div',{className:'eyebrow'},'DIARIO NUTRIZIONALE PERSONALE · V2.1 AUDITED RUNTIME'),h('h1',null,'NutriTrace'),h('p',null,'Diario per data, Master Food DB multi-fonte, N/D espliciti e AI usata come interprete e ricerca assistita.')),h('div',{className:'privacy'},'● Local-first · Master DB primario · AI tracciata')),
+    h('header',{className:'hero'},h('div',null,h('div',{className:'eyebrow'},'DIARIO NUTRIZIONALE PERSONALE · V2.2 SMART PORTIONS'),h('h1',null,'NutriTrace'),h('p',null,'Diario per data, Master Food DB multi-fonte, N/D espliciti e AI usata come interprete e ricerca assistita.')),h('div',{className:'privacy'},'● Local-first · Master DB primario · AI tracciata')),
     h('nav',{className:'tabs'},['oggi','ricerca','alimenti','obiettivi','dati'].map(x=>h('button',{key:x,className:tab===x?'active':'',onClick:()=>setTab(x)},x[0].toUpperCase()+x.slice(1)))),
 
     tab==='oggi'&&h('section',null,
@@ -1031,32 +1159,35 @@ function Home(){
         quickSuggestions.length?h('div',{className:'quickSuggestions'},quickSuggestions.map(r=>h('button',{className:'quickChoice',key:r.resultType==='master'?`m:${r.id}`:(r.id||r.localId),onClick:()=>quickAdd(r),disabled:recipeBusy==='quick'},h('span',null,h('b',null,r.name),h('small',null,r.resultType==='personal'?'Archivio personale':r.resultType==='master'?`Master DB · ${r.sc||1} ${Number(r.sc||1)===1?'fonte':'fonti'} · ${(r.sources||[]).join(', ')}`:(SOURCE_META[r.source]?.name||'Database locale'))),h('strong',null,recipeBusy==='quick'?'…':'+ Aggiungi')))):quickQuery.trim()?h('div',{className:'emptyAction'},h('span',{className:'muted'},ui('search.notFound','Nessuna corrispondenza nel Master DB o nei database personali.')),h('div',{className:'inlineActions'},h('button',{className:'ghost',onClick:()=>{setFoodDraft({...emptyFood(),name:quickQuery.trim(),aliases:[quickQuery.trim()]});setTab('alimenti');}},ui('search.manualButton','Inserisci manualmente')))):null,
         quickQuery.trim()&&h('div',{className:'inlineActions'},h('button',{className:'cta',disabled:recipeBusy==='parse',onClick:quickSearchWithAI},recipeBusy==='parse'?ui('search.aiWorking','Ricerca AI…'):ui('search.aiButton','Ricerca con AI'))),
         h('div',{className:'recipeComposer'},
-          h('div',{className:'recipeComposerHead'},h('div',null,h('b',null,ui('recipe.title','Ricerca con AI / ricetta')),h('p',{className:'muted tiny'},ui('recipe.subtitle','Scrivi alimenti, quantità o una ricetta. L’AI interpreta il testo; nutrienti e porzioni standard vengono risolti separatamente.'))),h('span',{className:'aiRole'},'AI = interprete')),
+          h('div',{className:'recipeComposerHead'},h('div',null,h('b',null,ui('recipe.title','Voce libera / lista / ricetta')),h('p',{className:'muted tiny'},ui('recipe.subtitle','L’AI interpreta il testo; peso e corrispondenza database vengono poi validati dal codice.'))),h('span',{className:'aiRole'},'AI = interprete')),
           h('textarea',{rows:3,value:recipeText,onChange:e=>setRecipeText(e.target.value),placeholder:'es. Ho mangiato 200 g di torta fatta con 100 g zucchero, 200 g farina 00, 50 g cacao e …'}),
           h('div',{className:'inlineActions'},h('button',{className:'cta',onClick:interpretRecipe,disabled:recipeBusy==='parse'||!recipeText.trim()},recipeBusy==='parse'?'Interpretazione…':ui('recipe.interpretButton','Interpreta e verifica')),h('small',{className:'muted'},'Pesi mancanti o alimenti realmente ambigui vengono fermati prima del calcolo.')),
-          recipeMsg&&h('p',{className:recipeMsg.startsWith('Ricetta aggiunta')?'statusMsg':'errorText'},recipeMsg),
+          recipeMsg&&h('p',{className:/^(Ricetta aggiunta|Alimenti aggiunti|Alimento aggiunto)/.test(recipeMsg)?'statusMsg':'errorText'},recipeMsg),
           recipeReview&&h('div',{className:'recipeReview'},
-            h('div',{className:'recipeSummary'},h('div',null,h('b',null,recipeReview.recipe_name||'Voce libera'),h('small',null,recipeReview.mode==='recipe'?'Ricetta composta':'Alimento singolo')),h('div',null,h('small',null,'Porzione dichiarata'),h('strong',null,recipeReview.consumed_grams?`${fmt(recipeReview.consumed_grams)} g`:'non specificata'))),
+            h('div',{className:'recipeSummary'},h('div',null,h('b',null,recipeReview.recipe_name||'Voce libera'),h('small',null,recipeReview.mode==='recipe'?'Ricetta composta':recipeReview.mode==='multi'?'Lista di alimenti':'Alimento singolo')),h('div',null,recipeReview.mode==='recipe'?h(React.Fragment,null,h('small',null,'Porzione dichiarata'),h('strong',null,recipeReview.consumed_grams?`${fmt(recipeReview.consumed_grams)} g`:'non specificata')):h(React.Fragment,null,h('small',null,'Alimenti interpretati'),h('strong',null,String(recipeReview.ingredients?.length||0))))),
             (recipeReview.errors||[]).length?h('div',{className:'recipeErrors'},(recipeReview.errors||[]).map((x,i)=>h('div',{key:i},`• ${x}`))):null,
             h('div',{className:'recipeIngredients'},(recipeReview.ingredients||[]).map((ing,i)=>{
               const problem=!(Number(ing.grams)>0)||!ing.selectedKey||ing.ambiguity==='needs_detail';
               return h('div',{className:`recipeIngredient ${problem?'problem':''}`,key:`ing-${i}`},
-                h('div',{className:'recipeIngredientTop'},h('b',null,`Ingrediente ${i+1}`),problem?h('span',{className:'coverageTag warn'},'da verificare'):h('span',{className:'coverageTag ok'},'risolto')),
+                h('div',{className:'recipeIngredientTop'},h('b',null,`${recipeReview.mode==='recipe'?'Ingrediente':'Alimento'} ${i+1}`),problem?h('span',{className:'coverageTag warn'},'da verificare'):h('span',{className:'coverageTag ok'},'risolto')),
                 h('div',{className:'recipeGrid'},
                   h('label',null,'Alimento interpretato',h('input',{value:ing.name||'',onChange:e=>updateRecipeIngredient(i,{name:e.target.value,ambiguity:'none',ambiguity_reason:'',selectedKey:''})})),
-                  h('label',null,'Grammi',h('input',{type:'number',min:'0',step:'any',value:ing.grams??'',placeholder:ing.quantity_text||'peso richiesto',onChange:e=>updateRecipeIngredient(i,{grams:e.target.value})})),
+                  h('label',null,'Grammi',h('input',{type:'number',min:'0',step:'any',value:ing.grams??'',placeholder:ing.quantity_text||'peso richiesto',onChange:e=>updateRecipeIngredient(i,{grams:e.target.value,gramsUserEdited:true})})),
                   h('label',{className:'candidateSelect'},'Corrispondenza database',h('select',{value:ing.selectedKey||'',onChange:e=>updateRecipeIngredient(i,{selectedKey:e.target.value,ambiguity:e.target.value?'none':ing.ambiguity})},h('option',{value:''},'— seleziona —'),...(ing.candidates||[]).map(c=>h('option',{key:c.candidateKey,value:c.candidateKey},`${c.name} · ${c.resultType==='master'?`Master ${c.sc||1} fonti`:'personale'}`))))
                 ),
-                ing.preparation&&h('small',{className:'muted'},`Preparazione: ${ing.preparation}`),
+                ing.preparation&&norm(ing.preparation)!=='none'&&h('small',{className:'muted'},`Preparazione: ${ing.preparation}`),
                 ing.portion_assumption&&h('small',{className:'muted portionAssumption'},`Porzione applicata: ${ing.portion_assumption}`),
                 ing.ambiguity_reason&&h('p',{className:'errorText tiny'},ing.ambiguity_reason),
                 h('div',{className:'recipeActions'},h('button',{className:'ghost',onClick:()=>rerunRecipeCandidates(i)},ui('recipe.dbSearchButton','Ricerche DB')),!(ing.candidates||[]).length?h('button',{className:'ghost',disabled:recipeBusy===`ai-${i}`,onClick:()=>estimateRecipeIngredient(i)},recipeBusy===`ai-${i}`?'Stima…':ui('recipe.aiEstimateButton','Ricerca con AI')):null)
               );
             })),
-            h('div',{className:'recipeFinalize'},
+            recipeReview.mode==='recipe'?h('div',{className:'recipeFinalize'},
               h('label',null,'Peso finale ricetta (g, consigliato se cotta)',h('input',{type:'number',min:'0',step:'any',value:recipeReview.yieldOverride??'',placeholder:'se vuoto = somma ingredienti',onChange:e=>setRecipeReview({...recipeReview,yieldOverride:e.target.value})})),
-              h('p',{className:'muted tiny'},'Se non indichi il peso finale, viene usata la somma dei grammi degli ingredienti: per cotture con perdita/assorbimento d’acqua è solo un’approssimazione di resa, non un dato inventato dall’AI.'),
-              h('button',{className:'cta',onClick:commitRecipe,disabled:recipeBusy==='commit'},recipeBusy==='commit'?'Calcolo…':`Aggiungi al ${shortDate(selectedDate)}`)
+              h('p',{className:'muted tiny'},'Se non indichi il peso finale, viene usata la somma dei grammi degli ingredienti: per cotture con perdita/assorbimento d’acqua è solo un’approssimazione di resa.'),
+              h('button',{className:'cta',onClick:commitRecipe,disabled:recipeBusy==='commit'},recipeBusy==='commit'?'Calcolo…':`Aggiungi ricetta al ${shortDate(selectedDate)}`)
+            ):h('div',{className:'recipeFinalize'},
+              h('p',{className:'muted tiny'},recipeReview.mode==='multi'?'Ogni alimento verrà registrato separatamente con il proprio peso.':'L’alimento verrà registrato con il peso risolto sopra.'),
+              h('button',{className:'cta',onClick:commitRecipe,disabled:recipeBusy==='commit'},recipeBusy==='commit'?'Aggiunta…':recipeReview.mode==='multi'?`Aggiungi tutti al ${shortDate(selectedDate)}`:`Aggiungi al ${shortDate(selectedDate)}`)
             )
           )
         )
@@ -1081,7 +1212,7 @@ function Home(){
         datasetMeta.length?h('div',{className:'sourceBadges'},datasetMeta.map(m=>h('span',{className:'online',key:m.id},`${m.name} · ${datasets[m.id]?.length||0}`))):h('p',{className:'muted tiny'},'Nessun database personale aggiuntivo: il Master DB integrato resta disponibile.'),
         searchError&&h('p',{className:'errorText'},searchError),
         results.map(r=>h('div',{className:'searchResult',key:r.resultType==='master'?`m:${r.id}`:(r.localId||r.sourceId||r.id)},h('div',null,h('b',null,r.name),h('small',null,r.resultType==='master'?`NutriTrace Master DB · ${r.sc||1} ${Number(r.sc||1)===1?'fonte':'fonti'} · ${(r.sources||[]).join(', ')}`:`${SOURCE_META[r.source]?.name||'Database locale'}${r.brand?` · ${r.brand}`:''}`)),h('button',{className:'ghost',onClick:()=>openResult(r,query)},r.resultType==='master'?'Apri Master':'Apri / importa'))),
-        query.trim()&&!results.length&&h('div',{className:'aiFallback'},h('div',null,h('b',null,'Alimento non trovato nel database?'),h('p',{className:'muted'},'Puoi usare la Ricerca con AI per interpretare meglio il nome/porzione oppure creare una scheda stimata se il Master non contiene davvero l’alimento.')),h('div',{className:'inlineActions'},h('button',{className:'ghost',disabled:aiBusy==='search-ai',onClick:searchFoodsWithAI},ui('search.aiButton','Ricerca con AI')),h('button',{className:'cta',disabled:aiBusy==='search',onClick:()=>createWithAI(query)},aiBusy==='search'?'Stima in corso…':'Crea scheda con AI'))),
+        query.trim()&&!results.length&&h('div',{className:'aiFallback'},h('div',null,h('b',null,'Nessuna corrispondenza affidabile?'),h('p',{className:'muted'},'Usa la Ricerca con AI per reinterpretare il nome. Se il Master non contiene davvero l’alimento, puoi inserirlo manualmente senza inventare valori nutrizionali.')),h('div',{className:'inlineActions'},h('button',{className:'ghost',disabled:aiBusy==='search-ai',onClick:searchFoodsWithAI},ui('search.aiButton','Ricerca con AI')),h('button',{className:'cta',onClick:()=>{setFoodDraft({...emptyFood(),name:query.trim(),aliases:[query.trim()]});setTab('alimenti');}},ui('search.manualButton','Inserisci manualmente')))),
         aiMsg&&h('p',{className:'errorText'},aiMsg)
       )
     ),

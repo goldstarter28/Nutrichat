@@ -1,0 +1,83 @@
+NutriChat / NutriTrace V2.2 — Smart Portions & Safe AI Parsing
+===============================================================
+
+SOSTITUISCI NELLA REPO ESATTAMENTE QUESTI FILE:
+
+/app.js
+/sw.js
+/api/parse-food-entry.js
+/config/standard-portions.json
+/config/search-policy.json
+/config/ui.it.json
+
+Non devi modificare il Master DB e non devi ricreare le variabili Vercel.
+
+Commit consigliato:
+release: NutriChat v2.2 smart portions and safe AI parsing
+
+COSA CAMBIA IN V2.2
+--------------------
+- Gli articoli e i conteggi non possono diventare grammi per errore.
+  "una banana" => count=1, grams non derivati dall'AI; catalogo => 118 g.
+  "2 cetrioli" => count=2, mai 2 g.
+- I grammi AI vengono ignorati se nel frammento originale non esiste una vera espressione g/kg.
+- I grammi digitati manualmente dall'utente restano sempre validi.
+- Lista di alimenti e ricetta sono due modalità diverse.
+  "banana, 2 uova e cetriolo" => lista multi, non ricetta.
+- Il matching database richiede evidenza lessicale e soglie più conservative.
+  Un cetriolo non viene auto-selezionato come basilico solo perché è il candidato meno peggio.
+- Ricerca semantica IT<->EN ampliata per frutta, verdura e alimenti comuni.
+- Catalogo porzioni V2.2 separato dal Master Food DB.
+- Se una unità naturale manca dal catalogo, la stima AI è ammessa solo con confidence/range accettabili.
+- Piatti, bowl, serving, pizza, bistecche/pezzi variabili ecc. non vengono auto-pesati.
+- Il parser OpenRouter ha retry specifici per output vuoto / finish_reason=length e riduzione reasoning.
+- Service Worker portato a cache V2.2 e include i tre file config per uso offline.
+
+PORTION KNOWLEDGE BASE V2.2
+---------------------------
+Versione: 2.2.0
+Voci alimento/porzione: 246
+Conversioni di misura conservate: 313
+Voci natural-unit: 66
+
+Fonte primaria: USDA FoodData Central Foundation Foods, release April 2026,
+più seed di compatibilità già usati in NutriChat per alcune unità comuni.
+Il catalogo NON inventa una porzione standard per ogni cibo: le unità troppo variabili
+restano non automatiche e gli alimenti naturali mancanti possono usare il fallback AI controllato.
+
+TEST STATICI ESEGUITI
+---------------------
+- node --check app.js: OK
+- node --check api/parse-food-entry.js: OK
+- node --check sw.js: OK
+- JSON config: OK
+- "una banana" con grams AI=1 -> 118 g da catalogo: PASS
+- "2 pesche" -> 322 g da catalogo: PASS
+- "un'arancia" -> 140 g da catalogo: PASS
+- "un mandarino di 50g" -> 50 g espliciti: PASS
+- "2 cetrioli" con stima AI 150 g/cad -> 300 g, mai 2 g: PASS
+- grammi manuali (es. banana 95 g inseriti dall'utente) -> 95 g: PASS
+- "un piatto di pasta" -> nessun peso automatico: PASS
+- cetriolo vs basilico -> evidenza lessicale FALSE: PASS
+- cetriolo vs cucumber -> evidenza lessicale TRUE: PASS
+- parser: "una banana" con grams AI=1 -> grams null: PASS
+- parser: "2 cetrioli" con grams AI=2 -> grams null: PASS
+- parser: "mandarino di 50g" -> grams 50: PASS
+- parser: preparation="none" -> stringa vuota: PASS
+
+TEST DA FARE DOPO IL DEPLOY VERCEL
+----------------------------------
+1. banana
+2. una banana
+3. 2 uova
+4. un'arancia
+5. 2 pesche
+6. un mandarino di 50 g
+7. 2 cetrioli
+8. una banana, 2 uova e un cetriolo
+9. una banana, 2 uova e un mandarino di 50 g
+10. un piatto di pasta
+11. una bistecca
+
+Dopo che Vercel è Ready, fai un reload completo; se usi la PWA installata su iPad,
+chiudila e riaprila per permettere al nuovo service worker V2.2 di prendere controllo.

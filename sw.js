@@ -1,6 +1,7 @@
-const CACHE='nutritrace-v21-runtime-audited';
+const CACHE='nutritrace-v22-runtime-audited';
 const CORE=[
   './','./index.html','./app.js','./style.css','./manifest.webmanifest','./icon-192.png','./icon-512.png',
+  './config/ui.it.json','./config/search-policy.json','./config/standard-portions.json',
   './data/master/manifest.json','./data/master/index.json'
 ];
 const VENDOR=[
@@ -21,7 +22,7 @@ self.addEventListener('activate',event=>{
   self.clients.claim();
 });
 self.addEventListener('fetch',event=>{
-  if(event.request.method!=='GET') return; // API POSTs always go to Vercel functions.
+  if(event.request.method!=='GET') return;
   event.respondWith((async()=>{
     const url=new URL(event.request.url);
     const cached=await caches.match(event.request);
@@ -30,7 +31,7 @@ self.addEventListener('fetch',event=>{
       const response=await fetch(event.request);
       if(response.ok){
         const isSameOrigin=url.origin===self.location.origin;
-        const isMasterChunk=isSameOrigin && url.pathname.includes('/data/master/chunks/');
+        const isMasterChunk=isSameOrigin&&url.pathname.includes('/data/master/chunks/');
         if(isSameOrigin||isMasterChunk){const copy=response.clone();caches.open(CACHE).then(cache=>cache.put(event.request,copy)).catch(()=>{});}
       }
       return response;
