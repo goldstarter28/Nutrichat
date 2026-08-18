@@ -1,0 +1,95 @@
+{
+  "version": "1.0",
+  "basis": "edible_mass_g",
+  "items": [
+    {
+      "id": "banana_raw",
+      "aliases": [
+        "banana",
+        "banane",
+        "banana cruda",
+        "banana raw"
+      ],
+      "kind": "natural_unit",
+      "defaultSize": "medium",
+      "sizes": {
+        "small": {
+          "grams": 101,
+          "confidence": "medium",
+          "autoApply": true
+        },
+        "medium": {
+          "grams": 118,
+          "confidence": "high",
+          "autoApply": true
+        },
+        "large": {
+          "grams": 136,
+          "confidence": "medium",
+          "autoApply": true
+        }
+      }
+    },
+    {
+      "id": "egg_chicken_whole",
+      "aliases": [
+        "uovo",
+        "uova",
+        "uovo di gallina",
+        "uova di gallina",
+        "egg",
+        "eggs",
+        "whole egg",
+        "chicken egg"
+      ],
+      "kind": "natural_unit",
+      "defaultSize": "medium",
+      "sizes": {
+        "small": {
+          "grams": 44,
+          "confidence": "medium",
+          "autoApply": true
+        },
+        "medium": {
+          "grams": 50,
+          "confidence": "high",
+          "autoApply": true
+        },
+        "large": {
+          "grams": 56,
+          "confidence": "medium",
+          "autoApply": true
+        }
+      }
+    },
+    {
+      "id": "apple_raw",
+      "aliases": [
+        "mela",
+        "mele",
+        "mela cruda",
+        "apple",
+        "apple raw"
+      ],
+      "kind": "natural_unit",
+      "defaultSize": "medium",
+      "sizes": {
+        "small": {
+          "grams": 149,
+          "confidence": "medium",
+          "autoApply": true
+        },
+        "medium": {
+          "grams": 182,
+          "confidence": "high",
+          "autoApply": true
+        },
+        "large": {
+          "grams": 223,
+          "confidence": "medium",
+          "autoApply": true
+        }
+      }
+    }
+  ]
+}
