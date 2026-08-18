@@ -1,34 +1,7 @@
 'use strict';
 
-const OPENROUTER_URL = 'https://openrouter.ai/api/v1/chat/completions';
-
-function getBody(req) {
-  if (!req.body) return {};
-  if (typeof req.body === 'object') return req.body;
-  try {
-    return JSON.parse(req.body);
-  } catch {
-    return {};
-  }
-}
-
-function clean(v, max = 500) {
-  return String(v ?? '').trim().slice(0, max);
-}
-
-function pos(v) {
-  const n = Number(v);
-  return Number.isFinite(n) && n > 0 ? n : null;
-}
-
-function content(data) {
-  const c = data?.choices?.[0]?.message?.content;
-  return typeof c === 'string'
-    ? c
-    : Array.isArray(c)
-      ? c.map(x => x?.text || '').join('')
-      : '';
-}
+const OPENROUTER_URL =
+  'https://openrouter.ai/api/v1/chat/completions';
 
 const UNIT_KINDS = [
   'mass',
@@ -43,517 +16,885 @@ const UNIT_KINDS = [
   'unknown'
 ];
 
-const schema = {
-  type: 'object',
-  additionalProperties: false,
-  properties: {
-    mode: {
-      type: 'string',
-      enum: ['single', 'recipe']
-    },
+const SIZES = [
+  'small',
+  'medium',
+  'large',
+  'unspecified'
+];
 
-    recipe_name: {
-      type: 'string'
-    },
+const CONFIDENCES = [
+  'none',
+  'low',
+  'medium',
+  'high'
+];
 
-    consumed_grams: {
-      type: ['number', 'null']
-    },
+function getBody(req) {
+  if (!req.body) return {};
 
-    final_recipe_weight_g: {
-      type: ['number', 'null']
-    },
+  if (typeof req.body === 'object') {
+    return req.body;
+  }
 
-    ingredients: {
-      type: 'array',
-      items: {
-        type: 'object',
-        additionalProperties: false,
-        properties: {
-          raw: {
-            type: 'string'
-          },
+  try {
+    return JSON.parse(req.body);
+  } catch {
+    return {};
+  }
+}
 
-          name: {
-            type: 'string'
-          },
+function clean(value, max = 500) {
+  return String(value ?? '')
+    .trim()
+    .slice(0, max);
+}
 
-          grams: {
-            type: ['number', 'null']
-          },
+function pos(value) {
+  const n = Number(value);
 
-          quantity_text: {
-            type: 'string'
-          },
+  return Number.isFinite(n) && n > 0
+    ? n
+    : null;
+}
 
-          preparation: {
-            type: 'string'
-          },
+function getAssistantText(data) {
+  const message =
+    data?.choices?.[0]?.message;
 
-          ambiguity: {
-            type: 'string',
-            enum: ['none', 'needs_detail']
-          },
+  const content =
+    message?.content;
 
-          ambiguity_reason: {
-            type: 'string'
-          },
+  if (typeof content === 'string') {
+    return content;
+  }
 
-          count: {
-            type: ['number', 'null']
-          },
+  if (Array.isArray(content)) {
+    return content
+      .map(item => {
+        if (typeof item === 'string') {
+          return item;
+        }
 
-          size: {
-            type: 'string',
-            enum: [
-              'small',
-              'medium',
-              'large',
-              'unspecified'
-            ]
-          },
+        return (
+          item?.text ||
+          item?.content ||
+          ''
+        );
+      })
+      .join('');
+  }
 
-          unit_kind: {
-            type: 'string',
-            enum: UNIT_KINDS
-          },
-
-          estimated_piece_grams: {
-            type: ['number', 'null']
-          },
-
-          estimated_piece_min_g: {
-            type: ['number', 'null']
-          },
-
-          estimated_piece_max_g: {
-            type: ['number', 'null']
-          },
-
-          portion_confidence: {
-            type: 'string',
-            enum: [
-              'none',
-              'low',
-              'medium',
-              'high'
-            ]
-          },
-
-          portion_estimate_reason: {
-            type: 'string'
-          }
-        },
-
-        required: [
-          'raw',
-          'name',
-          'grams',
-          'quantity_text',
-          'preparation',
-          'ambiguity',
-          'ambiguity_reason',
-          'count',
-          'size',
-          'unit_kind',
-          'estimated_piece_grams',
-          'estimated_piece_min_g',
-          'estimated_piece_max_g',
-          'portion_confidence',
-          'portion_estimate_reason'
-        ]
-      }
-    },
-
-    errors: {
-      type: 'array',
-      items: {
-        type: 'string'
-      }
+  if (
+    content &&
+    typeof content === 'object'
+  ) {
+    try {
+      return JSON.stringify(content);
+    } catch {
+      return '';
     }
-  },
+  }
 
-  required: [
-    'mode',
-    'recipe_name',
-    'consumed_grams',
-    'final_recipe_weight_g',
-    'ingredients',
-    'errors'
-  ]
-};
+  return '';
+}
 
-module.exports = async function handler(req, res) {
-  res.setHeader('Cache-Control', 'no-store, max-age=0');
+function tryParseJson(text) {
+  if (!text) return null;
+
+  const raw =
+    String(text).trim();
+
+  if (!raw) return null;
+
+  /*
+   * 1. JSON esatto.
+   */
+  try {
+    const parsed =
+      JSON.parse(raw);
+
+    if (
+      parsed &&
+      typeof parsed === 'object'
+    ) {
+      return parsed;
+    }
+  } catch {}
+
+  /*
+   * 2. Markdown:
+   *
+   * ```json
+   * {...}
+   * ```
+   */
+  const unfenced = raw
+    .replace(
+      /^```(?:json)?\s*/i,
+      ''
+    )
+    .replace(
+      /\s*```$/i,
+      ''
+    )
+    .trim();
+
+  if (unfenced !== raw) {
+    try {
+      const parsed =
+        JSON.parse(unfenced);
+
+      if (
+        parsed &&
+        typeof parsed === 'object'
+      ) {
+        return parsed;
+      }
+    } catch {}
+  }
+
+  /*
+   * 3. Testo + JSON.
+   *
+   * "Ecco il risultato:
+   *  {...}"
+   */
+  const first =
+    unfenced.indexOf('{');
+
+  const last =
+    unfenced.lastIndexOf('}');
+
+  if (
+    first >= 0 &&
+    last > first
+  ) {
+    const extracted =
+      unfenced.slice(
+        first,
+        last + 1
+      );
+
+    try {
+      const parsed =
+        JSON.parse(extracted);
+
+      if (
+        parsed &&
+        typeof parsed === 'object'
+      ) {
+        return parsed;
+      }
+    } catch {}
+  }
+
+  return null;
+}
+
+function parseOpenRouterResponse(data) {
+  /*
+   * Alcune integrazioni/provider
+   * potrebbero restituire già
+   * l'oggetto parsato.
+   */
+  const directCandidates = [
+    data?.choices?.[0]?.message
+      ?.parsed,
+
+    data?.parsed
+  ];
+
+  for (
+    const candidate
+    of directCandidates
+  ) {
+    if (
+      candidate &&
+      typeof candidate === 'object'
+    ) {
+      return candidate;
+    }
+  }
+
+  return tryParseJson(
+    getAssistantText(data)
+  );
+}
+
+function normalizeIngredient(raw) {
+  const x =
+    raw &&
+    typeof raw === 'object'
+      ? raw
+      : {};
+
+  return {
+    raw:
+      clean(x.raw, 300),
+
+    name:
+      clean(x.name, 180),
+
+    grams:
+      pos(x.grams),
+
+    quantity_text:
+      clean(
+        x.quantity_text,
+        120
+      ),
+
+    preparation:
+      clean(
+        x.preparation,
+        100
+      ),
+
+    ambiguity:
+      x.ambiguity ===
+      'needs_detail'
+        ? 'needs_detail'
+        : 'none',
+
+    ambiguity_reason:
+      clean(
+        x.ambiguity_reason,
+        240
+      ),
+
+    count:
+      pos(x.count),
+
+    size:
+      SIZES.includes(x.size)
+        ? x.size
+        : 'unspecified',
+
+    unit_kind:
+      UNIT_KINDS.includes(
+        x.unit_kind
+      )
+        ? x.unit_kind
+        : 'unknown',
+
+    estimated_piece_grams:
+      pos(
+        x.estimated_piece_grams
+      ),
+
+    estimated_piece_min_g:
+      pos(
+        x.estimated_piece_min_g
+      ),
+
+    estimated_piece_max_g:
+      pos(
+        x.estimated_piece_max_g
+      ),
+
+    portion_confidence:
+      CONFIDENCES.includes(
+        x.portion_confidence
+      )
+        ? x.portion_confidence
+        : 'none',
+
+    portion_estimate_reason:
+      clean(
+        x.portion_estimate_reason,
+        240
+      )
+  };
+}
+
+function buildSystemPrompt(context) {
+  return [
+    /*
+     * FORMATO
+     */
+
+    'You are the NutriTrace Italian food-entry parser.',
+
+    `Current context: ${context}.`,
+
+    'Return ONLY one valid JSON object.',
+
+    'Do not use Markdown.',
+
+    'Do not use code fences.',
+
+    'Do not add commentary before or after the JSON.',
+
+    'The top-level JSON object MUST contain these keys: mode, recipe_name, consumed_grams, final_recipe_weight_g, ingredients, errors.',
+
+    'mode must be either "single" or "recipe".',
+
+    'ingredients must be an array.',
+
+    'errors must be an array of strings.',
+
+    'Every ingredient object must contain these keys: raw, name, grams, quantity_text, preparation, ambiguity, ambiguity_reason, count, size, unit_kind, estimated_piece_grams, estimated_piece_min_g, estimated_piece_max_g, portion_confidence, portion_estimate_reason.',
+
+    'For an unknown numeric field use null.',
+
+    'For an unknown textual field use an empty string.',
+
+    'ambiguity must be "none" or "needs_detail".',
+
+    'size must be "small", "medium", "large", or "unspecified".',
+
+    `unit_kind must be one of: ${UNIT_KINDS.join(', ')}.`,
+
+    'portion_confidence must be "none", "low", "medium", or "high".',
+
+    /*
+     * NUTRIENTI
+     */
+
+    'You NEVER calculate or estimate calories, macronutrients, vitamins, minerals, amino acids, fatty acids or any other nutrient.',
+
+    'NutriTrace will obtain nutritional values from its own food database after parsing.',
+
+    /*
+     * GRAMMI ESPLICITI
+     */
+
+    'The grams field has a strict meaning.',
+
+    'Populate grams ONLY when the user explicitly provides a metric mass in grams or kilograms, or when an exact metric conversion is possible.',
+
+    'Never put an estimated piece weight into grams.',
+
+    /*
+     * UNITÀ NATURALI
+     */
+
+    'Foods that naturally make sense as countable individual items may use unit_kind="natural_unit".',
+
+    'Examples include banana, apple, pear, orange, kiwi, cucumber, tomato, potato, avocado and eggs when appropriate.',
+
+    'If the user writes a singular natural-unit food without an explicit count, use count=1.',
+
+    'If the user explicitly gives a count, preserve it.',
+
+    'Example: "2 uova" means count=2.',
+
+    'If a natural-unit food has no explicit size, use size="medium".',
+
+    'If the user explicitly says piccolo or piccola, use size="small".',
+
+    'If the user explicitly says grande, use size="large".',
+
+    /*
+     * UOVA
+     */
+
+    'For the ordinary Italian words "uovo" or "uova" without another species, interpret the food as ordinary whole chicken egg.',
+
+    'Do not ask which bird produced the egg unless a different species is explicitly mentioned or context genuinely requires it.',
+
+    'If the user says uovo di quaglia, uovo di anatra or another species, preserve that species in the food name.',
+
+    /*
+     * STIMA PESO PEZZO
+     */
+
+    'For a natural-unit food you MAY provide estimated_piece_grams plus estimated_piece_min_g and estimated_piece_max_g when a meaningful common average edible piece weight exists.',
+
+    'This is ONLY a portion-weight estimate.',
+
+    'It is NEVER a nutrient estimate.',
+
+    'portion_confidence must honestly represent the variability of the unit.',
+
+    'Use "high" only when the individual unit is relatively standardized.',
+
+    'Use "medium" when a useful typical average exists but normal biological variation is meaningful.',
+
+    'Use "low" when the average is weakly representative.',
+
+    'Use "none" and null estimated weights when automatic weight would not be reliable.',
+
+    /*
+     * ALIMENTI MOLTO VARIABILI
+     */
+
+    'Do NOT assume every food has a meaningful standard portion.',
+
+    'A plate, dish, bowl, generic serving, pizza, steak, generic slice or other highly variable portion must NOT be treated as a stable natural unit.',
+
+    'For "un piatto di pasta", recognize pasta as the food but use unit_kind="plate" and do not invent grams.',
+
+    'For "una ciotola di cereali", use unit_kind="bowl" and do not invent grams.',
+
+    'For an unspecified steak or similarly variable piece, use unit_kind="piece_variable".',
+
+    /*
+     * IDENTITÀ DELL'ALIMENTO
+     */
+
+    'Food identity and portion weight are two separate problems.',
+
+    'Ask for clarification only if the missing detail can materially change nutritional composition or database matching.',
+
+    'Dry versus cooked pasta or rice is materially important.',
+
+    'Pasta shape such as spaghetti versus penne normally is not materially important when state and ingredients are equivalent.',
+
+    'Generic meat is materially ambiguous.',
+
+    'Generic sugar means ordinary sucrose unless otherwise specified.',
+
+    'Common names such as banana, apple, cucumber and ordinary chicken egg do not need unnecessary clarification.',
+
+    'Preserve preparation terms such as raw, cooked, boiled, fried, dried or drained when they materially affect food identity.',
+
+    /*
+     * CONTESTO
+     */
+
+    'In search context, missing weight is NEVER an error.',
+
+    'In quick or diary context, missing explicit weight is not automatically an error for a natural unit that the application can resolve later.',
+
+    'In recipe context, a natural-unit ingredient may omit explicit grams because NutriTrace can later resolve its standard portion.',
+
+    /*
+     * RICETTE
+     */
+
+    'If the user says "200 g di torta fatta con ...", consumed_grams is 200 and ingredient quantities describe the complete recipe.',
+
+    'consumed_grams is populated only when the user explicitly states the consumed mass.',
+
+    'final_recipe_weight_g is populated only when the user explicitly states the finished or yield mass.',
+
+    'Never infer final cooked weight from ingredient weights.',
+
+    /*
+     * DIVIETI
+     */
+
+    'Never infer a brand.',
+
+    'Never invent recipe ingredients.',
+
+    'Never invent cooking loss.',
+
+    'Never invent edible yield.',
+
+    'Never invent nutrient values.'
+  ].join(' ');
+}
+
+async function callOpenRouter(
+  key,
+  basePayload,
+  useJsonMode
+) {
+  const payload = {
+    ...basePayload
+  };
+
+  if (useJsonMode) {
+    payload.response_format = {
+      type: 'json_object'
+    };
+
+    /*
+     * OpenRouter Response Healing:
+     * tenta di correggere automaticamente
+     * JSON malformato / markdown / testo
+     * misto.
+     */
+    payload.plugins = [
+      {
+        id: 'response-healing'
+      }
+    ];
+  }
+
+  return fetch(
+    OPENROUTER_URL,
+    {
+      method: 'POST',
+
+      headers: {
+        Authorization:
+          `Bearer ${key}`,
+
+        'Content-Type':
+          'application/json',
+
+        ...(
+          process.env
+            .OPENROUTER_SITE_URL
+            ? {
+                'HTTP-Referer':
+                  process.env
+                    .OPENROUTER_SITE_URL
+              }
+            : {}
+        ),
+
+        'X-Title':
+          process.env
+            .OPENROUTER_APP_NAME ||
+          'NutriTrace'
+      },
+
+      body:
+        JSON.stringify(payload)
+    }
+  );
+}
+
+module.exports =
+async function handler(req, res) {
+  res.setHeader(
+    'Cache-Control',
+    'no-store, max-age=0'
+  );
+
   res.setHeader(
     'Content-Type',
     'application/json; charset=utf-8'
   );
 
   if (req.method !== 'POST') {
-    res.setHeader('Allow', 'POST');
-
-    return res.status(405).json({
-      error: 'Metodo non consentito.'
-    });
-  }
-
-  const key = process.env.OPENROUTER_API_KEY;
-
-  if (!key) {
-    return res.status(503).json({
-      error:
-        'AI non configurata: manca OPENROUTER_API_KEY su Vercel.'
-    });
-  }
-
-  const body = getBody(req);
-
-  const text = clean(body.text, 3000);
-
-  const context = [
-    'search',
-    'quick',
-    'diary',
-    'recipe'
-  ].includes(body.context)
-    ? body.context
-    : 'diary';
-
-  if (!text) {
-    return res.status(400).json({
-      error: 'Testo mancante.'
-    });
-  }
-
-  const system = [
-    'You parse Italian free-text food diary entries and food searches.',
-
-    'You NEVER calculate calories, macros, vitamins, minerals or other nutrients.',
-
-    `The current context is "${context}".`,
-
-    'Return the food or recipe as structured ingredients for later lookup in the NutriTrace food database.',
-
-    'The grams field has a strict meaning: populate grams ONLY when the user explicitly states a metric mass in grams or kilograms, or when an exact conversion from an explicitly stated metric mass is possible.',
-
-    'Never put an estimated piece weight into the grams field.',
-
-    'For foods naturally consumed or described as individual units, classify them as unit_kind="natural_unit".',
-
-    'Examples of natural units include banana, apple, pear, orange, kiwi, cucumber, tomato, potato, avocado and eggs when appropriate.',
-
-    'When the user writes a singular natural-unit food without an explicit count, infer count=1.',
-
-    'When the user gives a count, preserve it. Example: "2 uova" means count=2.',
-
-    'If a natural-unit food has no explicit size, use size="medium".',
-
-    'If the user explicitly says piccolo/piccola, use size="small".',
-
-    'If the user explicitly says grande, use size="large".',
-
-    'For an unqualified Italian "uovo" or "uova", interpret it as an ordinary whole chicken egg. Do not ask which bird unless another species is explicitly mentioned or the context genuinely requires it.',
-
-    'If the user says uovo di quaglia, uovo di anatra or another species, preserve that species in the food name.',
-
-    'For a natural-unit food you MAY provide estimated_piece_grams and a plausible estimated_piece_min_g / estimated_piece_max_g when a common average edible piece weight is reasonably meaningful.',
-
-    'This is only a portion-weight estimate. It is NEVER a nutrient estimate.',
-
-    'portion_confidence must honestly represent how stable and well-defined the average piece weight is.',
-
-    'Use portion_confidence="high" only when the unit is relatively standardized or has low practical variability.',
-
-    'Use portion_confidence="medium" when a useful average exists but normal biological variation is relevant.',
-
-    'Use portion_confidence="low" when the average is only weakly representative.',
-
-    'Use portion_confidence="none" and null estimated weights when a meaningful automatic piece weight should not be used.',
-
-    'Do NOT assume that every food has a useful standard portion.',
-
-    'A plate, dish, bowl, generic serving, pizza, steak, generic slice or other highly variable portion must NOT be treated as a stable natural unit.',
-
-    'For "un piatto di pasta", recognize the food as pasta but set unit_kind="plate" and do not invent grams.',
-
-    'For "una ciotola di cereali", use unit_kind="bowl" and do not invent grams unless an explicit mass is provided.',
-
-    'For "una pizza", identify the pizza as far as the text allows, but do not invent its total weight.',
-
-    'For highly variable pieces such as an unspecified steak, use piece_variable rather than natural_unit.',
-
-    'Food identity and portion weight are separate problems.',
-
-    'Be specific about food identity when the distinction materially affects nutritional composition.',
-
-    'Dry versus cooked pasta or rice is materially important because water content changes values per 100 g substantially.',
-
-    'Pasta shape such as spaghetti versus penne is normally not materially important when preparation/state is the same.',
-
-    'Generic meat is materially ambiguous and should normally require clarification.',
-
-    'Generic sugar means ordinary sucrose unless the user says otherwise.',
-
-    'Common food names such as banana, apple, cucumber and ordinary chicken egg are acceptable without unnecessary clarification.',
-
-    'Preparation words such as raw, cooked, boiled, fried, dried or drained must be preserved when they materially affect database matching.',
-
-    'Set ambiguity="needs_detail" ONLY when the missing detail can materially change the nutritional identity of the food.',
-
-    'Do not be pedantic about harmless wording or irrelevant varieties.',
-
-    'In search context, missing weight is NEVER an error because the user may simply be searching for a food.',
-
-    'In quick/diary context, a missing explicit weight is not automatically an error when the food is a natural unit whose portion can later be resolved by the application.',
-
-    'In recipe context, ingredient quantities must eventually be resolvable for proportional calculation, but natural-unit ingredients may be left without explicit grams because the application can resolve their standard portion later.',
-
-    'If the user says "200 g di torta fatta con ...", consumed_grams is 200 and ingredient quantities describe the whole recipe.',
-
-    'final_recipe_weight_g is populated only when the user explicitly provides the finished/yield weight.',
-
-    'Never infer final cooked weight from the sum of ingredients.',
-
-    'Never infer brand.',
-
-    'Never invent recipe formulation.',
-
-    'Never infer cooking loss.',
-
-    'Never calculate or invent nutrient values.'
-  ].join(' ');
-
-  try {
-    const response = await fetch(
-      OPENROUTER_URL,
-      {
-        method: 'POST',
-
-        headers: {
-          Authorization: `Bearer ${key}`,
-          'Content-Type': 'application/json',
-
-          ...(process.env.OPENROUTER_SITE_URL
-            ? {
-                'HTTP-Referer':
-                  process.env.OPENROUTER_SITE_URL
-              }
-            : {}),
-
-          'X-Title':
-            process.env.OPENROUTER_APP_NAME ||
-            'NutriTrace'
-        },
-
-        body: JSON.stringify({
-          model:
-            process.env.OPENROUTER_MODEL ||
-            'openrouter/free',
-
-          messages: [
-            {
-              role: 'system',
-              content: system
-            },
-            {
-              role: 'user',
-              content: text
-            }
-          ],
-
-          temperature: 0,
-
-          max_tokens: 2600,
-
-          provider: {
-            require_parameters: true
-          },
-
-          response_format: {
-            type: 'json_schema',
-
-            json_schema: {
-              name: 'food_entry_parse_v2',
-              strict: true,
-              schema
-            }
-          }
-        })
-      }
+    res.setHeader(
+      'Allow',
+      'POST'
     );
 
-    const data = await response
-      .json()
-      .catch(() => ({}));
-
-    if (!response.ok) {
-      return res.status(502).json({
+    return res
+      .status(405)
+      .json({
         error:
-          data?.error?.message ||
-          `OpenRouter API ${response.status}`
+          'Metodo non consentito.'
       });
-    }
+  }
 
-    let parsed;
+  const key =
+    process.env
+      .OPENROUTER_API_KEY;
 
-    try {
-      parsed = JSON.parse(content(data));
-    } catch {
-      return res.status(502).json({
+  if (!key) {
+    return res
+      .status(503)
+      .json({
         error:
-          'Risposta AI non interpretabile.'
+          'AI non configurata: manca OPENROUTER_API_KEY su Vercel.'
       });
-    }
+  }
 
-    const ingredients = (
-      Array.isArray(parsed.ingredients)
-        ? parsed.ingredients
-        : []
-    )
-      .slice(0, 30)
-      .map(x => ({
-        raw: clean(x.raw, 300),
+  const body =
+    getBody(req);
 
-        name: clean(x.name, 180),
+  const text =
+    clean(
+      body.text,
+      3000
+    );
 
-        grams: pos(x.grams),
+  if (!text) {
+    return res
+      .status(400)
+      .json({
+        error:
+          'Testo mancante.'
+      });
+  }
 
-        quantity_text:
-          clean(x.quantity_text, 120),
+  const context =
+    [
+      'search',
+      'quick',
+      'diary',
+      'recipe'
+    ].includes(body.context)
+      ? body.context
+      : 'diary';
 
-        preparation:
-          clean(x.preparation, 100),
+  const system =
+    buildSystemPrompt(
+      context
+    );
 
-        ambiguity:
-          x.ambiguity === 'needs_detail'
-            ? 'needs_detail'
-            : 'none',
+  const basePayload = {
+    model:
+      process.env
+        .OPENROUTER_MODEL ||
+      'openrouter/free',
 
-        ambiguity_reason:
-          clean(x.ambiguity_reason, 240),
+    messages: [
+      {
+        role: 'system',
+        content: system
+      },
+      {
+        role: 'user',
+        content: text
+      }
+    ],
 
-        count: pos(x.count),
-
-        size: [
-          'small',
-          'medium',
-          'large'
-        ].includes(x.size)
-          ? x.size
-          : 'unspecified',
-
-        unit_kind:
-          UNIT_KINDS.includes(x.unit_kind)
-            ? x.unit_kind
-            : 'unknown',
-
-        estimated_piece_grams:
-          pos(x.estimated_piece_grams),
-
-        estimated_piece_min_g:
-          pos(x.estimated_piece_min_g),
-
-        estimated_piece_max_g:
-          pos(x.estimated_piece_max_g),
-
-        portion_confidence: [
-          'low',
-          'medium',
-          'high'
-        ].includes(x.portion_confidence)
-          ? x.portion_confidence
-          : 'none',
-
-        portion_estimate_reason:
-          clean(
-            x.portion_estimate_reason,
-            240
-          )
-      }))
-      .filter(x => x.name);
-
-    const errors = (
-      Array.isArray(parsed.errors)
-        ? parsed.errors
-        : []
-    )
-      .map(x => clean(x, 300))
-      .filter(Boolean)
-      .slice(0, 20);
+    temperature: 0,
 
     /*
-     * Non aggiungiamo più automaticamente:
-     *
-     * "Peso mancante: indica i grammi"
-     *
-     * per ogni alimento.
-     *
-     * La decisione viene demandata al motore
-     * delle porzioni:
-     *
-     * explicit grams
-     *      ↓
-     * standard-portions.json
-     *      ↓
-     * stima AI con confidence/range
-     *      ↓
-     * richiesta all'utente solo se necessario
+     * Abbastanza alto da evitare
+     * troncamenti sulle ricette.
      */
+    max_tokens: 3000,
 
-    for (const ingredient of ingredients) {
+    stream: false
+  };
+
+  try {
+    /*
+     * Tentativo 1:
+     * JSON mode + Response Healing.
+     */
+    let response =
+      await callOpenRouter(
+        key,
+        basePayload,
+        true
+      );
+
+    let data =
+      await response
+        .json()
+        .catch(() => ({}));
+
+    /*
+     * Alcuni modelli del router free
+     * potrebbero non supportare
+     * response_format/plugins.
+     *
+     * In quel caso facciamo un
+     * secondo tentativo usando
+     * soltanto il prompt JSON.
+     */
+    if (!response.ok) {
+      const status =
+        response.status;
+
+      const errorText =
+        clean(
+          data?.error?.message,
+          500
+        );
+
+      const potentiallyUnsupported =
+        status === 400 ||
+        status === 404 ||
+        status === 422;
+
+      if (
+        potentiallyUnsupported
+      ) {
+        response =
+          await callOpenRouter(
+            key,
+            basePayload,
+            false
+          );
+
+        data =
+          await response
+            .json()
+            .catch(() => ({}));
+      }
+
+      if (!response.ok) {
+        return res
+          .status(502)
+          .json({
+            error:
+              data?.error?.message ||
+              errorText ||
+              `OpenRouter API ${response.status}`
+          });
+      }
+    }
+
+    const parsed =
+      parseOpenRouterResponse(
+        data
+      );
+
+    if (!parsed) {
+      const model =
+        clean(
+          data?.model,
+          120
+        );
+
+      const finishReason =
+        clean(
+          data?.choices?.[0]
+            ?.finish_reason,
+          100
+        );
+
+      const raw =
+        clean(
+          getAssistantText(data),
+          300
+        );
+
+      return res
+        .status(502)
+        .json({
+          error:
+            'Risposta AI non interpretabile.' +
+            (
+              model
+                ? ` Modello: ${model}.`
+                : ''
+            ) +
+            (
+              finishReason
+                ? ` Fine: ${finishReason}.`
+                : ''
+            ) +
+            (
+              raw
+                ? ` Output ricevuto: ${raw}`
+                : ' Nessun contenuto testuale ricevuto.'
+            )
+        });
+    }
+
+    const ingredients =
+      (
+        Array.isArray(
+          parsed.ingredients
+        )
+          ? parsed.ingredients
+          : []
+      )
+        .slice(0, 30)
+        .map(
+          normalizeIngredient
+        )
+        .filter(
+          ingredient =>
+            ingredient.name
+        );
+
+    const errors =
+      (
+        Array.isArray(
+          parsed.errors
+        )
+          ? parsed.errors
+          : []
+      )
+        .map(
+          error =>
+            clean(
+              error,
+              300
+            )
+        )
+        .filter(Boolean)
+        .slice(0, 20);
+
+    /*
+     * Aggiungiamo errori soltanto
+     * per vere ambiguità identitarie.
+     *
+     * NON aggiungiamo:
+     * "mancano i grammi"
+     * per banana/uova/etc.
+     */
+    for (
+      const ingredient
+      of ingredients
+    ) {
       if (
         ingredient.ambiguity ===
           'needs_detail' &&
-        ingredient.ambiguity_reason &&
-        !errors.some(e =>
-          e
-            .toLowerCase()
-            .includes(
-              ingredient.name.toLowerCase()
-            )
+        ingredient
+          .ambiguity_reason &&
+        !errors.some(
+          error =>
+            error
+              .toLowerCase()
+              .includes(
+                ingredient
+                  .name
+                  .toLowerCase()
+              )
         )
       ) {
         errors.push(
-          `${ingredient.name}: ${ingredient.ambiguity_reason}`
+          `${ingredient.name}: ` +
+          ingredient
+            .ambiguity_reason
         );
       }
     }
 
-    return res.status(200).json({
-      mode:
-        parsed.mode === 'recipe' ||
-        ingredients.length > 1
-          ? 'recipe'
-          : 'single',
+    if (!ingredients.length) {
+      return res
+        .status(502)
+        .json({
+          error:
+            'L’AI non ha restituito alcun alimento interpretabile. Riprova specificando l’alimento.'
+        });
+    }
 
-      recipe_name:
-        clean(parsed.recipe_name, 180) ||
-        'Voce libera',
+    return res
+      .status(200)
+      .json({
+        mode:
+          parsed.mode ===
+            'recipe' ||
+          ingredients.length > 1
+            ? 'recipe'
+            : 'single',
 
-      consumed_grams:
-        pos(parsed.consumed_grams),
+        recipe_name:
+          clean(
+            parsed.recipe_name,
+            180
+          ) ||
+          'Voce libera',
 
-      final_recipe_weight_g:
-        pos(
-          parsed.final_recipe_weight_g
-        ),
+        consumed_grams:
+          pos(
+            parsed
+              .consumed_grams
+          ),
 
-      ingredients,
+        final_recipe_weight_g:
+          pos(
+            parsed
+              .final_recipe_weight_g
+          ),
 
-      errors,
+        ingredients,
 
-      model:
-        data?.model ||
-        process.env.OPENROUTER_MODEL ||
-        'openrouter/free'
-    });
-  } catch (e) {
-    return res.status(502).json({
-      error:
-        `AI non disponibile: ${
-          e.message || 'errore di rete'
-        }`
-    });
+        errors,
+
+        model:
+          data?.model ||
+          process.env
+            .OPENROUTER_MODEL ||
+          'openrouter/free'
+      });
+  } catch (error) {
+    return res
+      .status(502)
+      .json({
+        error:
+          `AI non disponibile: ${
+            error?.message ||
+            'errore di rete'
+          }`
+      });
   }
 };
