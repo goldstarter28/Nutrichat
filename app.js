@@ -313,6 +313,66 @@ function parseSheetRows(data, type = 'array') { const wb = XLSX.read(data, { typ
 } return rows; }
 
 const h = React.createElement;
+const DEFAULT_APP_UI = {
+  search: {
+    dbButton: 'Cerca nel database',
+    aiButton: 'Ricerca con AI',
+    aiWorking: 'Ricerca con AI…',
+    gramsLabel: 'Grammi',
+    gramsPlaceholder: 'facoltativi se esiste una porzione standard'
+  },
+  recipe: {
+    interpretButton: 'Interpreta e verifica',
+    aiEstimateButton: 'Ricerca con AI',
+    dbSearchButton: 'Ricerche DB'
+  }
+};
+
+const DEFAULT_SEARCH_POLICY = {
+  portionPolicy: {
+    catalogFirst: true,
+    aiEstimateWhenCatalogMissing: true,
+    defaultNaturalUnitCount: 1,
+    defaultNaturalUnitSize: 'medium',
+    autoApplyCatalog: true,
+    autoApplyAiConfidence: ['high', 'medium'],
+    maxAiRelativeRange: 0.55,
+    neverAutoApplyKinds: [
+      'dish',
+      'plate',
+      'bowl',
+      'serving',
+      'pizza',
+      'slice_variable',
+      'piece_variable',
+      'unknown'
+    ],
+    showAssumption: true
+  },
+  ambiguityPolicy: {
+    askOnlyIfMaterial: true
+  }
+};
+
+const DEFAULT_PORTION_CATALOG = {
+  items: []
+};
+
+async function loadJsonConfig(url, fallback) {
+  try {
+    const response = await fetch(url, {
+      cache: 'no-cache'
+    });
+
+    if (!response.ok) {
+      return fallback;
+    }
+
+    return await response.json();
+  } catch {
+    return fallback;
+  }
+}
 
 const MICRO_CATALOG = [
   { group:'Vitamine', id:'Vitamina A', name:'Vitamina A', unit:'µg', kind:'minimum' },
