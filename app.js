@@ -1170,7 +1170,15 @@ function Home(){
   const [masterManifest,setMasterManifest]=useState(null), [masterIndex,setMasterIndex]=useState([]), [masterStatus,setMasterStatus]=useState('Caricamento Master DB…'), [masterOfflineMsg,setMasterOfflineMsg]=useState('');
   const [recipeText,setRecipeText]=useState(''), [recipeReview,setRecipeReview]=useState(null), [recipeBusy,setRecipeBusy]=useState(''), [recipeMsg,setRecipeMsg]=useState('');
   const [showAllDeficits,setShowAllDeficits]=useState(false), [masterMigrationDone,setMasterMigrationDone]=useState(false);
+    const [appUi, setAppUi] =
+  useState(DEFAULT_APP_UI);
 
+const [searchPolicy, setSearchPolicy] =
+  useState(DEFAULT_SEARCH_POLICY);
+
+const [portionCatalog, setPortionCatalog] =
+  useState(DEFAULT_PORTION_CATALOG);
+    
   useEffect(()=>{ try{
     setFoods(JSON.parse(localStorage.getItem('nutritrace_foods')||'[]'));
     setLogs(JSON.parse(localStorage.getItem('nutritrace_logs')||'[]'));
