@@ -1,0 +1,42 @@
+{
+  "status": "PASS",
+  "integrity_check": "ok",
+  "candidate_exactly_one_macro_missing": 1805,
+  "candidate_by_missing_macro": {
+    "fat_total": 1404,
+    "protein": 168,
+    "carbohydrate_total": 233
+  },
+  "accepted_calculations": 15,
+  "accepted_by_macro": {
+    "fat_total": 15
+  },
+  "rejected": 1790,
+  "rejection_reasons": {
+    "fiber_missing": 1081,
+    "negative_energy_residual": 310,
+    "uncertainty_interval_crosses_zero": 287,
+    "uncertainty_too_large": 44,
+    "unreported_energy_contributor_risk": 59,
+    "known_manual_example_excluded": 9
+  },
+  "energy_foods": 37801,
+  "macro_distribution_after": {
+    "0": 70,
+    "1": 915,
+    "2": 1790,
+    "3": 35026
+  },
+  "distribution_sum": 37801,
+  "method_policy": {
+    "fiber_required": true,
+    "fiber_factor_kcal_g": 2.0,
+    "protein_factor": 4.0,
+    "carbohydrate_factor": 4.0,
+    "fat_factor": 9.0,
+    "alcohol_factor": 7.0,
+    "polyols_factor": 2.4,
+    "uncertainty": "max(5 kcal,3% energy)+0.5*fibre_g+budgets for unreported alcohol/polyols; accept only narrow intervals",
+    "known_manual_examples_excluded": true
+  }
+}

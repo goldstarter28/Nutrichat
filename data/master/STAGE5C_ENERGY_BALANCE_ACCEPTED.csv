@@ -1,0 +1,16 @@
+id,name,missing,estimate_g,lo_g,hi_g,relative_half_uncertainty
+2791,"Cake, sponge, homemade",fat_total,24.75555556,22.49555556,27.01555556,0.09129264
+5952,"Coffee, instant, powder",fat_total,16.98888889,14.15111111,19.82666667,0.16703728
+6394,Popcorn,fat_total,13.83600000,11.46611111,16.20588889,0.17128425
+8760,Caramel sauce,fat_total,7.81355556,6.60050000,9.02661111,0.15525014
+17452,Panna Cotta,fat_total,9.58111175,8.35399840,10.80822510,0.12807630
+37113,"Tomatoes, stuffed with rice",fat_total,12.13333333,10.61555556,13.65111111,0.12509158
+37262,"Onion rings, breaded, par fried, frozen, prepared, heated in oven",fat_total,13.43555556,11.68333333,15.18777778,0.13041680
+37284,"Olives, green, Manzanilla, stuffed with pimiento",fat_total,10.84000000,9.40666667,12.27333333,0.13222632
+37285,"Cookies, oatmeal, soft, with raisins",fat_total,13.53777778,11.26555556,15.81000000,0.16784307
+37290,"Restaurant, Latino, tamale, pork",fat_total,8.49777778,7.12888889,9.86666667,0.16108787
+37291,"Restaurant, Latino, pupusas con frijoles (pupusas, bean)",fat_total,7.67111111,5.93000000,9.41222222,0.22696987
+37307,"Restaurant, Chinese, sweet and sour pork",fat_total,13.38666667,11.80888889,14.96444444,0.11786189
+37411,"Peanut butter, creamy",fat_total,43.32855622,40.35711287,46.29999958,0.06857933
+37454,"Seeds, pumpkin seeds (pepitas), raw",fat_total,34.48324111,31.82938832,37.13709390,0.07696065
+37455,"Seeds, sunflower seed, kernel, raw",fat_total,42.52500000,39.56644111,45.48355889,0.06957223
