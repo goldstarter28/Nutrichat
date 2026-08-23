@@ -1,4 +1,4 @@
-const CACHE='nutritrace-v22-runtime-audited';
+const CACHE='nutrichat-v23-runtime';
 const CORE=[
   './','./index.html','./app.js','./style.css','./manifest.webmanifest','./icon-192.png','./icon-512.png',
   './config/ui.it.json','./config/search-policy.json','./config/standard-portions.json',

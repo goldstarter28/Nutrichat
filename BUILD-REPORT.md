@@ -1,46 +1,18 @@
-# NutriTrace v2.1 — Final integration report
+# NutriChat V2.3 — Build report
 
-Build applicativa: 2026-08-18
+La V2.3 integra cinque checkpoint: Master DB, Search/UI, AI enrichment, Goals e Analytics.
 
-## Runtime DB
+## Master DB
+Runtime `2.3-db1`, 38.072 alimenti, 64 chunk. La rigenerazione recupera 13.146 valori strutturati mancanti secondo policy conservativa, senza sovrascrivere valori esistenti. Core macro completo su 18.899 alimenti. Vedi `data/master/V23_DB_REGENERATION_REPORT.json` e `V23_DB_VALIDATION_REPORT.json`.
 
-- Runtime schema: `nutritrace-master-runtime-v2-post-audit`
-- Runtime version: `1.0`
-- Master sorgente: POST-AUDIT v1.0, test suite 66/66.
-- 38.072 alimenti.
-- 105 nutrienti/componenti canonici.
-- 1.341.239 valori numerici.
-- 28.216 N/D espliciti.
-- 1.237 alimenti multi-fonte.
-- 64 chunk.
-- Grade: A 3.708; B 20.576; C 1.316.193; D 762.
-- 771 quarantene aggiuntive applicate dal runtime builder alle contraddizioni cross-nutrient residue.
+## Search/UI
+Debounce 220 ms sulla ricerca rapida, indice Master pre-normalizzato, ranking che favorisce copertura macro. Voce libera/lista/ricetta dispone di browser candidati e scheda dettagliata prima della selezione.
 
-## Regole runtime
+## AI
+Parser semantico general-purpose V2.3. Enricher con batching lato client, retry JSON/response healing e stato esplicito per nutrienti high-risk o errori per singolo campo. Le stime AI restano separate dal Master e dalle classifiche di carenza.
 
-- `unknown != 0`.
-- Quarantene/N-D non sono numeriche.
-- A/B/C disponibili nella scheda alimento.
-- D rimane informativo ma è escluso dai ranking di carenza.
-- AI estimates esclusi dai ranking di carenza.
-- Per classificare una carenza serve coverage >=65% sugli alimenti effettivamente registrati.
-- Provenance sintetica e range rimangono disponibili; lineage completo resta nel Master auditabile.
+## Goals
+Default 72 kg / 2350 kcal; target micro prevalentemente settimanali, UL e target compositi supportati.
 
-## Migrazione
-
-I record locali provenienti dal precedente Master vengono aggiornati al RuntimeDB v1.0 quando il `masterId` è ancora presente. L'`id` locale rimane invariato affinché le registrazioni storiche del diario continuino a risolvere lo stesso alimento.
-
-## OpenRouter
-
-Le Vercel Functions restano server-side e utilizzano `OPENROUTER_API_KEY`; nessuna chiave è incorporata nel bundle client.
-
-## Verifiche richieste prima del deploy
-
-- sintassi JavaScript delle tre unità applicative;
-- 64/64 chunk leggibili;
-- index -> chunk completo;
-- checksum runtime;
-- nessun D/AI nel calcolo delle carenze;
-- benchmark banana/cioccolato;
-- smoke HTTP statico;
-- controllo assenza secret nel pacchetto.
+## Analytics
+Report giorno/settimana/mese/anno/intervallo, confronto col periodo precedente, coverage e cronologia navigabile.

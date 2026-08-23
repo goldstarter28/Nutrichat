@@ -1,26 +1,23 @@
-# NutriTrace v2.1 — Final validation
+# NutriChat V2.3 — Final validation
 
-Build: 2026-08-18
+Build finalizzata: 2026-08-23.
 
-## Passed
+## Controlli superati
+- Sintassi JavaScript: app.js, sw.js, api/parse-food-entry.js, api/nutrition-enrich.js.
+- JSON config, manifest e index validi.
+- Runtime Master V2.3: 38.072 alimenti, 64/64 chunk, 105 nutrienti/componenti.
+- Validatore DB V2.3: PASS.
+- Valori numerici: 1.354.385; N/D espliciti: 27.957.
+- Core macro completo: 16.760 -> 18.899 alimenti (+2.139).
+- Nessun valore numerico preesistente sovrascritto durante la rigenerazione; vengono riempiti solo gap ammessi dalla policy.
+- Nessuna nuova regressione cross-nutrient rispetto alla baseline nel validatore V2.3.
+- Quality gate presenti per pasta integrale, pane integrale, riso integrale, banana, uovo, cetriolo e uva.
+- Ricerca giornaliera: debounce 220 ms e campi Master normalizzati/precalcolati.
+- Browser candidati + dettaglio completo presente in voce libera/lista/ricetta.
+- AI enrichment: nessun limite utente a 8, batching interno, retry/JSON healing, stato blocked_high_risk e ai_error.
+- Default V2.3: 72 kg, 2350 kcal.
+- Analisi: giorno/settimana/mese/anno/custom + confronto + cronologia.
+- Cache Service Worker V2.3 isolata: nutrichat-v23-runtime.
 
-- JavaScript syntax: `app.js`, `sw.js`, `api/nutrition-enrich.js`, `api/parse-food-entry.js`.
-- Runtime manifest/index: 38.072 foods, 64/64 chunks.
-- Numeric values: 1.341.239.
-- Explicit N/D: 28.216.
-- Grade totals: A 3.708, B 20.576, C 1.316.193, D 762.
-- All index IDs resolve to their declared chunk.
-- All 131 runtime checksum entries match.
-- `.json.gz` files decompress byte-for-byte to their `.json` counterparts.
-- Banana regression: vitamin A RAE 4 µg; B5 0.334 mg; iodine N/D.
-- Dark chocolate 70–85% regression: copper 1.76 mg; vitamin K 7.3 µg.
-- Deficiency code excludes Master grade D and AI estimates.
-- Runtime C contributes only through the existing >=65% data-coverage classification policy.
-- New service-worker cache namespace: `nutritrace-v21-runtime-audited`.
-- No embedded OpenRouter secret found.
-- No residual `OPENAI_API_KEY` / `api.openai.com` client references.
-- Static HTTP smoke test passed for core app files, manifest, index and chunk 00.
-
-## Browser smoke limitation
-
-A Chromium visual smoke test could not complete in the build sandbox because external DNS resolution for the React/ReactDOM/SheetJS CDNs is unavailable there. This is an environment limitation, not a detected application error. Final visual/iOS PWA verification must therefore be performed on the Vercel deployment.
+## Limiti della validazione
+Non è stato possibile effettuare un test end-to-end reale contro OpenRouter senza usare la chiave Vercel dell'utente; sono stati validati sintassi, contratti, retry e guardrail statici. Il test visuale finale su Safari/iPad deve essere eseguito sul deploy Vercel reale.
