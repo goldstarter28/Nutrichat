@@ -8,6 +8,8 @@ const MACRO_KEYS=['kcal','protein','carbs','sugar','fat','saturatedFat','fiber',
 // This list is intentionally much smaller than V2.2: common vitamins, minerals,
 // fatty acids and amino acids may be returned as clearly-marked AI estimates,
 // but they are still excluded by the app from deficiency calculations.
+// V2.3.1 accepts explicitly low-confidence estimates for non-blocked nutrients: they remain
+// visibly marked as AI estimates and never enter deficiency calculations.
 const HARD_BLOCKED=new Set([
   'iodine','chromium','nickel','fluoride','sulfur','molybdenum','chloride','biotin_b7'
 ]);
@@ -82,8 +84,8 @@ module.exports=async function handler(req,res){
     'Never overwrite known values. Unknown is null, never numeric zero.',
     `All numeric values refer to exactly ${basis} g edible food and each requested nutrient MUST use the required_unit supplied by the caller.`,
     'For label return keys kcal,protein,carbs,sugar,fat,saturatedFat,fiber,salt; use null for known or undefensible values.',
-    'For nutrients return exactly the requested ids when possible. status=estimated only with a defensible benchmark for the exact food/preparation; otherwise status=not_available and value=null.',
-    'Do not guess IU conversions, percentages, fortification, geographic iodine/trace-mineral exposure, recipe formulation or brand composition.',
+    'For nutrients return exactly the requested ids. For common unbranded foods, use an established typical food-composition benchmark when exact analytical data is unavailable; status=estimated may have confidence high, medium or low. Use status=not_available only when even a broad typical estimate would be misleading.',
+    'For missing label/macros of common unbranded foods, provide a conservative typical estimate whenever composition is well established. Do not guess fortification, geographic iodine/trace-mineral exposure, recipe formulation or brand composition.',
     'Do not derive amino acids by a fixed percentage of protein. An amino-acid estimate is allowed only when the exact/common food has a well-established composition benchmark.',
     'Do not derive EPA/DHA from total fat. Estimate fatty acids only when the exact food/species has a defensible typical composition.',
     'Precision must reflect uncertainty; do not manufacture excessive decimals.'
@@ -104,11 +106,11 @@ module.exports=async function handler(req,res){
     for(const n of Array.isArray(parsed.nutrients)?parsed.nutrients:[]){
       const spec=allowed.get(clean(n?.id,80));if(!spec)continue;
       const value=finiteOrNull(n.value),confidence=['high','medium','low'].includes(n.confidence)?n.confidence:'low',cap=CAPS[spec.id]??Infinity;
-      const accepted=n.status==='estimated'&&['high','medium'].includes(confidence)&&value!==null&&value>0&&value<=cap;
+      const accepted=n.status==='estimated'&&['high','medium','low'].includes(confidence)&&value!==null&&value>0&&value<=cap;
       out.push({id:spec.id,status:accepted?'estimated':'not_available',value:accepted?value:null,confidence:accepted?confidence:'low',note:accepted?clean(n.note,280):(clean(n.note,280)||'N/D: il modello non ha una stima sufficientemente affidabile per questo alimento.')});
     }
     for(const x of requested)if(!out.some(n=>n.id===x.id))out.push({id:x.id,status:'not_available',value:null,confidence:'low',note:'N/D: nessuna stima numerica sufficientemente supportata.'});
     for(const x of blocked)out.push({id:x.id,status:'blocked_high_risk',value:null,confidence:'none',note:`Errore ${x.name||x.id}: nutriente ad alto rischio/variabilità; la stima numerica AI è disabilitata.`});
-    return res.status(200).json({label:sanitizeLabel(parsed.label||{},known),nutrients:out,note:`AI fallback controllato via OpenRouter (${a.data?.model||process.env.OPENROUTER_MODEL||'openrouter/free'}). Le stime AI restano separate dai dati Master e non alimentano le carenze.`,model:a.data?.model||null,enricher_version:'2.3.0'});
+    return res.status(200).json({label:sanitizeLabel(parsed.label||{},known),nutrients:out,note:`AI fallback controllato via OpenRouter (${a.data?.model||process.env.OPENROUTER_MODEL||'openrouter/free'}). Le stime AI restano separate dai dati Master e non alimentano le carenze.`,model:a.data?.model||null,enricher_version:'2.3.1'});
   }catch(e){return res.status(502).json({error:`AI non disponibile: ${e?.message||'errore di rete'}`});}
 };
