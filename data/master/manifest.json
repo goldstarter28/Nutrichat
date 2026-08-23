@@ -1,7 +1,7 @@
 {
-  "schema": "nutritrace-master-runtime-v2-post-audit",
-  "runtime_version": "1.0",
-  "built_at": "2026-08-18",
+  "schema": "nutritrace-master-runtime-v2.3-db-regenerated",
+  "runtime_version": "2.3-db1",
+  "built_at": "2026-08-23",
   "source_master": {
     "schema_version": "1.0-post-audit",
     "audit_version": "1.0",
@@ -12,13 +12,13 @@
   "food_count": 38072,
   "chunk_count": 64,
   "nutrient_count": 105,
-  "numeric_values": 1341239,
-  "explicit_nd_values": 28216,
+  "numeric_values": 1354385,
+  "explicit_nd_values": 27957,
   "multisource_foods": 1237,
   "grade_counts": {
+    "C": 1329220,
+    "B": 20695,
     "A": 3708,
-    "B": 20576,
-    "C": 1316193,
     "D": 762
   },
   "numeric_status_counts": {
@@ -1372,5 +1372,25 @@
       "definition": "",
       "name": "Valina"
     }
-  ]
+  ],
+  "v23_repair": {
+    "policy": "Verified Core preferred; otherwise >=2 independent agreeing builds; existing values never overwritten; audit/conflict/quarantine protected",
+    "values_backfilled": 13146,
+    "foods_changed": 8363,
+    "by_nutrient": {
+      "carbohydrate_available": 1667,
+      "carbohydrate_total": 1069,
+      "sugars_total": 2862,
+      "fat_total": 1294,
+      "protein": 1185,
+      "energy_kcal": 1364,
+      "fiber": 3705
+    },
+    "rejected_plausibility": 2,
+    "core_complete_foods": 18899,
+    "index_fields": {
+      "mc": "macro coverage 0-6",
+      "core": "energy+protein+fat+one carbohydrate definition"
+    }
+  }
 }

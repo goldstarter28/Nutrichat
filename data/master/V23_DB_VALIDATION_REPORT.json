@@ -1,0 +1,5145 @@
+{
+  "status": "PASS",
+  "manifest": {
+    "schema": "nutritrace-master-runtime-v2.3-db-regenerated",
+    "runtime_version": "2.3-db1",
+    "food_count": 38072,
+    "chunk_count": 64,
+    "nutrient_count": 105,
+    "numeric_values": 1354385,
+    "explicit_nd_values": 27957,
+    "grade_counts": {
+      "C": 1329220,
+      "B": 20695,
+      "A": 3708,
+      "D": 762
+    },
+    "v23_repair": {
+      "policy": "Verified Core preferred; otherwise >=2 independent agreeing builds; existing values never overwritten; audit/conflict/quarantine protected",
+      "values_backfilled": 13146,
+      "foods_changed": 8363,
+      "by_nutrient": {
+        "carbohydrate_available": 1667,
+        "carbohydrate_total": 1069,
+        "sugars_total": 2862,
+        "fat_total": 1294,
+        "protein": 1185,
+        "energy_kcal": 1364,
+        "fiber": 3705
+      },
+      "rejected_plausibility": 2,
+      "core_complete_foods": 18899,
+      "index_fields": {
+        "mc": "macro coverage 0-6",
+        "core": "energy+protein+fat+one carbohydrate definition"
+      }
+    }
+  },
+  "coverage": {
+    "before": {
+      "energy": 29342,
+      "protein": 26352,
+      "fat": 25405,
+      "carbs": 22132,
+      "fiber": 15032,
+      "sugars": 19270,
+      "core_complete": 16760,
+      "all6": 10122
+    },
+    "after": {
+      "energy": 30706,
+      "protein": 27537,
+      "fat": 26699,
+      "carbs": 23866,
+      "fiber": 18737,
+      "sugars": 22132,
+      "core_complete": 18899,
+      "all6": 10574
+    }
+  },
+  "coverage_delta": {
+    "energy": 1364,
+    "fat": 1294,
+    "sugars": 2862,
+    "core_complete": 2139,
+    "all6": 452,
+    "carbs": 1734,
+    "protein": 1185,
+    "fiber": 3705
+  },
+  "cross_nutrient_violations": {
+    "mass_water_gt112": 228,
+    "macro_mass_gt110": 70,
+    "energy_ratio": 10
+  },
+  "baseline_cross_nutrient_violations": {
+    "mass_water_gt112": 230,
+    "macro_mass_gt110": 71,
+    "energy_ratio": 10
+  },
+  "new_cross_nutrient_delta": {
+    "macro_mass_gt110": -1,
+    "energy_ratio": 0,
+    "mass_water_gt112": -2
+  },
+  "quality_gate": {
+    "pasta_integrale": {
+      "matches": 50,
+      "core_complete_count": 36,
+      "best_core": true,
+      "multi_source_ge5": 0,
+      "multi_source_ge5_core": 0
+    },
+    "pane_integrale": {
+      "matches": 32,
+      "core_complete_count": 25,
+      "best_core": true,
+      "multi_source_ge5": 0,
+      "multi_source_ge5_core": 0
+    },
+    "riso_integrale": {
+      "matches": 30,
+      "core_complete_count": 27,
+      "best_core": true,
+      "multi_source_ge5": 0,
+      "multi_source_ge5_core": 0
+    },
+    "banana": {
+      "matches": 50,
+      "core_complete_count": 48,
+      "best_core": true,
+      "multi_source_ge5": 1,
+      "multi_source_ge5_core": 1
+    },
+    "uovo": {
+      "matches": 50,
+      "core_complete_count": 50,
+      "best_core": true,
+      "multi_source_ge5": 0,
+      "multi_source_ge5_core": 0
+    },
+    "cetriolo": {
+      "matches": 50,
+      "core_complete_count": 50,
+      "best_core": true,
+      "multi_source_ge5": 0,
+      "multi_source_ge5_core": 0
+    },
+    "uva": {
+      "matches": 50,
+      "core_complete_count": 50,
+      "best_core": true,
+      "multi_source_ge5": 1,
+      "multi_source_ge5_core": 1
+    }
+  },
+  "target_regressions": {
+    "pasta_integrale": [
+      {
+        "id": 37635,
+        "name": "Pasta di semola, integrale",
+        "name_en": "Pasta, wholemeal durum wheat, raw",
+        "sc": 1,
+        "mc": 6,
+        "core": true,
+        "coverage": {
+          "energy": true,
+          "protein": true,
+          "fat": true,
+          "carbs": true,
+          "fiber": true,
+          "sugars": true
+        }
+      },
+      {
+        "id": 37636,
+        "name": "Pasta di semola, integrale, cotta, bollita",
+        "name_en": "Pasta, wholemeal durum wheat, boiled in distilled water, no salt",
+        "sc": 1,
+        "mc": 6,
+        "core": true,
+        "coverage": {
+          "energy": true,
+          "protein": true,
+          "fat": true,
+          "carbs": true,
+          "fiber": true,
+          "sugars": true
+        }
+      },
+      {
+        "id": 38338,
+        "name": "Pasta integrale al sugo di pomodoro",
+        "name_en": "Pasta, wholemeal durum wheat, with tomato sauce",
+        "sc": 1,
+        "mc": 6,
+        "core": true,
+        "coverage": {
+          "energy": true,
+          "protein": true,
+          "fat": true,
+          "carbs": true,
+          "fiber": true,
+          "sugars": true
+        }
+      },
+      {
+        "id": 13419,
+        "name": "Fresh wholemeal egg pasta with almond pesto",
+        "name_en": "Fresh wholemeal egg pasta with almond pesto",
+        "sc": 1,
+        "mc": 6,
+        "core": true,
+        "coverage": {
+          "energy": true,
+          "protein": true,
+          "fat": true,
+          "carbs": true,
+          "fiber": true,
+          "sugars": true
+        }
+      },
+      {
+        "id": 13141,
+        "name": "Fresh wholemeal egg pasta with anchovy-herb pesto",
+        "name_en": "Fresh wholemeal egg pasta with anchovy-herb pesto",
+        "sc": 1,
+        "mc": 6,
+        "core": true,
+        "coverage": {
+          "energy": true,
+          "protein": true,
+          "fat": true,
+          "carbs": true,
+          "fiber": true,
+          "sugars": true
+        }
+      },
+      {
+        "id": 13808,
+        "name": "Fresh wholemeal egg pasta with Bolognese (minced meat sauce)",
+        "name_en": "Fresh wholemeal egg pasta with Bolognese (minced meat sauce)",
+        "sc": 1,
+        "mc": 6,
+        "core": true,
+        "coverage": {
+          "energy": true,
+          "protein": true,
+          "fat": true,
+          "carbs": true,
+          "fiber": true,
+          "sugars": true
+        }
+      },
+      {
+        "id": 12802,
+        "name": "Fresh wholemeal egg pasta with Roquefort sauce",
+        "name_en": "Fresh wholemeal egg pasta with Roquefort sauce",
+        "sc": 1,
+        "mc": 6,
+        "core": true,
+        "coverage": {
+          "energy": true,
+          "protein": true,
+          "fat": true,
+          "carbs": true,
+          "fiber": true,
+          "sugars": true
+        }
+      },
+      {
+        "id": 13639,
+        "name": "Fresh wholemeal egg pasta with spinach and canned tomatoes, gratinated",
+        "name_en": "Fresh wholemeal egg pasta with spinach and canned tomatoes, gratinated",
+        "sc": 1,
+        "mc": 6,
+        "core": true,
+        "coverage": {
+          "energy": true,
+          "protein": true,
+          "fat": true,
+          "carbs": true,
+          "fiber": true,
+          "sugars": true
+        }
+      },
+      {
+        "id": 13312,
+        "name": "Fresh wholemeal egg pasta with stewed mixed vegetables",
+        "name_en": "Fresh wholemeal egg pasta with stewed mixed vegetables",
+        "sc": 1,
+        "mc": 6,
+        "core": true,
+        "coverage": {
+          "energy": true,
+          "protein": true,
+          "fat": true,
+          "carbs": true,
+          "fiber": true,
+          "sugars": true
+        }
+      },
+      {
+        "id": 12741,
+        "name": "Fresh wholemeal egg pasta with tomato sauce from white basic sauce",
+        "name_en": "Fresh wholemeal egg pasta with tomato sauce from white basic sauce",
+        "sc": 1,
+        "mc": 6,
+        "core": true,
+        "coverage": {
+          "energy": true,
+          "protein": true,
+          "fat": true,
+          "carbs": true,
+          "fiber": true,
+          "sugars": true
+        }
+      },
+      {
+        "id": 9416,
+        "name": "Fresh wholemeal egg pasta, homemade, raw",
+        "name_en": "Fresh wholemeal egg pasta, homemade, raw",
+        "sc": 1,
+        "mc": 6,
+        "core": true,
+        "coverage": {
+          "energy": true,
+          "protein": true,
+          "fat": true,
+          "carbs": true,
+          "fiber": true,
+          "sugars": true
+        }
+      },
+      {
+        "id": 23129,
+        "name": "LASAGNE, BEEF STEAK MINCE, WHOLE WHEAT PASTA",
+        "name_en": "LASAGNE, BEEF STEAK MINCE, WHOLE WHEAT PASTA",
+        "sc": 1,
+        "mc": 6,
+        "core": true,
+        "coverage": {
+          "energy": true,
+          "protein": true,
+          "fat": true,
+          "carbs": true,
+          "fiber": true,
+          "sugars": true
+        }
+      },
+      {
+        "id": 27796,
+        "name": "Pasta wholemeal boiled",
+        "name_en": "Pasta wholemeal boiled",
+        "sc": 1,
+        "mc": 6,
+        "core": true,
+        "coverage": {
+          "energy": true,
+          "protein": true,
+          "fat": true,
+          "carbs": true,
+          "fiber": true,
+          "sugars": true
+        }
+      },
+      {
+        "id": 27241,
+        "name": "Pasta wholemeal raw",
+        "name_en": "Pasta wholemeal raw",
+        "sc": 1,
+        "mc": 6,
+        "core": true,
+        "coverage": {
+          "energy": true,
+          "protein": true,
+          "fat": true,
+          "carbs": true,
+          "fiber": true,
+          "sugars": true
+        }
+      },
+      {
+        "id": 3342,
+        "name": "Pasta, macaroni (elbow), whole wheat, cooked",
+        "name_en": "Pasta, macaroni (elbow), whole wheat, cooked",
+        "sc": 1,
+        "mc": 6,
+        "core": true,
+        "coverage": {
+          "energy": true,
+          "protein": true,
+          "fat": true,
+          "carbs": true,
+          "fiber": true,
+          "sugars": true
+        }
+      },
+      {
+        "id": 3402,
+        "name": "Pasta, spaghetti, whole-wheat, cooked",
+        "name_en": "Pasta, spaghetti, whole-wheat, cooked",
+        "sc": 1,
+        "mc": 6,
+        "core": true,
+        "coverage": {
+          "energy": true,
+          "protein": true,
+          "fat": true,
+          "carbs": true,
+          "fiber": true,
+          "sugars": true
+        }
+      },
+      {
+        "id": 36346,
+        "name": "Pasta, wholewheat, spaghetti, dried, raw",
+        "name_en": "Pasta, wholewheat, spaghetti, dried, raw",
+        "sc": 1,
+        "mc": 6,
+        "core": true,
+        "coverage": {
+          "energy": true,
+          "protein": true,
+          "fat": true,
+          "carbs": true,
+          "fiber": true,
+          "sugars": true
+        }
+      },
+      {
+        "id": 11778,
+        "name": "Wholemeal egg pasta boiled",
+        "name_en": "Wholemeal egg pasta boiled",
+        "sc": 1,
+        "mc": 6,
+        "core": true,
+        "coverage": {
+          "energy": true,
+          "protein": true,
+          "fat": true,
+          "carbs": true,
+          "fiber": true,
+          "sugars": true
+        }
+      },
+      {
+        "id": 12643,
+        "name": "Wholemeal egg pasta boiled, baked",
+        "name_en": "Wholemeal egg pasta boiled, baked",
+        "sc": 1,
+        "mc": 6,
+        "core": true,
+        "coverage": {
+          "energy": true,
+          "protein": true,
+          "fat": true,
+          "carbs": true,
+          "fiber": true,
+          "sugars": true
+        }
+      },
+      {
+        "id": 13113,
+        "name": "Wholemeal egg pasta boiled, fried without fat (pan)",
+        "name_en": "Wholemeal egg pasta boiled, fried without fat (pan)",
+        "sc": 1,
+        "mc": 6,
+        "core": true,
+        "coverage": {
+          "energy": true,
+          "protein": true,
+          "fat": true,
+          "carbs": true,
+          "fiber": true,
+          "sugars": true
+        }
+      },
+      {
+        "id": 9159,
+        "name": "Wholemeal egg pasta raw",
+        "name_en": "Wholemeal egg pasta raw",
+        "sc": 1,
+        "mc": 6,
+        "core": true,
+        "coverage": {
+          "energy": true,
+          "protein": true,
+          "fat": true,
+          "carbs": true,
+          "fiber": true,
+          "sugars": true
+        }
+      },
+      {
+        "id": 10534,
+        "name": "Wholemeal pasta egg-free, boiled",
+        "name_en": "Wholemeal pasta egg-free, boiled",
+        "sc": 1,
+        "mc": 6,
+        "core": true,
+        "coverage": {
+          "energy": true,
+          "protein": true,
+          "fat": true,
+          "carbs": true,
+          "fiber": true,
+          "sugars": true
+        }
+      },
+      {
+        "id": 12497,
+        "name": "Wholemeal pasta egg-free, boiled, baked",
+        "name_en": "Wholemeal pasta egg-free, boiled, baked",
+        "sc": 1,
+        "mc": 6,
+        "core": true,
+        "coverage": {
+          "energy": true,
+          "protein": true,
+          "fat": true,
+          "carbs": true,
+          "fiber": true,
+          "sugars": true
+        }
+      },
+      {
+        "id": 12422,
+        "name": "Wholemeal pasta egg-free, boiled, fried without fat (pan)",
+        "name_en": "Wholemeal pasta egg-free, boiled, fried without fat (pan)",
+        "sc": 1,
+        "mc": 6,
+        "core": true,
+        "coverage": {
+          "energy": true,
+          "protein": true,
+          "fat": true,
+          "carbs": true,
+          "fiber": true,
+          "sugars": true
+        }
+      },
+      {
+        "id": 6908,
+        "name": "Wholemeal pasta egg-free, raw",
+        "name_en": "Wholemeal pasta egg-free, raw",
+        "sc": 1,
+        "mc": 6,
+        "core": true,
+        "coverage": {
+          "energy": true,
+          "protein": true,
+          "fat": true,
+          "carbs": true,
+          "fiber": true,
+          "sugars": true
+        }
+      },
+      {
+        "id": 12230,
+        "name": "Wholemeal spelt egg pasta boiled",
+        "name_en": "Wholemeal spelt egg pasta boiled",
+        "sc": 1,
+        "mc": 6,
+        "core": true,
+        "coverage": {
+          "energy": true,
+          "protein": true,
+          "fat": true,
+          "carbs": true,
+          "fiber": true,
+          "sugars": true
+        }
+      },
+      {
+        "id": 9925,
+        "name": "Wholemeal spelt egg pasta raw",
+        "name_en": "Wholemeal spelt egg pasta raw",
+        "sc": 1,
+        "mc": 6,
+        "core": true,
+        "coverage": {
+          "energy": true,
+          "protein": true,
+          "fat": true,
+          "carbs": true,
+          "fiber": true,
+          "sugars": true
+        }
+      },
+      {
+        "id": 11597,
+        "name": "Wholemeal spelt pasta egg-free, boiled",
+        "name_en": "Wholemeal spelt pasta egg-free, boiled",
+        "sc": 1,
+        "mc": 6,
+        "core": true,
+        "coverage": {
+          "energy": true,
+          "protein": true,
+          "fat": true,
+          "carbs": true,
+          "fiber": true,
+          "sugars": true
+        }
+      },
+      {
+        "id": 9911,
+        "name": "Wholemeal spelt pasta egg-free, raw",
+        "name_en": "Wholemeal spelt pasta egg-free, raw",
+        "sc": 1,
+        "mc": 6,
+        "core": true,
+        "coverage": {
+          "energy": true,
+          "protein": true,
+          "fat": true,
+          "carbs": true,
+          "fiber": true,
+          "sugars": true
+        }
+      },
+      {
+        "id": 24569,
+        "name": "Pasta, dry, semi-wholewheat, cooked, no added salt",
+        "name_en": "Pasta, dry, semi-wholewheat, cooked, no added salt",
+        "sc": 1,
+        "mc": 5,
+        "core": true,
+        "coverage": {
+          "energy": true,
+          "protein": true,
+          "fat": true,
+          "carbs": true,
+          "fiber": false,
+          "sugars": true
+        }
+      },
+      {
+        "id": 24566,
+        "name": "Pasta, dry, wholewheat, cooked, no added salt",
+        "name_en": "Pasta, dry, wholewheat, cooked, no added salt",
+        "sc": 1,
+        "mc": 5,
+        "core": true,
+        "coverage": {
+          "energy": true,
+          "protein": true,
+          "fat": true,
+          "carbs": true,
+          "fiber": false,
+          "sugars": true
+        }
+      },
+      {
+        "id": 24601,
+        "name": "Pasta, dry, wholewheat, raw",
+        "name_en": "Pasta, dry, wholewheat, raw",
+        "sc": 1,
+        "mc": 5,
+        "core": true,
+        "coverage": {
+          "energy": true,
+          "protein": true,
+          "fat": true,
+          "carbs": true,
+          "fiber": false,
+          "sugars": true
+        }
+      },
+      {
+        "id": 3341,
+        "name": "Pasta, macaroni (elbow), whole wheat, dry",
+        "name_en": "Pasta, macaroni (elbow), whole wheat, dry",
+        "sc": 1,
+        "mc": 5,
+        "core": true,
+        "coverage": {
+          "energy": true,
+          "protein": true,
+          "fat": true,
+          "carbs": true,
+          "fiber": true,
+          "sugars": false
+        }
+      },
+      {
+        "id": 3401,
+        "name": "Pasta, spaghetti, whole-wheat, dry",
+        "name_en": "Pasta, spaghetti, whole-wheat, dry",
+        "sc": 1,
+        "mc": 5,
+        "core": true,
+        "coverage": {
+          "energy": true,
+          "protein": true,
+          "fat": true,
+          "carbs": true,
+          "fiber": true,
+          "sugars": false
+        }
+      },
+      {
+        "id": 36345,
+        "name": "Pasta, wholewheat, spaghetti, dried, boiled in unsalted water",
+        "name_en": "Pasta, wholewheat, spaghetti, dried, boiled in unsalted water",
+        "sc": 1,
+        "mc": 5,
+        "core": true,
+        "coverage": {
+          "energy": true,
+          "protein": true,
+          "fat": true,
+          "carbs": true,
+          "fiber": true,
+          "sugars": false
+        }
+      },
+      {
+        "id": 36832,
+        "name": "Salad, wholemeal pasta, with vegetables and mayonnaise",
+        "name_en": "Salad, wholemeal pasta, with vegetables and mayonnaise",
+        "sc": 1,
+        "mc": 5,
+        "core": true,
+        "coverage": {
+          "energy": true,
+          "protein": true,
+          "fat": true,
+          "carbs": true,
+          "fiber": false,
+          "sugars": true
+        }
+      },
+      {
+        "id": 21758,
+        "name": "LASAGNE, BEEF MINCE (17%), WHOLE WHEAT PASTA, MEAL MIXTURE",
+        "name_en": "LASAGNE, BEEF MINCE (17%), WHOLE WHEAT PASTA, MEAL MIXTURE",
+        "sc": 1,
+        "mc": 5,
+        "core": false,
+        "coverage": {
+          "energy": false,
+          "protein": true,
+          "fat": true,
+          "carbs": true,
+          "fiber": true,
+          "sugars": true
+        }
+      },
+      {
+        "id": 21418,
+        "name": "PASTA, WHOLEGRAIN RICE FLOUR, NATURALLY GLUTEN-FREE",
+        "name_en": "PASTA, WHOLEGRAIN RICE FLOUR, NATURALLY GLUTEN-FREE",
+        "sc": 1,
+        "mc": 5,
+        "core": false,
+        "coverage": {
+          "energy": false,
+          "protein": true,
+          "fat": true,
+          "carbs": true,
+          "fiber": true,
+          "sugars": true
+        }
+      },
+      {
+        "id": 21841,
+        "name": "PASTA, WHOLEGRAIN RICE FLOUR, NATURALLY GLUTEN-FREE, BOILED WITHOUT SALT",
+        "name_en": "PASTA, WHOLEGRAIN RICE FLOUR, NATURALLY GLUTEN-FREE, BOILED WITHOUT SALT",
+        "sc": 1,
+        "mc": 5,
+        "core": false,
+        "coverage": {
+          "energy": false,
+          "protein": true,
+          "fat": true,
+          "carbs": true,
+          "fiber": true,
+          "sugars": true
+        }
+      },
+      {
+        "id": 21842,
+        "name": "PASTA, WHOLEGRAIN RICE FLOUR, NATURALLY GLUTEN-FREE, BOILED, SALT",
+        "name_en": "PASTA, WHOLEGRAIN RICE FLOUR, NATURALLY GLUTEN-FREE, BOILED, SALT",
+        "sc": 1,
+        "mc": 5,
+        "core": false,
+        "coverage": {
+          "energy": false,
+          "protein": true,
+          "fat": true,
+          "carbs": true,
+          "fiber": true,
+          "sugars": true
+        }
+      },
+      {
+        "id": 31406,
+        "name": "Miso, pasta de soja fermentada com arroz integral e cevada",
+        "name_en": "Miso, pasta de soja fermentada com arroz integral e cevada",
+        "sc": 1,
+        "mc": 2,
+        "core": false,
+        "coverage": {
+          "energy": true,
+          "protein": false,
+          "fat": false,
+          "carbs": false,
+          "fiber": true,
+          "sugars": false
+        }
+      },
+      {
+        "id": 17233,
+        "name": "Pasta, whole wheat, boiled",
+        "name_en": "Pasta, whole wheat, boiled",
+        "sc": 1,
+        "mc": 2,
+        "core": false,
+        "coverage": {
+          "energy": true,
+          "protein": false,
+          "fat": false,
+          "carbs": false,
+          "fiber": true,
+          "sugars": false
+        }
+      },
+      {
+        "id": 18273,
+        "name": "Whole wheat pasta, with mixed minced meat",
+        "name_en": "Whole wheat pasta, with mixed minced meat",
+        "sc": 1,
+        "mc": 2,
+        "core": false,
+        "coverage": {
+          "energy": true,
+          "protein": false,
+          "fat": false,
+          "carbs": false,
+          "fiber": true,
+          "sugars": false
+        }
+      },
+      {
+        "id": 6817,
+        "name": "Wholemeal pasta egg-free, cooked in salted water (uniodised)",
+        "name_en": "Wholemeal pasta egg-free, cooked in salted water (uniodised)",
+        "sc": 1,
+        "mc": 2,
+        "core": false,
+        "coverage": {
+          "energy": true,
+          "protein": false,
+          "fat": false,
+          "carbs": false,
+          "fiber": true,
+          "sugars": false
+        }
+      },
+      {
+        "id": 15593,
+        "name": "Pasta, whole wheat, dry",
+        "name_en": "Pasta, whole wheat, dry",
+        "sc": 1,
+        "mc": 1,
+        "core": false,
+        "coverage": {
+          "energy": true,
+          "protein": false,
+          "fat": false,
+          "carbs": false,
+          "fiber": false,
+          "sugars": false
+        }
+      },
+      {
+        "id": 6818,
+        "name": "Wholemeal pasta egg-free, dry",
+        "name_en": "Wholemeal pasta egg-free, dry",
+        "sc": 1,
+        "mc": 1,
+        "core": false,
+        "coverage": {
+          "energy": true,
+          "protein": false,
+          "fat": false,
+          "carbs": false,
+          "fiber": false,
+          "sugars": false
+        }
+      },
+      {
+        "id": 30460,
+        "name": "Baby food, in jars, wholemeal pasta with vegetables, from 12 months",
+        "name_en": "Baby food, in jars, wholemeal pasta with vegetables, from 12 months",
+        "sc": 1,
+        "mc": 0,
+        "core": false,
+        "coverage": {
+          "energy": false,
+          "protein": false,
+          "fat": false,
+          "carbs": false,
+          "fiber": false,
+          "sugars": false
+        }
+      },
+      {
+        "id": 37587,
+        "name": "Pasta, dry, whole grain, spaghetti",
+        "name_en": "Pasta, dry, whole grain, spaghetti",
+        "sc": 1,
+        "mc": 0,
+        "core": false,
+        "coverage": {
+          "energy": false,
+          "protein": false,
+          "fat": false,
+          "carbs": false,
+          "fiber": false,
+          "sugars": false
+        }
+      },
+      {
+        "id": 29866,
+        "name": "Pasta, whole grain, cooked with salt",
+        "name_en": "Pasta, whole grain, cooked with salt",
+        "sc": 1,
+        "mc": 0,
+        "core": false,
+        "coverage": {
+          "energy": false,
+          "protein": false,
+          "fat": false,
+          "carbs": false,
+          "fiber": false,
+          "sugars": false
+        }
+      },
+      {
+        "id": 29867,
+        "name": "Pasta, whole-grain, uncooked",
+        "name_en": "Pasta, whole-grain, uncooked",
+        "sc": 1,
+        "mc": 0,
+        "core": false,
+        "coverage": {
+          "energy": false,
+          "protein": false,
+          "fat": false,
+          "carbs": false,
+          "fiber": false,
+          "sugars": false
+        }
+      }
+    ],
+    "pane_integrale": [
+      {
+        "id": 8863,
+        "name": "Pane di tipo integrale",
+        "name_en": "Wholemeal bread",
+        "sc": 2,
+        "mc": 6,
+        "core": true,
+        "coverage": {
+          "energy": true,
+          "protein": true,
+          "fat": true,
+          "carbs": true,
+          "fiber": true,
+          "sugars": true
+        }
+      },
+      {
+        "id": 37625,
+        "name": "Pane di tipo semintegrale",
+        "name_en": "Bread, flour type 1",
+        "sc": 1,
+        "mc": 6,
+        "core": true,
+        "coverage": {
+          "energy": true,
+          "protein": true,
+          "fat": true,
+          "carbs": true,
+          "fiber": true,
+          "sugars": true
+        }
+      },
+      {
+        "id": 34969,
+        "name": "Bread rolls, wholemeal",
+        "name_en": "Bread rolls, wholemeal",
+        "sc": 1,
+        "mc": 6,
+        "core": true,
+        "coverage": {
+          "energy": true,
+          "protein": true,
+          "fat": true,
+          "carbs": true,
+          "fiber": true,
+          "sugars": true
+        }
+      },
+      {
+        "id": 14229,
+        "name": "Bread, wholemeal",
+        "name_en": "Bread, wholemeal",
+        "sc": 1,
+        "mc": 6,
+        "core": true,
+        "coverage": {
+          "energy": true,
+          "protein": true,
+          "fat": true,
+          "carbs": true,
+          "fiber": true,
+          "sugars": true
+        }
+      },
+      {
+        "id": 28756,
+        "name": "Breadsticks wholemeal",
+        "name_en": "Breadsticks wholemeal",
+        "sc": 1,
+        "mc": 6,
+        "core": true,
+        "coverage": {
+          "energy": true,
+          "protein": true,
+          "fat": true,
+          "carbs": true,
+          "fiber": true,
+          "sugars": true
+        }
+      },
+      {
+        "id": 28796,
+        "name": "Toasted ham-cheese sandwich w brown/wholemeal bread",
+        "name_en": "Toasted ham-cheese sandwich w brown/wholemeal bread",
+        "sc": 1,
+        "mc": 6,
+        "core": true,
+        "coverage": {
+          "energy": true,
+          "protein": true,
+          "fat": true,
+          "carbs": true,
+          "fiber": true,
+          "sugars": true
+        }
+      },
+      {
+        "id": 8305,
+        "name": "Wholemeal bread gluten-free",
+        "name_en": "Wholemeal bread gluten-free",
+        "sc": 1,
+        "mc": 6,
+        "core": true,
+        "coverage": {
+          "energy": true,
+          "protein": true,
+          "fat": true,
+          "carbs": true,
+          "fiber": true,
+          "sugars": true
+        }
+      },
+      {
+        "id": 8561,
+        "name": "Wholemeal bread with buttermilk",
+        "name_en": "Wholemeal bread with buttermilk",
+        "sc": 1,
+        "mc": 6,
+        "core": true,
+        "coverage": {
+          "energy": true,
+          "protein": true,
+          "fat": true,
+          "carbs": true,
+          "fiber": true,
+          "sugars": true
+        }
+      },
+      {
+        "id": 9161,
+        "name": "Wholemeal bread with nuts",
+        "name_en": "Wholemeal bread with nuts",
+        "sc": 1,
+        "mc": 6,
+        "core": true,
+        "coverage": {
+          "energy": true,
+          "protein": true,
+          "fat": true,
+          "carbs": true,
+          "fiber": true,
+          "sugars": true
+        }
+      },
+      {
+        "id": 8110,
+        "name": "Wholemeal bread with oilseeds",
+        "name_en": "Wholemeal bread with oilseeds",
+        "sc": 1,
+        "mc": 6,
+        "core": true,
+        "coverage": {
+          "energy": true,
+          "protein": true,
+          "fat": true,
+          "carbs": true,
+          "fiber": true,
+          "sugars": true
+        }
+      },
+      {
+        "id": 8707,
+        "name": "Wholemeal bread with pumpkin seeds",
+        "name_en": "Wholemeal bread with pumpkin seeds",
+        "sc": 1,
+        "mc": 6,
+        "core": true,
+        "coverage": {
+          "energy": true,
+          "protein": true,
+          "fat": true,
+          "carbs": true,
+          "fiber": true,
+          "sugars": true
+        }
+      },
+      {
+        "id": 8079,
+        "name": "Wholemeal bread with quark",
+        "name_en": "Wholemeal bread with quark",
+        "sc": 1,
+        "mc": 6,
+        "core": true,
+        "coverage": {
+          "energy": true,
+          "protein": true,
+          "fat": true,
+          "carbs": true,
+          "fiber": true,
+          "sugars": true
+        }
+      },
+      {
+        "id": 8260,
+        "name": "Wholemeal bread with sunflower seeds",
+        "name_en": "Wholemeal bread with sunflower seeds",
+        "sc": 1,
+        "mc": 6,
+        "core": true,
+        "coverage": {
+          "energy": true,
+          "protein": true,
+          "fat": true,
+          "carbs": true,
+          "fiber": true,
+          "sugars": true
+        }
+      },
+      {
+        "id": 23930,
+        "name": "Sandwich, club, wholemeal bread, bacon and raw vegetables, prepacked",
+        "name_en": "Sandwich, club, wholemeal bread, bacon and raw vegetables, prepacked",
+        "sc": 1,
+        "mc": 5,
+        "core": true,
+        "coverage": {
+          "energy": true,
+          "protein": true,
+          "fat": true,
+          "carbs": true,
+          "fiber": false,
+          "sugars": true
+        }
+      },
+      {
+        "id": 23919,
+        "name": "Sandwich, club, wholemeal bread, chicken and raw vegetables, prepacked",
+        "name_en": "Sandwich, club, wholemeal bread, chicken and raw vegetables, prepacked",
+        "sc": 1,
+        "mc": 5,
+        "core": true,
+        "coverage": {
+          "energy": true,
+          "protein": true,
+          "fat": true,
+          "carbs": true,
+          "fiber": false,
+          "sugars": true
+        }
+      },
+      {
+        "id": 23946,
+        "name": "Sandwich, club, wholemeal bread, chicken, prepacked",
+        "name_en": "Sandwich, club, wholemeal bread, chicken, prepacked",
+        "sc": 1,
+        "mc": 5,
+        "core": true,
+        "coverage": {
+          "energy": true,
+          "protein": true,
+          "fat": true,
+          "carbs": true,
+          "fiber": false,
+          "sugars": true
+        }
+      },
+      {
+        "id": 23927,
+        "name": "Sandwich, club, wholemeal bread, dry sausage, prepacked",
+        "name_en": "Sandwich, club, wholemeal bread, dry sausage, prepacked",
+        "sc": 1,
+        "mc": 5,
+        "core": true,
+        "coverage": {
+          "energy": true,
+          "protein": true,
+          "fat": true,
+          "carbs": true,
+          "fiber": false,
+          "sugars": true
+        }
+      },
+      {
+        "id": 23918,
+        "name": "Sandwich, club, wholemeal bread, ham and cheese, prepacked",
+        "name_en": "Sandwich, club, wholemeal bread, ham and cheese, prepacked",
+        "sc": 1,
+        "mc": 5,
+        "core": true,
+        "coverage": {
+          "energy": true,
+          "protein": true,
+          "fat": true,
+          "carbs": true,
+          "fiber": false,
+          "sugars": true
+        }
+      },
+      {
+        "id": 23938,
+        "name": "Sandwich, club, wholemeal bread, ham and raw vegetables, prepacked",
+        "name_en": "Sandwich, club, wholemeal bread, ham and raw vegetables, prepacked",
+        "sc": 1,
+        "mc": 5,
+        "core": true,
+        "coverage": {
+          "energy": true,
+          "protein": true,
+          "fat": true,
+          "carbs": true,
+          "fiber": false,
+          "sugars": true
+        }
+      },
+      {
+        "id": 23937,
+        "name": "Sandwich, club, wholemeal bread, ham, cheese and raw vegetables, prepacked",
+        "name_en": "Sandwich, club, wholemeal bread, ham, cheese and raw vegetables, prepacked",
+        "sc": 1,
+        "mc": 5,
+        "core": true,
+        "coverage": {
+          "energy": true,
+          "protein": true,
+          "fat": true,
+          "carbs": true,
+          "fiber": false,
+          "sugars": true
+        }
+      },
+      {
+        "id": 23936,
+        "name": "Sandwich, club, wholemeal bread, ham, egg and raw vegetables, prepacked",
+        "name_en": "Sandwich, club, wholemeal bread, ham, egg and raw vegetables, prepacked",
+        "sc": 1,
+        "mc": 5,
+        "core": true,
+        "coverage": {
+          "energy": true,
+          "protein": true,
+          "fat": true,
+          "carbs": true,
+          "fiber": false,
+          "sugars": true
+        }
+      },
+      {
+        "id": 23920,
+        "name": "Sandwich, club, wholemeal bread, ham, prepacked",
+        "name_en": "Sandwich, club, wholemeal bread, ham, prepacked",
+        "sc": 1,
+        "mc": 5,
+        "core": true,
+        "coverage": {
+          "energy": true,
+          "protein": true,
+          "fat": true,
+          "carbs": true,
+          "fiber": false,
+          "sugars": true
+        }
+      },
+      {
+        "id": 23935,
+        "name": "Sandwich, club, wholemeal bread, smoked salmon, prepacked",
+        "name_en": "Sandwich, club, wholemeal bread, smoked salmon, prepacked",
+        "sc": 1,
+        "mc": 5,
+        "core": true,
+        "coverage": {
+          "energy": true,
+          "protein": true,
+          "fat": true,
+          "carbs": true,
+          "fiber": false,
+          "sugars": true
+        }
+      },
+      {
+        "id": 23917,
+        "name": "Sandwich, club, wholemeal bread, tuna and raw vegetables, prepacked",
+        "name_en": "Sandwich, club, wholemeal bread, tuna and raw vegetables, prepacked",
+        "sc": 1,
+        "mc": 5,
+        "core": true,
+        "coverage": {
+          "energy": true,
+          "protein": true,
+          "fat": true,
+          "carbs": true,
+          "fiber": false,
+          "sugars": true
+        }
+      },
+      {
+        "id": 23934,
+        "name": "Sandwich, club, wholemeal bread, tuna, egg and raw vegetables, prepacked",
+        "name_en": "Sandwich, club, wholemeal bread, tuna, egg and raw vegetables, prepacked",
+        "sc": 1,
+        "mc": 5,
+        "core": true,
+        "coverage": {
+          "energy": true,
+          "protein": true,
+          "fat": true,
+          "carbs": true,
+          "fiber": false,
+          "sugars": true
+        }
+      },
+      {
+        "id": 19273,
+        "name": "Brown bread, whole wheat, with rye grains and wheat bran, Südamesepik, type 'Fazer'",
+        "name_en": "Brown bread, whole wheat, with rye grains and wheat bran, Südamesepik, type 'Fazer'",
+        "sc": 1,
+        "mc": 4,
+        "core": false,
+        "coverage": {
+          "energy": true,
+          "protein": true,
+          "fat": false,
+          "carbs": true,
+          "fiber": false,
+          "sugars": true
+        }
+      },
+      {
+        "id": 19061,
+        "name": "Sandwich bread, oat, with oat bran, oat flakes and oat grains, Oatfit Kaerasüda, type 'Leibur'",
+        "name_en": "Sandwich bread, oat, with oat bran, oat flakes and oat grains, Oatfit Kaerasüda, type 'Leibur'",
+        "sc": 1,
+        "mc": 4,
+        "core": false,
+        "coverage": {
+          "energy": true,
+          "protein": true,
+          "fat": false,
+          "carbs": true,
+          "fiber": false,
+          "sugars": true
+        }
+      },
+      {
+        "id": 19230,
+        "name": "Toast bread, wholegrain oat and wheat, with oat flakes, - grains and - bran, OatFIT Kaeraröst, type 'Leibur'",
+        "name_en": "Toast bread, wholegrain oat and wheat, with oat flakes, - grains and - bran, OatFIT Kaeraröst, type 'Leibur'",
+        "sc": 1,
+        "mc": 4,
+        "core": false,
+        "coverage": {
+          "energy": true,
+          "protein": true,
+          "fat": true,
+          "carbs": false,
+          "fiber": true,
+          "sugars": false
+        }
+      },
+      {
+        "id": 19227,
+        "name": "Toast bread, Saib, type 'Leibur'",
+        "name_en": "Toast bread, Saib, type 'Leibur'",
+        "sc": 1,
+        "mc": 3,
+        "core": false,
+        "coverage": {
+          "energy": true,
+          "protein": true,
+          "fat": true,
+          "carbs": false,
+          "fiber": false,
+          "sugars": false
+        }
+      },
+      {
+        "id": 5809,
+        "name": "Bread for toasting, wholemeal",
+        "name_en": "Bread for toasting, wholemeal",
+        "sc": 1,
+        "mc": 1,
+        "core": false,
+        "coverage": {
+          "energy": true,
+          "protein": false,
+          "fat": false,
+          "carbs": false,
+          "fiber": false,
+          "sugars": false
+        }
+      },
+      {
+        "id": 17027,
+        "name": "Bun, whole wheat",
+        "name_en": "Bun, whole wheat",
+        "sc": 1,
+        "mc": 1,
+        "core": false,
+        "coverage": {
+          "energy": true,
+          "protein": false,
+          "fat": false,
+          "carbs": false,
+          "fiber": false,
+          "sugars": false
+        }
+      },
+      {
+        "id": 29782,
+        "name": "Flour, gluten-free, mix for wholemeal bread",
+        "name_en": "Flour, gluten-free, mix for wholemeal bread",
+        "sc": 1,
+        "mc": 0,
+        "core": false,
+        "coverage": {
+          "energy": false,
+          "protein": false,
+          "fat": false,
+          "carbs": false,
+          "fiber": false,
+          "sugars": false
+        }
+      }
+    ],
+    "riso_integrale": [
+      {
+        "id": 37608,
+        "name": "Riso, integrale",
+        "name_en": "Rice, whole, raw",
+        "sc": 1,
+        "mc": 6,
+        "core": true,
+        "coverage": {
+          "energy": true,
+          "protein": true,
+          "fat": true,
+          "carbs": true,
+          "fiber": true,
+          "sugars": true
+        }
+      },
+      {
+        "id": 37609,
+        "name": "Riso, integrale, cotto, bollito",
+        "name_en": "Rice, whole, boiled in distilled water, no salt, drained",
+        "sc": 1,
+        "mc": 6,
+        "core": true,
+        "coverage": {
+          "energy": true,
+          "protein": true,
+          "fat": true,
+          "carbs": true,
+          "fiber": true,
+          "sugars": true
+        }
+      },
+      {
+        "id": 9562,
+        "name": "Brown rice boiled",
+        "name_en": "Brown rice boiled",
+        "sc": 1,
+        "mc": 6,
+        "core": true,
+        "coverage": {
+          "energy": true,
+          "protein": true,
+          "fat": true,
+          "carbs": true,
+          "fiber": true,
+          "sugars": true
+        }
+      },
+      {
+        "id": 12152,
+        "name": "Brown rice boiled, fried without fat (pan)",
+        "name_en": "Brown rice boiled, fried without fat (pan)",
+        "sc": 1,
+        "mc": 6,
+        "core": true,
+        "coverage": {
+          "energy": true,
+          "protein": true,
+          "fat": true,
+          "carbs": true,
+          "fiber": true,
+          "sugars": true
+        }
+      },
+      {
+        "id": 6958,
+        "name": "Brown rice raw",
+        "name_en": "Brown rice raw",
+        "sc": 1,
+        "mc": 6,
+        "core": true,
+        "coverage": {
+          "energy": true,
+          "protein": true,
+          "fat": true,
+          "carbs": true,
+          "fiber": true,
+          "sugars": true
+        }
+      },
+      {
+        "id": 8718,
+        "name": "Brown rice stewed (with fat and salt)",
+        "name_en": "Brown rice stewed (with fat and salt)",
+        "sc": 1,
+        "mc": 6,
+        "core": true,
+        "coverage": {
+          "energy": true,
+          "protein": true,
+          "fat": true,
+          "carbs": true,
+          "fiber": true,
+          "sugars": true
+        }
+      },
+      {
+        "id": 748,
+        "name": "Cereal, ready to eat, Brown Rice Crisps, Barbara's Bakery",
+        "name_en": "Cereal, ready to eat, Brown Rice Crisps, Barbara's Bakery",
+        "sc": 1,
+        "mc": 6,
+        "core": true,
+        "coverage": {
+          "energy": true,
+          "protein": true,
+          "fat": true,
+          "carbs": true,
+          "fiber": true,
+          "sugars": true
+        }
+      },
+      {
+        "id": 36475,
+        "name": "Pilau, egg and potato, brown rice, homemade",
+        "name_en": "Pilau, egg and potato, brown rice, homemade",
+        "sc": 1,
+        "mc": 6,
+        "core": true,
+        "coverage": {
+          "energy": true,
+          "protein": true,
+          "fat": true,
+          "carbs": true,
+          "fiber": true,
+          "sugars": true
+        }
+      },
+      {
+        "id": 14849,
+        "name": "Rice cake/cracker, puffed brown rice, plain",
+        "name_en": "Rice cake/cracker, puffed brown rice, plain",
+        "sc": 1,
+        "mc": 6,
+        "core": true,
+        "coverage": {
+          "energy": true,
+          "protein": true,
+          "fat": true,
+          "carbs": true,
+          "fiber": true,
+          "sugars": true
+        }
+      },
+      {
+        "id": 5395,
+        "name": "Snacks, brown rice chips",
+        "name_en": "Snacks, brown rice chips",
+        "sc": 1,
+        "mc": 6,
+        "core": true,
+        "coverage": {
+          "energy": true,
+          "protein": true,
+          "fat": true,
+          "carbs": true,
+          "fiber": true,
+          "sugars": true
+        }
+      },
+      {
+        "id": 3056,
+        "name": "Snacks, rice cakes, brown rice, plain",
+        "name_en": "Snacks, rice cakes, brown rice, plain",
+        "sc": 1,
+        "mc": 6,
+        "core": true,
+        "coverage": {
+          "energy": true,
+          "protein": true,
+          "fat": true,
+          "carbs": true,
+          "fiber": true,
+          "sugars": true
+        }
+      },
+      {
+        "id": 3277,
+        "name": "Snacks, rice cakes, brown rice, plain, unsalted",
+        "name_en": "Snacks, rice cakes, brown rice, plain, unsalted",
+        "sc": 1,
+        "mc": 6,
+        "core": true,
+        "coverage": {
+          "energy": true,
+          "protein": true,
+          "fat": true,
+          "carbs": true,
+          "fiber": true,
+          "sugars": true
+        }
+      },
+      {
+        "id": 36755,
+        "name": "Rice and black-eye beans, brown rice",
+        "name_en": "Rice and black-eye beans, brown rice",
+        "sc": 1,
+        "mc": 5,
+        "core": true,
+        "coverage": {
+          "energy": true,
+          "protein": true,
+          "fat": true,
+          "carbs": true,
+          "fiber": false,
+          "sugars": true
+        }
+      },
+      {
+        "id": 36757,
+        "name": "Rice and pigeon peas, brown rice",
+        "name_en": "Rice and pigeon peas, brown rice",
+        "sc": 1,
+        "mc": 5,
+        "core": true,
+        "coverage": {
+          "energy": true,
+          "protein": true,
+          "fat": true,
+          "carbs": true,
+          "fiber": false,
+          "sugars": true
+        }
+      },
+      {
+        "id": 36759,
+        "name": "Rice and red kidney beans, brown rice",
+        "name_en": "Rice and red kidney beans, brown rice",
+        "sc": 1,
+        "mc": 5,
+        "core": true,
+        "coverage": {
+          "energy": true,
+          "protein": true,
+          "fat": true,
+          "carbs": true,
+          "fiber": false,
+          "sugars": true
+        }
+      },
+      {
+        "id": 36761,
+        "name": "Rice and split peas, brown rice",
+        "name_en": "Rice and split peas, brown rice",
+        "sc": 1,
+        "mc": 5,
+        "core": true,
+        "coverage": {
+          "energy": true,
+          "protein": true,
+          "fat": true,
+          "carbs": true,
+          "fiber": false,
+          "sugars": true
+        }
+      },
+      {
+        "id": 36790,
+        "name": "Risotto, vegetable, brown rice",
+        "name_en": "Risotto, vegetable, brown rice",
+        "sc": 1,
+        "mc": 5,
+        "core": true,
+        "coverage": {
+          "energy": true,
+          "protein": true,
+          "fat": true,
+          "carbs": true,
+          "fiber": false,
+          "sugars": true
+        }
+      },
+      {
+        "id": 36792,
+        "name": "Rissoles, brown rice, fried in sunflower oil",
+        "name_en": "Rissoles, brown rice, fried in sunflower oil",
+        "sc": 1,
+        "mc": 5,
+        "core": true,
+        "coverage": {
+          "energy": true,
+          "protein": true,
+          "fat": true,
+          "carbs": true,
+          "fiber": false,
+          "sugars": true
+        }
+      },
+      {
+        "id": 36793,
+        "name": "Rissoles, brown rice, fried in vegetable oil",
+        "name_en": "Rissoles, brown rice, fried in vegetable oil",
+        "sc": 1,
+        "mc": 5,
+        "core": true,
+        "coverage": {
+          "energy": true,
+          "protein": true,
+          "fat": true,
+          "carbs": true,
+          "fiber": false,
+          "sugars": true
+        }
+      },
+      {
+        "id": 3057,
+        "name": "Snacks, rice cakes, brown rice, buckwheat",
+        "name_en": "Snacks, rice cakes, brown rice, buckwheat",
+        "sc": 1,
+        "mc": 5,
+        "core": true,
+        "coverage": {
+          "energy": true,
+          "protein": true,
+          "fat": true,
+          "carbs": true,
+          "fiber": true,
+          "sugars": false
+        }
+      },
+      {
+        "id": 3256,
+        "name": "Snacks, rice cakes, brown rice, corn",
+        "name_en": "Snacks, rice cakes, brown rice, corn",
+        "sc": 1,
+        "mc": 5,
+        "core": true,
+        "coverage": {
+          "energy": true,
+          "protein": true,
+          "fat": true,
+          "carbs": true,
+          "fiber": true,
+          "sugars": false
+        }
+      },
+      {
+        "id": 3257,
+        "name": "Snacks, rice cakes, brown rice, multigrain",
+        "name_en": "Snacks, rice cakes, brown rice, multigrain",
+        "sc": 1,
+        "mc": 5,
+        "core": true,
+        "coverage": {
+          "energy": true,
+          "protein": true,
+          "fat": true,
+          "carbs": true,
+          "fiber": true,
+          "sugars": false
+        }
+      },
+      {
+        "id": 3259,
+        "name": "Snacks, rice cakes, brown rice, rye",
+        "name_en": "Snacks, rice cakes, brown rice, rye",
+        "sc": 1,
+        "mc": 5,
+        "core": true,
+        "coverage": {
+          "energy": true,
+          "protein": true,
+          "fat": true,
+          "carbs": true,
+          "fiber": true,
+          "sugars": false
+        }
+      },
+      {
+        "id": 3058,
+        "name": "Snacks, rice cakes, brown rice, sesame seed",
+        "name_en": "Snacks, rice cakes, brown rice, sesame seed",
+        "sc": 1,
+        "mc": 5,
+        "core": true,
+        "coverage": {
+          "energy": true,
+          "protein": true,
+          "fat": true,
+          "carbs": true,
+          "fiber": true,
+          "sugars": false
+        }
+      },
+      {
+        "id": 3278,
+        "name": "Snacks, rice cakes, brown rice, buckwheat, unsalted",
+        "name_en": "Snacks, rice cakes, brown rice, buckwheat, unsalted",
+        "sc": 1,
+        "mc": 4,
+        "core": true,
+        "coverage": {
+          "energy": true,
+          "protein": true,
+          "fat": true,
+          "carbs": true,
+          "fiber": false,
+          "sugars": false
+        }
+      },
+      {
+        "id": 3279,
+        "name": "Snacks, rice cakes, brown rice, multigrain, unsalted",
+        "name_en": "Snacks, rice cakes, brown rice, multigrain, unsalted",
+        "sc": 1,
+        "mc": 4,
+        "core": true,
+        "coverage": {
+          "energy": true,
+          "protein": true,
+          "fat": true,
+          "carbs": true,
+          "fiber": false,
+          "sugars": false
+        }
+      },
+      {
+        "id": 3280,
+        "name": "Snacks, rice cakes, brown rice, sesame seed, unsalted",
+        "name_en": "Snacks, rice cakes, brown rice, sesame seed, unsalted",
+        "sc": 1,
+        "mc": 4,
+        "core": true,
+        "coverage": {
+          "energy": true,
+          "protein": true,
+          "fat": true,
+          "carbs": true,
+          "fiber": false,
+          "sugars": false
+        }
+      },
+      {
+        "id": 20783,
+        "name": "RICE, BROWN",
+        "name_en": "RICE, BROWN",
+        "sc": 1,
+        "mc": 5,
+        "core": false,
+        "coverage": {
+          "energy": false,
+          "protein": true,
+          "fat": true,
+          "carbs": true,
+          "fiber": true,
+          "sugars": true
+        }
+      },
+      {
+        "id": 17766,
+        "name": "Rice, whole grain, boiled",
+        "name_en": "Rice, whole grain, boiled",
+        "sc": 1,
+        "mc": 2,
+        "core": false,
+        "coverage": {
+          "energy": true,
+          "protein": false,
+          "fat": false,
+          "carbs": false,
+          "fiber": true,
+          "sugars": false
+        }
+      },
+      {
+        "id": 15930,
+        "name": "Rice, whole grain, dry",
+        "name_en": "Rice, whole grain, dry",
+        "sc": 1,
+        "mc": 1,
+        "core": false,
+        "coverage": {
+          "energy": true,
+          "protein": false,
+          "fat": false,
+          "carbs": false,
+          "fiber": false,
+          "sugars": false
+        }
+      }
+    ],
+    "banana": [
+      {
+        "id": 1044,
+        "name": "Banana, raw",
+        "name_en": "Banana, raw",
+        "sc": 5,
+        "mc": 6,
+        "core": true,
+        "coverage": {
+          "energy": true,
+          "protein": true,
+          "fat": true,
+          "carbs": true,
+          "fiber": true,
+          "sugars": true
+        }
+      },
+      {
+        "id": 5730,
+        "name": "Banana, dried",
+        "name_en": "Banana, dried",
+        "sc": 3,
+        "mc": 6,
+        "core": true,
+        "coverage": {
+          "energy": true,
+          "protein": true,
+          "fat": true,
+          "carbs": true,
+          "fiber": true,
+          "sugars": true
+        }
+      },
+      {
+        "id": 15122,
+        "name": "Banana",
+        "name_en": "Banana",
+        "sc": 2,
+        "mc": 6,
+        "core": true,
+        "coverage": {
+          "energy": true,
+          "protein": true,
+          "fat": true,
+          "carbs": true,
+          "fiber": true,
+          "sugars": true
+        }
+      },
+      {
+        "id": 10923,
+        "name": "Banana nectar",
+        "name_en": "Banana nectar",
+        "sc": 2,
+        "mc": 5,
+        "core": true,
+        "coverage": {
+          "energy": true,
+          "protein": true,
+          "fat": true,
+          "carbs": true,
+          "fiber": false,
+          "sugars": true
+        }
+      },
+      {
+        "id": 11350,
+        "name": "Apple-banana salad sweetened with honey",
+        "name_en": "Apple-banana salad sweetened with honey",
+        "sc": 1,
+        "mc": 6,
+        "core": true,
+        "coverage": {
+          "energy": true,
+          "protein": true,
+          "fat": true,
+          "carbs": true,
+          "fiber": true,
+          "sugars": true
+        }
+      },
+      {
+        "id": 11516,
+        "name": "Apple-banana sauce (raw) with raisins",
+        "name_en": "Apple-banana sauce (raw) with raisins",
+        "sc": 1,
+        "mc": 6,
+        "core": true,
+        "coverage": {
+          "energy": true,
+          "protein": true,
+          "fat": true,
+          "carbs": true,
+          "fiber": true,
+          "sugars": true
+        }
+      },
+      {
+        "id": 11148,
+        "name": "Apple-banana-pear salad sweetened with honey",
+        "name_en": "Apple-banana-pear salad sweetened with honey",
+        "sc": 1,
+        "mc": 6,
+        "core": true,
+        "coverage": {
+          "energy": true,
+          "protein": true,
+          "fat": true,
+          "carbs": true,
+          "fiber": true,
+          "sugars": true
+        }
+      },
+      {
+        "id": 13502,
+        "name": "Apple-banana-pear sauce raw",
+        "name_en": "Apple-banana-pear sauce raw",
+        "sc": 1,
+        "mc": 6,
+        "core": true,
+        "coverage": {
+          "energy": true,
+          "protein": true,
+          "fat": true,
+          "carbs": true,
+          "fiber": true,
+          "sugars": true
+        }
+      },
+      {
+        "id": 11752,
+        "name": "Apple-banana-pear sauce unsweetened",
+        "name_en": "Apple-banana-pear sauce unsweetened",
+        "sc": 1,
+        "mc": 6,
+        "core": true,
+        "coverage": {
+          "energy": true,
+          "protein": true,
+          "fat": true,
+          "carbs": true,
+          "fiber": true,
+          "sugars": true
+        }
+      },
+      {
+        "id": 5622,
+        "name": "Babyfood, dessert, jarred, banana graham pie",
+        "name_en": "Babyfood, dessert, jarred, banana graham pie",
+        "sc": 1,
+        "mc": 6,
+        "core": true,
+        "coverage": {
+          "energy": true,
+          "protein": true,
+          "fat": true,
+          "carbs": true,
+          "fiber": true,
+          "sugars": true
+        }
+      },
+      {
+        "id": 5619,
+        "name": "Babyfood, dessert, jarred, banana with coconut cream",
+        "name_en": "Babyfood, dessert, jarred, banana with coconut cream",
+        "sc": 1,
+        "mc": 6,
+        "core": true,
+        "coverage": {
+          "energy": true,
+          "protein": true,
+          "fat": true,
+          "carbs": true,
+          "fiber": true,
+          "sugars": true
+        }
+      },
+      {
+        "id": 5610,
+        "name": "Babyfood, fruit, jarred, apple and other fruit (plum, mango, kiwi, pear, banana, apricot and/or pineapple), all stages",
+        "name_en": "Babyfood, fruit, jarred, apple and other fruit (plum, mango, kiwi, pear, banana, apricot and/or pineapple), all stages",
+        "sc": 1,
+        "mc": 6,
+        "core": true,
+        "coverage": {
+          "energy": true,
+          "protein": true,
+          "fat": true,
+          "carbs": true,
+          "fiber": true,
+          "sugars": true
+        }
+      },
+      {
+        "id": 5612,
+        "name": "Babyfood, fruit, jarred, banana and other fruit",
+        "name_en": "Babyfood, fruit, jarred, banana and other fruit",
+        "sc": 1,
+        "mc": 6,
+        "core": true,
+        "coverage": {
+          "energy": true,
+          "protein": true,
+          "fat": true,
+          "carbs": true,
+          "fiber": true,
+          "sugars": true
+        }
+      },
+      {
+        "id": 5608,
+        "name": "Babyfood, fruit, jarred, banana, all stages",
+        "name_en": "Babyfood, fruit, jarred, banana, all stages",
+        "sc": 1,
+        "mc": 6,
+        "core": true,
+        "coverage": {
+          "energy": true,
+          "protein": true,
+          "fat": true,
+          "carbs": true,
+          "fiber": true,
+          "sugars": true
+        }
+      },
+      {
+        "id": 28631,
+        "name": "Banana bread",
+        "name_en": "Banana bread",
+        "sc": 1,
+        "mc": 6,
+        "core": true,
+        "coverage": {
+          "energy": true,
+          "protein": true,
+          "fat": true,
+          "carbs": true,
+          "fiber": true,
+          "sugars": true
+        }
+      },
+      {
+        "id": 11218,
+        "name": "Banana compote",
+        "name_en": "Banana compote",
+        "sc": 1,
+        "mc": 6,
+        "core": true,
+        "coverage": {
+          "energy": true,
+          "protein": true,
+          "fat": true,
+          "carbs": true,
+          "fiber": true,
+          "sugars": true
+        }
+      },
+      {
+        "id": 13421,
+        "name": "Banana compote with artificial sweetener",
+        "name_en": "Banana compote with artificial sweetener",
+        "sc": 1,
+        "mc": 6,
+        "core": true,
+        "coverage": {
+          "energy": true,
+          "protein": true,
+          "fat": true,
+          "carbs": true,
+          "fiber": true,
+          "sugars": true
+        }
+      },
+      {
+        "id": 7131,
+        "name": "Banana crips/banana chips, deep-fried, sweetened",
+        "name_en": "Banana crips/banana chips, deep-fried, sweetened",
+        "sc": 1,
+        "mc": 6,
+        "core": true,
+        "coverage": {
+          "energy": true,
+          "protein": true,
+          "fat": true,
+          "carbs": true,
+          "fiber": true,
+          "sugars": true
+        }
+      },
+      {
+        "id": 23079,
+        "name": "BANANA EGG PANCAKE",
+        "name_en": "BANANA EGG PANCAKE",
+        "sc": 1,
+        "mc": 6,
+        "core": true,
+        "coverage": {
+          "energy": true,
+          "protein": true,
+          "fat": true,
+          "carbs": true,
+          "fiber": true,
+          "sugars": true
+        }
+      },
+      {
+        "id": 11502,
+        "name": "Banana milk with milk 3.5 % fat",
+        "name_en": "Banana milk with milk 3.5 % fat",
+        "sc": 1,
+        "mc": 6,
+        "core": true,
+        "coverage": {
+          "energy": true,
+          "protein": true,
+          "fat": true,
+          "carbs": true,
+          "fiber": true,
+          "sugars": true
+        }
+      },
+      {
+        "id": 11343,
+        "name": "Banana quark",
+        "name_en": "Banana quark",
+        "sc": 1,
+        "mc": 6,
+        "core": true,
+        "coverage": {
+          "energy": true,
+          "protein": true,
+          "fat": true,
+          "carbs": true,
+          "fiber": true,
+          "sugars": true
+        }
+      },
+      {
+        "id": 34693,
+        "name": "Banana split, homemade",
+        "name_en": "Banana split, homemade",
+        "sc": 1,
+        "mc": 6,
+        "core": true,
+        "coverage": {
+          "energy": true,
+          "protein": true,
+          "fat": true,
+          "carbs": true,
+          "fiber": true,
+          "sugars": true
+        }
+      },
+      {
+        "id": 861,
+        "name": "Banana, dehydrated or banana powder",
+        "name_en": "Banana, dehydrated or banana powder",
+        "sc": 1,
+        "mc": 6,
+        "core": true,
+        "coverage": {
+          "energy": true,
+          "protein": true,
+          "fat": true,
+          "carbs": true,
+          "fiber": true,
+          "sugars": true
+        }
+      },
+      {
+        "id": 14383,
+        "name": "Cooking banana, Plantain, raw",
+        "name_en": "Cooking banana, Plantain, raw",
+        "sc": 1,
+        "mc": 6,
+        "core": true,
+        "coverage": {
+          "energy": true,
+          "protein": true,
+          "fat": true,
+          "carbs": true,
+          "fiber": true,
+          "sugars": true
+        }
+      },
+      {
+        "id": 27925,
+        "name": "Eclair filled w banana and whipped cream",
+        "name_en": "Eclair filled w banana and whipped cream",
+        "sc": 1,
+        "mc": 6,
+        "core": true,
+        "coverage": {
+          "energy": true,
+          "protein": true,
+          "fat": true,
+          "carbs": true,
+          "fiber": true,
+          "sugars": true
+        }
+      },
+      {
+        "id": 27951,
+        "name": "Fritter banana",
+        "name_en": "Fritter banana",
+        "sc": 1,
+        "mc": 6,
+        "core": true,
+        "coverage": {
+          "energy": true,
+          "protein": true,
+          "fat": true,
+          "carbs": true,
+          "fiber": true,
+          "sugars": true
+        }
+      },
+      {
+        "id": 8095,
+        "name": "Fruit mix (apple, banana, mandarin) unsweetened",
+        "name_en": "Fruit mix (apple, banana, mandarin) unsweetened",
+        "sc": 1,
+        "mc": 6,
+        "core": true,
+        "coverage": {
+          "energy": true,
+          "protein": true,
+          "fat": true,
+          "carbs": true,
+          "fiber": true,
+          "sugars": true
+        }
+      },
+      {
+        "id": 3921,
+        "name": "Orange-strawberry-banana juice",
+        "name_en": "Orange-strawberry-banana juice",
+        "sc": 1,
+        "mc": 6,
+        "core": true,
+        "coverage": {
+          "energy": true,
+          "protein": true,
+          "fat": true,
+          "carbs": true,
+          "fiber": true,
+          "sugars": true
+        }
+      },
+      {
+        "id": 3605,
+        "name": "Pepper, banana, raw",
+        "name_en": "Pepper, banana, raw",
+        "sc": 1,
+        "mc": 6,
+        "core": true,
+        "coverage": {
+          "energy": true,
+          "protein": true,
+          "fat": true,
+          "carbs": true,
+          "fiber": true,
+          "sugars": true
+        }
+      },
+      {
+        "id": 2922,
+        "name": "Pie, banana cream, homemade",
+        "name_en": "Pie, banana cream, homemade",
+        "sc": 1,
+        "mc": 6,
+        "core": true,
+        "coverage": {
+          "energy": true,
+          "protein": true,
+          "fat": true,
+          "carbs": true,
+          "fiber": true,
+          "sugars": true
+        }
+      },
+      {
+        "id": 11452,
+        "name": "Rice pudding with milk 3.5 % fat and raw banana",
+        "name_en": "Rice pudding with milk 3.5 % fat and raw banana",
+        "sc": 1,
+        "mc": 6,
+        "core": true,
+        "coverage": {
+          "energy": true,
+          "protein": true,
+          "fat": true,
+          "carbs": true,
+          "fiber": true,
+          "sugars": true
+        }
+      },
+      {
+        "id": 3249,
+        "name": "Snacks, banana chips",
+        "name_en": "Snacks, banana chips",
+        "sc": 1,
+        "mc": 6,
+        "core": true,
+        "coverage": {
+          "energy": true,
+          "protein": true,
+          "fat": true,
+          "carbs": true,
+          "fiber": true,
+          "sugars": true
+        }
+      },
+      {
+        "id": 14648,
+        "name": "Yoghurt with pear and banana",
+        "name_en": "Yoghurt with pear and banana",
+        "sc": 1,
+        "mc": 6,
+        "core": true,
+        "coverage": {
+          "energy": true,
+          "protein": true,
+          "fat": true,
+          "carbs": true,
+          "fiber": true,
+          "sugars": true
+        }
+      },
+      {
+        "id": 26759,
+        "name": "Baby food jar, fruits with banana",
+        "name_en": "Baby food jar, fruits with banana",
+        "sc": 1,
+        "mc": 5,
+        "core": true,
+        "coverage": {
+          "energy": true,
+          "protein": true,
+          "fat": true,
+          "carbs": true,
+          "fiber": false,
+          "sugars": true
+        }
+      },
+      {
+        "id": 34692,
+        "name": "Banana bread, homemade",
+        "name_en": "Banana bread, homemade",
+        "sc": 1,
+        "mc": 5,
+        "core": true,
+        "coverage": {
+          "energy": true,
+          "protein": true,
+          "fat": true,
+          "carbs": true,
+          "fiber": false,
+          "sugars": true
+        }
+      },
+      {
+        "id": 13193,
+        "name": "Banana nectar spritzer",
+        "name_en": "Banana nectar spritzer",
+        "sc": 1,
+        "mc": 5,
+        "core": true,
+        "coverage": {
+          "energy": true,
+          "protein": true,
+          "fat": true,
+          "carbs": true,
+          "fiber": false,
+          "sugars": true
+        }
+      },
+      {
+        "id": 24446,
+        "name": "Banana, flesh without skin, dried",
+        "name_en": "Banana, flesh without skin, dried",
+        "sc": 1,
+        "mc": 5,
+        "core": true,
+        "coverage": {
+          "energy": true,
+          "protein": true,
+          "fat": true,
+          "carbs": true,
+          "fiber": false,
+          "sugars": true
+        }
+      },
+      {
+        "id": 2735,
+        "name": "Bread, banana, homemade, made with margarine",
+        "name_en": "Bread, banana, homemade, made with margarine",
+        "sc": 1,
+        "mc": 5,
+        "core": true,
+        "coverage": {
+          "energy": true,
+          "protein": true,
+          "fat": true,
+          "carbs": true,
+          "fiber": true,
+          "sugars": false
+        }
+      },
+      {
+        "id": 35126,
+        "name": "Casserole, sweet potato and green banana, homemade",
+        "name_en": "Casserole, sweet potato and green banana, homemade",
+        "sc": 1,
+        "mc": 5,
+        "core": true,
+        "coverage": {
+          "energy": true,
+          "protein": true,
+          "fat": true,
+          "carbs": true,
+          "fiber": false,
+          "sugars": true
+        }
+      },
+      {
+        "id": 3215,
+        "name": "Dessert, pudding, banana, dry mix, instant, prepared with whole milk",
+        "name_en": "Dessert, pudding, banana, dry mix, instant, prepared with whole milk",
+        "sc": 1,
+        "mc": 5,
+        "core": true,
+        "coverage": {
+          "energy": true,
+          "protein": true,
+          "fat": true,
+          "carbs": true,
+          "fiber": false,
+          "sugars": true
+        }
+      },
+      {
+        "id": 3114,
+        "name": "Dessert, pudding, banana, dry mix, regular, prepared with 2% milk",
+        "name_en": "Dessert, pudding, banana, dry mix, regular, prepared with 2% milk",
+        "sc": 1,
+        "mc": 5,
+        "core": true,
+        "coverage": {
+          "energy": true,
+          "protein": true,
+          "fat": true,
+          "carbs": true,
+          "fiber": false,
+          "sugars": true
+        }
+      },
+      {
+        "id": 3217,
+        "name": "Dessert, pudding, banana, dry mix, regular, prepared with whole milk",
+        "name_en": "Dessert, pudding, banana, dry mix, regular, prepared with whole milk",
+        "sc": 1,
+        "mc": 5,
+        "core": true,
+        "coverage": {
+          "energy": true,
+          "protein": true,
+          "fat": true,
+          "carbs": true,
+          "fiber": false,
+          "sugars": true
+        }
+      },
+      {
+        "id": 36142,
+        "name": "Milk, flavoured, pasteurised, strawberry, banana",
+        "name_en": "Milk, flavoured, pasteurised, strawberry, banana",
+        "sc": 1,
+        "mc": 5,
+        "core": true,
+        "coverage": {
+          "energy": true,
+          "protein": true,
+          "fat": true,
+          "carbs": true,
+          "fiber": false,
+          "sugars": true
+        }
+      },
+      {
+        "id": 2921,
+        "name": "Pie, banana cream, prepared from mix, no-bake type",
+        "name_en": "Pie, banana cream, prepared from mix, no-bake type",
+        "sc": 1,
+        "mc": 5,
+        "core": true,
+        "coverage": {
+          "energy": true,
+          "protein": true,
+          "fat": true,
+          "carbs": true,
+          "fiber": true,
+          "sugars": false
+        }
+      },
+      {
+        "id": 24278,
+        "name": "Plantain banana, cooked",
+        "name_en": "Plantain banana, cooked",
+        "sc": 1,
+        "mc": 5,
+        "core": true,
+        "coverage": {
+          "energy": true,
+          "protein": true,
+          "fat": true,
+          "carbs": true,
+          "fiber": false,
+          "sugars": true
+        }
+      },
+      {
+        "id": 19386,
+        "name": "Whole grain porridge with banana Põnn, baby food, type 'Salvest'",
+        "name_en": "Whole grain porridge with banana Põnn, baby food, type 'Salvest'",
+        "sc": 1,
+        "mc": 5,
+        "core": true,
+        "coverage": {
+          "energy": true,
+          "protein": true,
+          "fat": true,
+          "carbs": true,
+          "fiber": false,
+          "sugars": true
+        }
+      },
+      {
+        "id": 3113,
+        "name": "Dessert, pudding, banana, dry mix, instant, prepared with 2% milk",
+        "name_en": "Dessert, pudding, banana, dry mix, instant, prepared with 2% milk",
+        "sc": 1,
+        "mc": 4,
+        "core": true,
+        "coverage": {
+          "energy": true,
+          "protein": true,
+          "fat": true,
+          "carbs": true,
+          "fiber": false,
+          "sugars": false
+        }
+      },
+      {
+        "id": 24070,
+        "name": "Plantain banana, raw",
+        "name_en": "Plantain banana, raw",
+        "sc": 1,
+        "mc": 4,
+        "core": true,
+        "coverage": {
+          "energy": true,
+          "protein": true,
+          "fat": true,
+          "carbs": true,
+          "fiber": false,
+          "sugars": false
+        }
+      },
+      {
+        "id": 5731,
+        "name": "Banana, dried (banana chips)",
+        "name_en": "Banana, dried (banana chips)",
+        "sc": 2,
+        "mc": 3,
+        "core": false,
+        "coverage": {
+          "energy": true,
+          "protein": true,
+          "fat": false,
+          "carbs": false,
+          "fiber": true,
+          "sugars": false
+        }
+      },
+      {
+        "id": 21012,
+        "name": "BAKED BANANA",
+        "name_en": "BAKED BANANA",
+        "sc": 1,
+        "mc": 5,
+        "core": false,
+        "coverage": {
+          "energy": false,
+          "protein": true,
+          "fat": true,
+          "carbs": true,
+          "fiber": true,
+          "sugars": true
+        }
+      }
+    ],
+    "uovo": [
+      {
+        "id": 6024,
+        "name": "Egg white, raw",
+        "name_en": "Egg white, raw",
+        "sc": 4,
+        "mc": 5,
+        "core": true,
+        "coverage": {
+          "energy": true,
+          "protein": true,
+          "fat": true,
+          "carbs": true,
+          "fiber": false,
+          "sugars": true
+        }
+      },
+      {
+        "id": 6025,
+        "name": "Egg yolk, raw",
+        "name_en": "Egg yolk, raw",
+        "sc": 4,
+        "mc": 5,
+        "core": true,
+        "coverage": {
+          "energy": true,
+          "protein": true,
+          "fat": true,
+          "carbs": true,
+          "fiber": false,
+          "sugars": true
+        }
+      },
+      {
+        "id": 6026,
+        "name": "Egg, raw",
+        "name_en": "Egg, raw",
+        "sc": 4,
+        "mc": 5,
+        "core": true,
+        "coverage": {
+          "energy": true,
+          "protein": true,
+          "fat": true,
+          "carbs": true,
+          "fiber": false,
+          "sugars": true
+        }
+      },
+      {
+        "id": 17312,
+        "name": "Egg, boiled",
+        "name_en": "Egg, boiled",
+        "sc": 3,
+        "mc": 5,
+        "core": true,
+        "coverage": {
+          "energy": true,
+          "protein": true,
+          "fat": true,
+          "carbs": true,
+          "fiber": false,
+          "sugars": true
+        }
+      },
+      {
+        "id": 7395,
+        "name": "Quail egg raw",
+        "name_en": "Quail egg raw",
+        "sc": 3,
+        "mc": 5,
+        "core": true,
+        "coverage": {
+          "energy": true,
+          "protein": true,
+          "fat": true,
+          "carbs": true,
+          "fiber": false,
+          "sugars": true
+        }
+      },
+      {
+        "id": 9245,
+        "name": "Duck egg boiled",
+        "name_en": "Duck egg boiled",
+        "sc": 2,
+        "mc": 5,
+        "core": true,
+        "coverage": {
+          "energy": true,
+          "protein": true,
+          "fat": true,
+          "carbs": true,
+          "fiber": false,
+          "sugars": true
+        }
+      },
+      {
+        "id": 17313,
+        "name": "Egg, poached",
+        "name_en": "Egg, poached",
+        "sc": 2,
+        "mc": 5,
+        "core": true,
+        "coverage": {
+          "energy": true,
+          "protein": true,
+          "fat": true,
+          "carbs": true,
+          "fiber": false,
+          "sugars": true
+        }
+      },
+      {
+        "id": 9644,
+        "name": "Goose egg boiled",
+        "name_en": "Goose egg boiled",
+        "sc": 2,
+        "mc": 5,
+        "core": true,
+        "coverage": {
+          "energy": true,
+          "protein": true,
+          "fat": true,
+          "carbs": true,
+          "fiber": false,
+          "sugars": true
+        }
+      },
+      {
+        "id": 9061,
+        "name": "Quail egg boiled",
+        "name_en": "Quail egg boiled",
+        "sc": 2,
+        "mc": 5,
+        "core": true,
+        "coverage": {
+          "energy": true,
+          "protein": true,
+          "fat": true,
+          "carbs": true,
+          "fiber": false,
+          "sugars": true
+        }
+      },
+      {
+        "id": 37637,
+        "name": "Pasta all'uovo, secca",
+        "name_en": "Egg pasta, dried, raw",
+        "sc": 1,
+        "mc": 6,
+        "core": true,
+        "coverage": {
+          "energy": true,
+          "protein": true,
+          "fat": true,
+          "carbs": true,
+          "fiber": true,
+          "sugars": true
+        }
+      },
+      {
+        "id": 37638,
+        "name": "Pasta all'uovo, secca, cotta, bollita",
+        "name_en": "Egg pasta, dried, boiled in distilled water, no salt",
+        "sc": 1,
+        "mc": 6,
+        "core": true,
+        "coverage": {
+          "energy": true,
+          "protein": true,
+          "fat": true,
+          "carbs": true,
+          "fiber": true,
+          "sugars": true
+        }
+      },
+      {
+        "id": 12861,
+        "name": "\"Berliner\" doughnut (yeast dough) deep-fried, filled with egg liqueur cream",
+        "name_en": "\"Berliner\" doughnut (yeast dough) deep-fried, filled with egg liqueur cream",
+        "sc": 1,
+        "mc": 6,
+        "core": true,
+        "coverage": {
+          "energy": true,
+          "protein": true,
+          "fat": true,
+          "carbs": true,
+          "fiber": true,
+          "sugars": true
+        }
+      },
+      {
+        "id": 12926,
+        "name": "\"Eierschecke\" cheesecake (yeast dough) with egg cream",
+        "name_en": "\"Eierschecke\" cheesecake (yeast dough) with egg cream",
+        "sc": 1,
+        "mc": 6,
+        "core": true,
+        "coverage": {
+          "energy": true,
+          "protein": true,
+          "fat": true,
+          "carbs": true,
+          "fiber": true,
+          "sugars": true
+        }
+      },
+      {
+        "id": 11300,
+        "name": "\"Gaisburger Marsch\" (stew with beef, vegetables, potatoes and fresh egg pasta spaetzle)",
+        "name_en": "\"Gaisburger Marsch\" (stew with beef, vegetables, potatoes and fresh egg pasta spaetzle)",
+        "sc": 1,
+        "mc": 6,
+        "core": true,
+        "coverage": {
+          "energy": true,
+          "protein": true,
+          "fat": true,
+          "carbs": true,
+          "fiber": true,
+          "sugars": true
+        }
+      },
+      {
+        "id": 8787,
+        "name": "\"Salzburger Nockerl\" baked (sweet egg dish)",
+        "name_en": "\"Salzburger Nockerl\" baked (sweet egg dish)",
+        "sc": 1,
+        "mc": 6,
+        "core": true,
+        "coverage": {
+          "energy": true,
+          "protein": true,
+          "fat": true,
+          "carbs": true,
+          "fiber": true,
+          "sugars": true
+        }
+      },
+      {
+        "id": 12943,
+        "name": "\"Schinkenfleckerl\" (casserole of fresh egg pasta with boiled ham and sour cream)",
+        "name_en": "\"Schinkenfleckerl\" (casserole of fresh egg pasta with boiled ham and sour cream)",
+        "sc": 1,
+        "mc": 6,
+        "core": true,
+        "coverage": {
+          "energy": true,
+          "protein": true,
+          "fat": true,
+          "carbs": true,
+          "fiber": true,
+          "sugars": true
+        }
+      },
+      {
+        "id": 11400,
+        "name": "Almond bread (prepared with egg white, without fat)",
+        "name_en": "Almond bread (prepared with egg white, without fat)",
+        "sc": 1,
+        "mc": 6,
+        "core": true,
+        "coverage": {
+          "energy": true,
+          "protein": true,
+          "fat": true,
+          "carbs": true,
+          "fiber": true,
+          "sugars": true
+        }
+      },
+      {
+        "id": 8213,
+        "name": "Almond cake base (prepared with egg white)",
+        "name_en": "Almond cake base (prepared with egg white)",
+        "sc": 1,
+        "mc": 6,
+        "core": true,
+        "coverage": {
+          "energy": true,
+          "protein": true,
+          "fat": true,
+          "carbs": true,
+          "fiber": true,
+          "sugars": true
+        }
+      },
+      {
+        "id": 27226,
+        "name": "Almond paste w egg",
+        "name_en": "Almond paste w egg",
+        "sc": 1,
+        "mc": 6,
+        "core": true,
+        "coverage": {
+          "energy": true,
+          "protein": true,
+          "fat": true,
+          "carbs": true,
+          "fiber": true,
+          "sugars": true
+        }
+      },
+      {
+        "id": 11680,
+        "name": "Apple-wine cream (with egg) for pastry/tortes",
+        "name_en": "Apple-wine cream (with egg) for pastry/tortes",
+        "sc": 1,
+        "mc": 6,
+        "core": true,
+        "coverage": {
+          "energy": true,
+          "protein": true,
+          "fat": true,
+          "carbs": true,
+          "fiber": true,
+          "sugars": true
+        }
+      },
+      {
+        "id": 23261,
+        "name": "BACON SALAD WITH EGG AND BEANS, WITHOUT DRESSING",
+        "name_en": "BACON SALAD WITH EGG AND BEANS, WITHOUT DRESSING",
+        "sc": 1,
+        "mc": 6,
+        "core": true,
+        "coverage": {
+          "energy": true,
+          "protein": true,
+          "fat": true,
+          "carbs": true,
+          "fiber": true,
+          "sugars": true
+        }
+      },
+      {
+        "id": 13572,
+        "name": "Baguette roll with egg and remoulade sauce",
+        "name_en": "Baguette roll with egg and remoulade sauce",
+        "sc": 1,
+        "mc": 6,
+        "core": true,
+        "coverage": {
+          "energy": true,
+          "protein": true,
+          "fat": true,
+          "carbs": true,
+          "fiber": true,
+          "sugars": true
+        }
+      },
+      {
+        "id": 12697,
+        "name": "Baked egg on stewed spinach with tomatoes",
+        "name_en": "Baked egg on stewed spinach with tomatoes",
+        "sc": 1,
+        "mc": 6,
+        "core": true,
+        "coverage": {
+          "energy": true,
+          "protein": true,
+          "fat": true,
+          "carbs": true,
+          "fiber": true,
+          "sugars": true
+        }
+      },
+      {
+        "id": 13624,
+        "name": "Bami Goreng (egg pasta fried with vegetables and chicken)",
+        "name_en": "Bami Goreng (egg pasta fried with vegetables and chicken)",
+        "sc": 1,
+        "mc": 6,
+        "core": true,
+        "coverage": {
+          "energy": true,
+          "protein": true,
+          "fat": true,
+          "carbs": true,
+          "fiber": true,
+          "sugars": true
+        }
+      },
+      {
+        "id": 23079,
+        "name": "BANANA EGG PANCAKE",
+        "name_en": "BANANA EGG PANCAKE",
+        "sc": 1,
+        "mc": 6,
+        "core": true,
+        "coverage": {
+          "energy": true,
+          "protein": true,
+          "fat": true,
+          "carbs": true,
+          "fiber": true,
+          "sugars": true
+        }
+      },
+      {
+        "id": 11636,
+        "name": "Beef consomme with egg pasta",
+        "name_en": "Beef consomme with egg pasta",
+        "sc": 1,
+        "mc": 6,
+        "core": true,
+        "coverage": {
+          "energy": true,
+          "protein": true,
+          "fat": true,
+          "carbs": true,
+          "fiber": true,
+          "sugars": true
+        }
+      },
+      {
+        "id": 2739,
+        "name": "Bread, egg (Challah)",
+        "name_en": "Bread, egg (Challah)",
+        "sc": 1,
+        "mc": 6,
+        "core": true,
+        "coverage": {
+          "energy": true,
+          "protein": true,
+          "fat": true,
+          "carbs": true,
+          "fiber": true,
+          "sugars": true
+        }
+      },
+      {
+        "id": 2740,
+        "name": "Bread, egg, (challah), toasted",
+        "name_en": "Bread, egg, (challah), toasted",
+        "sc": 1,
+        "mc": 6,
+        "core": true,
+        "coverage": {
+          "energy": true,
+          "protein": true,
+          "fat": true,
+          "carbs": true,
+          "fiber": true,
+          "sugars": true
+        }
+      },
+      {
+        "id": 13693,
+        "name": "Casserole of egg pasta with mushroom sauce from Bechamel sauce and Gouda cheese gratinated",
+        "name_en": "Casserole of egg pasta with mushroom sauce from Bechamel sauce and Gouda cheese gratinated",
+        "sc": 1,
+        "mc": 6,
+        "core": true,
+        "coverage": {
+          "energy": true,
+          "protein": true,
+          "fat": true,
+          "carbs": true,
+          "fiber": true,
+          "sugars": true
+        }
+      },
+      {
+        "id": 12842,
+        "name": "Casserole of fresh egg pasta with cream-cheese sauce and Chester cheese gratinated",
+        "name_en": "Casserole of fresh egg pasta with cream-cheese sauce and Chester cheese gratinated",
+        "sc": 1,
+        "mc": 6,
+        "core": true,
+        "coverage": {
+          "energy": true,
+          "protein": true,
+          "fat": true,
+          "carbs": true,
+          "fiber": true,
+          "sugars": true
+        }
+      },
+      {
+        "id": 10779,
+        "name": "Casserole of pasta egg-free, with boiled ham",
+        "name_en": "Casserole of pasta egg-free, with boiled ham",
+        "sc": 1,
+        "mc": 6,
+        "core": true,
+        "coverage": {
+          "energy": true,
+          "protein": true,
+          "fat": true,
+          "carbs": true,
+          "fiber": true,
+          "sugars": true
+        }
+      },
+      {
+        "id": 11540,
+        "name": "Cheese cream (egg-free) for pastry/tortes",
+        "name_en": "Cheese cream (egg-free) for pastry/tortes",
+        "sc": 1,
+        "mc": 6,
+        "core": true,
+        "coverage": {
+          "energy": true,
+          "protein": true,
+          "fat": true,
+          "carbs": true,
+          "fiber": true,
+          "sugars": true
+        }
+      },
+      {
+        "id": 11104,
+        "name": "Chicken stock with egg pasta",
+        "name_en": "Chicken stock with egg pasta",
+        "sc": 1,
+        "mc": 6,
+        "core": true,
+        "coverage": {
+          "energy": true,
+          "protein": true,
+          "fat": true,
+          "carbs": true,
+          "fiber": true,
+          "sugars": true
+        }
+      },
+      {
+        "id": 4924,
+        "name": "Chinese dish, soup, egg drop, restaurant prepared",
+        "name_en": "Chinese dish, soup, egg drop, restaurant prepared",
+        "sc": 1,
+        "mc": 6,
+        "core": true,
+        "coverage": {
+          "energy": true,
+          "protein": true,
+          "fat": true,
+          "carbs": true,
+          "fiber": true,
+          "sugars": true
+        }
+      },
+      {
+        "id": 27069,
+        "name": "Chinese noodle dish Bami goreng wo egg",
+        "name_en": "Chinese noodle dish Bami goreng wo egg",
+        "sc": 1,
+        "mc": 6,
+        "core": true,
+        "coverage": {
+          "energy": true,
+          "protein": true,
+          "fat": true,
+          "carbs": true,
+          "fiber": true,
+          "sugars": true
+        }
+      },
+      {
+        "id": 11854,
+        "name": "Chocolate butter cream with egg, light, for pastry/tortes",
+        "name_en": "Chocolate butter cream with egg, light, for pastry/tortes",
+        "sc": 1,
+        "mc": 6,
+        "core": true,
+        "coverage": {
+          "energy": true,
+          "protein": true,
+          "fat": true,
+          "carbs": true,
+          "fiber": true,
+          "sugars": true
+        }
+      },
+      {
+        "id": 13275,
+        "name": "Chocolate butter cream, egg-free, light, for pastry/tortes",
+        "name_en": "Chocolate butter cream, egg-free, light, for pastry/tortes",
+        "sc": 1,
+        "mc": 6,
+        "core": true,
+        "coverage": {
+          "energy": true,
+          "protein": true,
+          "fat": true,
+          "carbs": true,
+          "fiber": true,
+          "sugars": true
+        }
+      },
+      {
+        "id": 8909,
+        "name": "Chocolate ice cream (with egg)",
+        "name_en": "Chocolate ice cream (with egg)",
+        "sc": 1,
+        "mc": 6,
+        "core": true,
+        "coverage": {
+          "energy": true,
+          "protein": true,
+          "fat": true,
+          "carbs": true,
+          "fiber": true,
+          "sugars": true
+        }
+      },
+      {
+        "id": 7273,
+        "name": "Chocolate kiss (chocolate coated egg meringue on waffle base)",
+        "name_en": "Chocolate kiss (chocolate coated egg meringue on waffle base)",
+        "sc": 1,
+        "mc": 6,
+        "core": true,
+        "coverage": {
+          "energy": true,
+          "protein": true,
+          "fat": true,
+          "carbs": true,
+          "fiber": true,
+          "sugars": true
+        }
+      },
+      {
+        "id": 12642,
+        "name": "Cold vanilla-milk soup with egg and fruit garnish, thickened with starch",
+        "name_en": "Cold vanilla-milk soup with egg and fruit garnish, thickened with starch",
+        "sc": 1,
+        "mc": 6,
+        "core": true,
+        "coverage": {
+          "energy": true,
+          "protein": true,
+          "fat": true,
+          "carbs": true,
+          "fiber": true,
+          "sugars": true
+        }
+      },
+      {
+        "id": 10741,
+        "name": "Cold vanilla-milk soup with egg, thickened with starch",
+        "name_en": "Cold vanilla-milk soup with egg, thickened with starch",
+        "sc": 1,
+        "mc": 6,
+        "core": true,
+        "coverage": {
+          "energy": true,
+          "protein": true,
+          "fat": true,
+          "carbs": true,
+          "fiber": true,
+          "sugars": true
+        }
+      },
+      {
+        "id": 9019,
+        "name": "Cream pudding with egg yolk",
+        "name_en": "Cream pudding with egg yolk",
+        "sc": 1,
+        "mc": 6,
+        "core": true,
+        "coverage": {
+          "energy": true,
+          "protein": true,
+          "fat": true,
+          "carbs": true,
+          "fiber": true,
+          "sugars": true
+        }
+      },
+      {
+        "id": 23095,
+        "name": "CRISPBREAD, SEED CRISPBREAD WITH EGG, GLUTEN-FREE, HOME-MADE",
+        "name_en": "CRISPBREAD, SEED CRISPBREAD WITH EGG, GLUTEN-FREE, HOME-MADE",
+        "sc": 1,
+        "mc": 6,
+        "core": true,
+        "coverage": {
+          "energy": true,
+          "protein": true,
+          "fat": true,
+          "carbs": true,
+          "fiber": true,
+          "sugars": true
+        }
+      },
+      {
+        "id": 35483,
+        "name": "Curry, egg and potato, homemade",
+        "name_en": "Curry, egg and potato, homemade",
+        "sc": 1,
+        "mc": 6,
+        "core": true,
+        "coverage": {
+          "energy": true,
+          "protein": true,
+          "fat": true,
+          "carbs": true,
+          "fiber": true,
+          "sugars": true
+        }
+      },
+      {
+        "id": 35485,
+        "name": "Curry, egg, with butter, homemade",
+        "name_en": "Curry, egg, with butter, homemade",
+        "sc": 1,
+        "mc": 6,
+        "core": true,
+        "coverage": {
+          "energy": true,
+          "protein": true,
+          "fat": true,
+          "carbs": true,
+          "fiber": true,
+          "sugars": true
+        }
+      },
+      {
+        "id": 35486,
+        "name": "Curry, egg, with rapeseed oil, homemade",
+        "name_en": "Curry, egg, with rapeseed oil, homemade",
+        "sc": 1,
+        "mc": 6,
+        "core": true,
+        "coverage": {
+          "energy": true,
+          "protein": true,
+          "fat": true,
+          "carbs": true,
+          "fiber": true,
+          "sugars": true
+        }
+      },
+      {
+        "id": 9687,
+        "name": "Egg added to soups",
+        "name_en": "Egg added to soups",
+        "sc": 1,
+        "mc": 6,
+        "core": true,
+        "coverage": {
+          "energy": true,
+          "protein": true,
+          "fat": true,
+          "carbs": true,
+          "fiber": true,
+          "sugars": true
+        }
+      },
+      {
+        "id": 11489,
+        "name": "Egg custard with herbs, diced",
+        "name_en": "Egg custard with herbs, diced",
+        "sc": 1,
+        "mc": 6,
+        "core": true,
+        "coverage": {
+          "energy": true,
+          "protein": true,
+          "fat": true,
+          "carbs": true,
+          "fiber": true,
+          "sugars": true
+        }
+      },
+      {
+        "id": 13384,
+        "name": "Egg fricassee with cauliflower and asparagus in white basic sauce, with risotto",
+        "name_en": "Egg fricassee with cauliflower and asparagus in white basic sauce, with risotto",
+        "sc": 1,
+        "mc": 6,
+        "core": true,
+        "coverage": {
+          "energy": true,
+          "protein": true,
+          "fat": true,
+          "carbs": true,
+          "fiber": true,
+          "sugars": true
+        }
+      },
+      {
+        "id": 13741,
+        "name": "Egg fricassee with mushroom sauce from white basic sauce",
+        "name_en": "Egg fricassee with mushroom sauce from white basic sauce",
+        "sc": 1,
+        "mc": 6,
+        "core": true,
+        "coverage": {
+          "energy": true,
+          "protein": true,
+          "fat": true,
+          "carbs": true,
+          "fiber": true,
+          "sugars": true
+        }
+      }
+    ],
+    "cetriolo": [
+      {
+        "id": 15446,
+        "name": "Cucumber",
+        "name_en": "Cucumber",
+        "sc": 2,
+        "mc": 6,
+        "core": true,
+        "coverage": {
+          "energy": true,
+          "protein": true,
+          "fat": true,
+          "carbs": true,
+          "fiber": true,
+          "sugars": true
+        }
+      },
+      {
+        "id": 8684,
+        "name": "Cucumber boiled",
+        "name_en": "Cucumber boiled",
+        "sc": 2,
+        "mc": 5,
+        "core": true,
+        "coverage": {
+          "energy": true,
+          "protein": true,
+          "fat": true,
+          "carbs": true,
+          "fiber": false,
+          "sugars": true
+        }
+      },
+      {
+        "id": 37728,
+        "name": "Cetrioli, freschi",
+        "name_en": "Cucumbers, fresh",
+        "sc": 1,
+        "mc": 6,
+        "core": true,
+        "coverage": {
+          "energy": true,
+          "protein": true,
+          "fat": true,
+          "carbs": true,
+          "fiber": true,
+          "sugars": true
+        }
+      },
+      {
+        "id": 11949,
+        "name": "Chicken breast fillet fried, with braised cucumbers",
+        "name_en": "Chicken breast fillet fried, with braised cucumbers",
+        "sc": 1,
+        "mc": 6,
+        "core": true,
+        "coverage": {
+          "energy": true,
+          "protein": true,
+          "fat": true,
+          "carbs": true,
+          "fiber": true,
+          "sugars": true
+        }
+      },
+      {
+        "id": 11177,
+        "name": "Club sandwich with tuna, cucumber, Emmental cheese and mayonnaise",
+        "name_en": "Club sandwich with tuna, cucumber, Emmental cheese and mayonnaise",
+        "sc": 1,
+        "mc": 6,
+        "core": true,
+        "coverage": {
+          "energy": true,
+          "protein": true,
+          "fat": true,
+          "carbs": true,
+          "fiber": true,
+          "sugars": true
+        }
+      },
+      {
+        "id": 13679,
+        "name": "Cold cucumber-buttermilk-yogurt soup",
+        "name_en": "Cold cucumber-buttermilk-yogurt soup",
+        "sc": 1,
+        "mc": 6,
+        "core": true,
+        "coverage": {
+          "energy": true,
+          "protein": true,
+          "fat": true,
+          "carbs": true,
+          "fiber": true,
+          "sugars": true
+        }
+      },
+      {
+        "id": 11008,
+        "name": "Cream of cucumber soup",
+        "name_en": "Cream of cucumber soup",
+        "sc": 1,
+        "mc": 6,
+        "core": true,
+        "coverage": {
+          "energy": true,
+          "protein": true,
+          "fat": true,
+          "carbs": true,
+          "fiber": true,
+          "sugars": true
+        }
+      },
+      {
+        "id": 9433,
+        "name": "Cucumber baked",
+        "name_en": "Cucumber baked",
+        "sc": 1,
+        "mc": 6,
+        "core": true,
+        "coverage": {
+          "energy": true,
+          "protein": true,
+          "fat": true,
+          "carbs": true,
+          "fiber": true,
+          "sugars": true
+        }
+      },
+      {
+        "id": 10530,
+        "name": "Cucumber braised without fat",
+        "name_en": "Cucumber braised without fat",
+        "sc": 1,
+        "mc": 6,
+        "core": true,
+        "coverage": {
+          "energy": true,
+          "protein": true,
+          "fat": true,
+          "carbs": true,
+          "fiber": true,
+          "sugars": true
+        }
+      },
+      {
+        "id": 9985,
+        "name": "Cucumber fried without fat (pan)",
+        "name_en": "Cucumber fried without fat (pan)",
+        "sc": 1,
+        "mc": 6,
+        "core": true,
+        "coverage": {
+          "energy": true,
+          "protein": true,
+          "fat": true,
+          "carbs": true,
+          "fiber": true,
+          "sugars": true
+        }
+      },
+      {
+        "id": 8680,
+        "name": "Cucumber juice",
+        "name_en": "Cucumber juice",
+        "sc": 1,
+        "mc": 6,
+        "core": true,
+        "coverage": {
+          "energy": true,
+          "protein": true,
+          "fat": true,
+          "carbs": true,
+          "fiber": true,
+          "sugars": true
+        }
+      },
+      {
+        "id": 13332,
+        "name": "Cucumber salad with sour cream dressing",
+        "name_en": "Cucumber salad with sour cream dressing",
+        "sc": 1,
+        "mc": 6,
+        "core": true,
+        "coverage": {
+          "energy": true,
+          "protein": true,
+          "fat": true,
+          "carbs": true,
+          "fiber": true,
+          "sugars": true
+        }
+      },
+      {
+        "id": 12033,
+        "name": "Cucumber salad with vinegar marinade",
+        "name_en": "Cucumber salad with vinegar marinade",
+        "sc": 1,
+        "mc": 6,
+        "core": true,
+        "coverage": {
+          "energy": true,
+          "protein": true,
+          "fat": true,
+          "carbs": true,
+          "fiber": true,
+          "sugars": true
+        }
+      },
+      {
+        "id": 11316,
+        "name": "Cucumber salad with yogurt marinade",
+        "name_en": "Cucumber salad with yogurt marinade",
+        "sc": 1,
+        "mc": 6,
+        "core": true,
+        "coverage": {
+          "energy": true,
+          "protein": true,
+          "fat": true,
+          "carbs": true,
+          "fiber": true,
+          "sugars": true
+        }
+      },
+      {
+        "id": 8506,
+        "name": "Cucumber stewed",
+        "name_en": "Cucumber stewed",
+        "sc": 1,
+        "mc": 6,
+        "core": true,
+        "coverage": {
+          "energy": true,
+          "protein": true,
+          "fat": true,
+          "carbs": true,
+          "fiber": true,
+          "sugars": true
+        }
+      },
+      {
+        "id": 28135,
+        "name": "Cucumber w skin raw",
+        "name_en": "Cucumber w skin raw",
+        "sc": 1,
+        "mc": 6,
+        "core": true,
+        "coverage": {
+          "energy": true,
+          "protein": true,
+          "fat": true,
+          "carbs": true,
+          "fiber": true,
+          "sugars": true
+        }
+      },
+      {
+        "id": 26783,
+        "name": "Cucumber wo skin raw",
+        "name_en": "Cucumber wo skin raw",
+        "sc": 1,
+        "mc": 6,
+        "core": true,
+        "coverage": {
+          "energy": true,
+          "protein": true,
+          "fat": true,
+          "carbs": true,
+          "fiber": true,
+          "sugars": true
+        }
+      },
+      {
+        "id": 14144,
+        "name": "Cucumber, large, pickled",
+        "name_en": "Cucumber, large, pickled",
+        "sc": 1,
+        "mc": 6,
+        "core": true,
+        "coverage": {
+          "energy": true,
+          "protein": true,
+          "fat": true,
+          "carbs": true,
+          "fiber": true,
+          "sugars": true
+        }
+      },
+      {
+        "id": 3597,
+        "name": "Cucumber, peeled, raw",
+        "name_en": "Cucumber, peeled, raw",
+        "sc": 1,
+        "mc": 6,
+        "core": true,
+        "coverage": {
+          "energy": true,
+          "protein": true,
+          "fat": true,
+          "carbs": true,
+          "fiber": true,
+          "sugars": true
+        }
+      },
+      {
+        "id": 35437,
+        "name": "Cucumber, raw, flesh and skin",
+        "name_en": "Cucumber, raw, flesh and skin",
+        "sc": 1,
+        "mc": 6,
+        "core": true,
+        "coverage": {
+          "energy": true,
+          "protein": true,
+          "fat": true,
+          "carbs": true,
+          "fiber": true,
+          "sugars": true
+        }
+      },
+      {
+        "id": 11424,
+        "name": "Cucumber-lettuce-salad with yogurt marinade",
+        "name_en": "Cucumber-lettuce-salad with yogurt marinade",
+        "sc": 1,
+        "mc": 6,
+        "core": true,
+        "coverage": {
+          "energy": true,
+          "protein": true,
+          "fat": true,
+          "carbs": true,
+          "fiber": true,
+          "sugars": true
+        }
+      },
+      {
+        "id": 13061,
+        "name": "Cucumber-radish salad with sour cream dressing",
+        "name_en": "Cucumber-radish salad with sour cream dressing",
+        "sc": 1,
+        "mc": 6,
+        "core": true,
+        "coverage": {
+          "energy": true,
+          "protein": true,
+          "fat": true,
+          "carbs": true,
+          "fiber": true,
+          "sugars": true
+        }
+      },
+      {
+        "id": 12986,
+        "name": "Cucumber-tomato salad with sour cream dressing",
+        "name_en": "Cucumber-tomato salad with sour cream dressing",
+        "sc": 1,
+        "mc": 6,
+        "core": true,
+        "coverage": {
+          "energy": true,
+          "protein": true,
+          "fat": true,
+          "carbs": true,
+          "fiber": true,
+          "sugars": true
+        }
+      },
+      {
+        "id": 9307,
+        "name": "Cucumbers braised",
+        "name_en": "Cucumbers braised",
+        "sc": 1,
+        "mc": 6,
+        "core": true,
+        "coverage": {
+          "energy": true,
+          "protein": true,
+          "fat": true,
+          "carbs": true,
+          "fiber": true,
+          "sugars": true
+        }
+      },
+      {
+        "id": 10998,
+        "name": "Cucumbers stewed",
+        "name_en": "Cucumbers stewed",
+        "sc": 1,
+        "mc": 6,
+        "core": true,
+        "coverage": {
+          "energy": true,
+          "protein": true,
+          "fat": true,
+          "carbs": true,
+          "fiber": true,
+          "sugars": true
+        }
+      },
+      {
+        "id": 13615,
+        "name": "Cucumbers with minced meat filling, braised, with sauce",
+        "name_en": "Cucumbers with minced meat filling, braised, with sauce",
+        "sc": 1,
+        "mc": 6,
+        "core": true,
+        "coverage": {
+          "energy": true,
+          "protein": true,
+          "fat": true,
+          "carbs": true,
+          "fiber": true,
+          "sugars": true
+        }
+      },
+      {
+        "id": 14142,
+        "name": "Gherkin cucumber, raw",
+        "name_en": "Gherkin cucumber, raw",
+        "sc": 1,
+        "mc": 6,
+        "core": true,
+        "coverage": {
+          "energy": true,
+          "protein": true,
+          "fat": true,
+          "carbs": true,
+          "fiber": true,
+          "sugars": true
+        }
+      },
+      {
+        "id": 11760,
+        "name": "Lettuce with tomato, cucumber and yogurt marinade",
+        "name_en": "Lettuce with tomato, cucumber and yogurt marinade",
+        "sc": 1,
+        "mc": 6,
+        "core": true,
+        "coverage": {
+          "energy": true,
+          "protein": true,
+          "fat": true,
+          "carbs": true,
+          "fiber": true,
+          "sugars": true
+        }
+      },
+      {
+        "id": 13263,
+        "name": "Mustard cucumber pickled, canned, drained",
+        "name_en": "Mustard cucumber pickled, canned, drained",
+        "sc": 1,
+        "mc": 6,
+        "core": true,
+        "coverage": {
+          "energy": true,
+          "protein": true,
+          "fat": true,
+          "carbs": true,
+          "fiber": true,
+          "sugars": true
+        }
+      },
+      {
+        "id": 1776,
+        "name": "Pickles, cucumber, dill (includes Kosher and Polish)",
+        "name_en": "Pickles, cucumber, dill (includes Kosher and Polish)",
+        "sc": 1,
+        "mc": 6,
+        "core": true,
+        "coverage": {
+          "energy": true,
+          "protein": true,
+          "fat": true,
+          "carbs": true,
+          "fiber": true,
+          "sugars": true
+        }
+      },
+      {
+        "id": 1778,
+        "name": "Pickles, cucumber, dill, low sodium",
+        "name_en": "Pickles, cucumber, dill, low sodium",
+        "sc": 1,
+        "mc": 6,
+        "core": true,
+        "coverage": {
+          "energy": true,
+          "protein": true,
+          "fat": true,
+          "carbs": true,
+          "fiber": true,
+          "sugars": true
+        }
+      },
+      {
+        "id": 1622,
+        "name": "Pickles, cucumber, sour",
+        "name_en": "Pickles, cucumber, sour",
+        "sc": 1,
+        "mc": 6,
+        "core": true,
+        "coverage": {
+          "energy": true,
+          "protein": true,
+          "fat": true,
+          "carbs": true,
+          "fiber": true,
+          "sugars": true
+        }
+      },
+      {
+        "id": 1625,
+        "name": "Pickles, cucumber, sour, low sodium",
+        "name_en": "Pickles, cucumber, sour, low sodium",
+        "sc": 1,
+        "mc": 6,
+        "core": true,
+        "coverage": {
+          "energy": true,
+          "protein": true,
+          "fat": true,
+          "carbs": true,
+          "fiber": true,
+          "sugars": true
+        }
+      },
+      {
+        "id": 1621,
+        "name": "Pickles, cucumber, sweet",
+        "name_en": "Pickles, cucumber, sweet",
+        "sc": 1,
+        "mc": 6,
+        "core": true,
+        "coverage": {
+          "energy": true,
+          "protein": true,
+          "fat": true,
+          "carbs": true,
+          "fiber": true,
+          "sugars": true
+        }
+      },
+      {
+        "id": 1626,
+        "name": "Pickles, cucumber, sweet, low sodium",
+        "name_en": "Pickles, cucumber, sweet, low sodium",
+        "sc": 1,
+        "mc": 6,
+        "core": true,
+        "coverage": {
+          "energy": true,
+          "protein": true,
+          "fat": true,
+          "carbs": true,
+          "fiber": true,
+          "sugars": true
+        }
+      },
+      {
+        "id": 13784,
+        "name": "Potato salad with cucumber and marinade (vegetable stock)",
+        "name_en": "Potato salad with cucumber and marinade (vegetable stock)",
+        "sc": 1,
+        "mc": 6,
+        "core": true,
+        "coverage": {
+          "energy": true,
+          "protein": true,
+          "fat": true,
+          "carbs": true,
+          "fiber": true,
+          "sugars": true
+        }
+      },
+      {
+        "id": 11550,
+        "name": "Potato salad with cucumber and mayonnaise, diluted with yogurt",
+        "name_en": "Potato salad with cucumber and mayonnaise, diluted with yogurt",
+        "sc": 1,
+        "mc": 6,
+        "core": true,
+        "coverage": {
+          "energy": true,
+          "protein": true,
+          "fat": true,
+          "carbs": true,
+          "fiber": true,
+          "sugars": true
+        }
+      },
+      {
+        "id": 36749,
+        "name": "Relish, corn/cucumber/onion",
+        "name_en": "Relish, corn/cucumber/onion",
+        "sc": 1,
+        "mc": 6,
+        "core": true,
+        "coverage": {
+          "energy": true,
+          "protein": true,
+          "fat": true,
+          "carbs": true,
+          "fiber": true,
+          "sugars": true
+        }
+      },
+      {
+        "id": 27687,
+        "name": "Salad cucumber",
+        "name_en": "Salad cucumber",
+        "sc": 1,
+        "mc": 6,
+        "core": true,
+        "coverage": {
+          "energy": true,
+          "protein": true,
+          "fat": true,
+          "carbs": true,
+          "fiber": true,
+          "sugars": true
+        }
+      },
+      {
+        "id": 23301,
+        "name": "SALAD, CUCUMBER SLICES WITH DILL AND VINEGAR",
+        "name_en": "SALAD, CUCUMBER SLICES WITH DILL AND VINEGAR",
+        "sc": 1,
+        "mc": 6,
+        "core": true,
+        "coverage": {
+          "energy": true,
+          "protein": true,
+          "fat": true,
+          "carbs": true,
+          "fiber": true,
+          "sugars": true
+        }
+      },
+      {
+        "id": 14748,
+        "name": "Sandwich with roast pork, red cabbage and cucumber pickles, fast food",
+        "name_en": "Sandwich with roast pork, red cabbage and cucumber pickles, fast food",
+        "sc": 1,
+        "mc": 6,
+        "core": true,
+        "coverage": {
+          "energy": true,
+          "protein": true,
+          "fat": true,
+          "carbs": true,
+          "fiber": true,
+          "sugars": true
+        }
+      },
+      {
+        "id": 11609,
+        "name": "Summer salad with carrots, kohlrabi, cucumber and yogurt marinade",
+        "name_en": "Summer salad with carrots, kohlrabi, cucumber and yogurt marinade",
+        "sc": 1,
+        "mc": 6,
+        "core": true,
+        "coverage": {
+          "energy": true,
+          "protein": true,
+          "fat": true,
+          "carbs": true,
+          "fiber": true,
+          "sugars": true
+        }
+      },
+      {
+        "id": 28694,
+        "name": "Sushi stuffed w salmon and cucumber",
+        "name_en": "Sushi stuffed w salmon and cucumber",
+        "sc": 1,
+        "mc": 6,
+        "core": true,
+        "coverage": {
+          "energy": true,
+          "protein": true,
+          "fat": true,
+          "carbs": true,
+          "fiber": true,
+          "sugars": true
+        }
+      },
+      {
+        "id": 12981,
+        "name": "Sweet cucumber pickled, canned, drained",
+        "name_en": "Sweet cucumber pickled, canned, drained",
+        "sc": 1,
+        "mc": 6,
+        "core": true,
+        "coverage": {
+          "energy": true,
+          "protein": true,
+          "fat": true,
+          "carbs": true,
+          "fiber": true,
+          "sugars": true
+        }
+      },
+      {
+        "id": 11093,
+        "name": "Sweet pepper-cucumber-tomato salad with vinegar marinade",
+        "name_en": "Sweet pepper-cucumber-tomato salad with vinegar marinade",
+        "sc": 1,
+        "mc": 6,
+        "core": true,
+        "coverage": {
+          "energy": true,
+          "protein": true,
+          "fat": true,
+          "carbs": true,
+          "fiber": true,
+          "sugars": true
+        }
+      },
+      {
+        "id": 8897,
+        "name": "Sweet peppers and cucumbers stewed",
+        "name_en": "Sweet peppers and cucumbers stewed",
+        "sc": 1,
+        "mc": 6,
+        "core": true,
+        "coverage": {
+          "energy": true,
+          "protein": true,
+          "fat": true,
+          "carbs": true,
+          "fiber": true,
+          "sugars": true
+        }
+      },
+      {
+        "id": 13286,
+        "name": "Swordfish fried, with stewed sweet-peppers, tomatoes and cucumbers",
+        "name_en": "Swordfish fried, with stewed sweet-peppers, tomatoes and cucumbers",
+        "sc": 1,
+        "mc": 6,
+        "core": true,
+        "coverage": {
+          "energy": true,
+          "protein": true,
+          "fat": true,
+          "carbs": true,
+          "fiber": true,
+          "sugars": true
+        }
+      },
+      {
+        "id": 11109,
+        "name": "Tomato-cucumber salad with yogurt marinade",
+        "name_en": "Tomato-cucumber salad with yogurt marinade",
+        "sc": 1,
+        "mc": 6,
+        "core": true,
+        "coverage": {
+          "energy": true,
+          "protein": true,
+          "fat": true,
+          "carbs": true,
+          "fiber": true,
+          "sugars": true
+        }
+      },
+      {
+        "id": 23595,
+        "name": "Cucumber salad, with fresh cream/cheese sauce, prepacked",
+        "name_en": "Cucumber salad, with fresh cream/cheese sauce, prepacked",
+        "sc": 1,
+        "mc": 5,
+        "core": true,
+        "coverage": {
+          "energy": true,
+          "protein": true,
+          "fat": true,
+          "carbs": true,
+          "fiber": false,
+          "sugars": true
+        }
+      },
+      {
+        "id": 23980,
+        "name": "Cucumber, flesh and skin, raw",
+        "name_en": "Cucumber, flesh and skin, raw",
+        "sc": 1,
+        "mc": 5,
+        "core": true,
+        "coverage": {
+          "energy": true,
+          "protein": true,
+          "fat": true,
+          "carbs": true,
+          "fiber": false,
+          "sugars": true
+        }
+      }
+    ],
+    "uva": [
+      {
+        "id": 6116,
+        "name": "Grape juice",
+        "name_en": "Grape juice",
+        "sc": 5,
+        "mc": 5,
+        "core": true,
+        "coverage": {
+          "energy": true,
+          "protein": true,
+          "fat": true,
+          "carbs": true,
+          "fiber": false,
+          "sugars": true
+        }
+      },
+      {
+        "id": 19641,
+        "name": "Uva, secca",
+        "name_en": "RAISIN",
+        "sc": 3,
+        "mc": 6,
+        "core": true,
+        "coverage": {
+          "energy": true,
+          "protein": true,
+          "fat": true,
+          "carbs": true,
+          "fiber": true,
+          "sugars": true
+        }
+      },
+      {
+        "id": 7800,
+        "name": "Grape raw",
+        "name_en": "Grape raw",
+        "sc": 2,
+        "mc": 6,
+        "core": true,
+        "coverage": {
+          "energy": true,
+          "protein": true,
+          "fat": true,
+          "carbs": true,
+          "fiber": true,
+          "sugars": true
+        }
+      },
+      {
+        "id": 7988,
+        "name": "Grape red, raw",
+        "name_en": "Grape red, raw",
+        "sc": 2,
+        "mc": 6,
+        "core": true,
+        "coverage": {
+          "energy": true,
+          "protein": true,
+          "fat": true,
+          "carbs": true,
+          "fiber": true,
+          "sugars": true
+        }
+      },
+      {
+        "id": 7990,
+        "name": "Grape white, raw",
+        "name_en": "Grape white, raw",
+        "sc": 2,
+        "mc": 6,
+        "core": true,
+        "coverage": {
+          "energy": true,
+          "protein": true,
+          "fat": true,
+          "carbs": true,
+          "fiber": true,
+          "sugars": true
+        }
+      },
+      {
+        "id": 37857,
+        "name": "Uva, bianca, fresca",
+        "name_en": "Grapes, white, fresh",
+        "sc": 1,
+        "mc": 6,
+        "core": true,
+        "coverage": {
+          "energy": true,
+          "protein": true,
+          "fat": true,
+          "carbs": true,
+          "fiber": true,
+          "sugars": true
+        }
+      },
+      {
+        "id": 37856,
+        "name": "Uva, fresca",
+        "name_en": "Grapes, fresh",
+        "sc": 1,
+        "mc": 6,
+        "core": true,
+        "coverage": {
+          "energy": true,
+          "protein": true,
+          "fat": true,
+          "carbs": true,
+          "fiber": true,
+          "sugars": true
+        }
+      },
+      {
+        "id": 37858,
+        "name": "Uva, nera, fresca",
+        "name_en": "Grapes, black, fresh",
+        "sc": 1,
+        "mc": 6,
+        "core": true,
+        "coverage": {
+          "energy": true,
+          "protein": true,
+          "fat": true,
+          "carbs": true,
+          "fiber": true,
+          "sugars": true
+        }
+      },
+      {
+        "id": 726,
+        "name": "Cereal, ready to eat, Grape-nuts, Post",
+        "name_en": "Cereal, ready to eat, Grape-nuts, Post",
+        "sc": 1,
+        "mc": 6,
+        "core": true,
+        "coverage": {
+          "energy": true,
+          "protein": true,
+          "fat": true,
+          "carbs": true,
+          "fiber": true,
+          "sugars": true
+        }
+      },
+      {
+        "id": 7808,
+        "name": "Currant (grape dried)",
+        "name_en": "Currant (grape dried)",
+        "sc": 1,
+        "mc": 6,
+        "core": true,
+        "coverage": {
+          "energy": true,
+          "protein": true,
+          "fat": true,
+          "carbs": true,
+          "fiber": true,
+          "sugars": true
+        }
+      },
+      {
+        "id": 902,
+        "name": "Fruit cocktail (peach, pear, apricot, pineapple, cherry, grape), canned, heavy syrup pack, solids and liquid",
+        "name_en": "Fruit cocktail (peach, pear, apricot, pineapple, cherry, grape), canned, heavy syrup pack, solids and liquid",
+        "sc": 1,
+        "mc": 6,
+        "core": true,
+        "coverage": {
+          "energy": true,
+          "protein": true,
+          "fat": true,
+          "carbs": true,
+          "fiber": true,
+          "sugars": true
+        }
+      },
+      {
+        "id": 3857,
+        "name": "Fruit cocktail (peach, pear, apricot, pineapple, cherry, grape), canned, heavy syrup, drained",
+        "name_en": "Fruit cocktail (peach, pear, apricot, pineapple, cherry, grape), canned, heavy syrup, drained",
+        "sc": 1,
+        "mc": 6,
+        "core": true,
+        "coverage": {
+          "energy": true,
+          "protein": true,
+          "fat": true,
+          "carbs": true,
+          "fiber": true,
+          "sugars": true
+        }
+      },
+      {
+        "id": 899,
+        "name": "Fruit cocktail (peach, pear, apricot, pineapple, cherry, grape), canned, juice pack, solids and liquid",
+        "name_en": "Fruit cocktail (peach, pear, apricot, pineapple, cherry, grape), canned, juice pack, solids and liquid",
+        "sc": 1,
+        "mc": 6,
+        "core": true,
+        "coverage": {
+          "energy": true,
+          "protein": true,
+          "fat": true,
+          "carbs": true,
+          "fiber": true,
+          "sugars": true
+        }
+      },
+      {
+        "id": 901,
+        "name": "Fruit cocktail (peach, pear, apricot, pineapple, cherry, grape), canned, light syrup pack, solids and liquid",
+        "name_en": "Fruit cocktail (peach, pear, apricot, pineapple, cherry, grape), canned, light syrup pack, solids and liquid",
+        "sc": 1,
+        "mc": 6,
+        "core": true,
+        "coverage": {
+          "energy": true,
+          "protein": true,
+          "fat": true,
+          "carbs": true,
+          "fiber": true,
+          "sugars": true
+        }
+      },
+      {
+        "id": 898,
+        "name": "Fruit cocktail (peach, pear, apricot, pineapple, cherry, grape), canned, water pack, solids and liquid",
+        "name_en": "Fruit cocktail (peach, pear, apricot, pineapple, cherry, grape), canned, water pack, solids and liquid",
+        "sc": 1,
+        "mc": 6,
+        "core": true,
+        "coverage": {
+          "energy": true,
+          "protein": true,
+          "fat": true,
+          "carbs": true,
+          "fiber": true,
+          "sugars": true
+        }
+      },
+      {
+        "id": 8902,
+        "name": "Grape juice spritzer",
+        "name_en": "Grape juice spritzer",
+        "sc": 1,
+        "mc": 6,
+        "core": true,
+        "coverage": {
+          "energy": true,
+          "protein": true,
+          "fat": true,
+          "carbs": true,
+          "fiber": true,
+          "sugars": true
+        }
+      },
+      {
+        "id": 4903,
+        "name": "Grape juice, canned or bottled, unsweetened, with added vitamin C",
+        "name_en": "Grape juice, canned or bottled, unsweetened, with added vitamin C",
+        "sc": 1,
+        "mc": 6,
+        "core": true,
+        "coverage": {
+          "energy": true,
+          "protein": true,
+          "fat": true,
+          "carbs": true,
+          "fiber": true,
+          "sugars": true
+        }
+      },
+      {
+        "id": 923,
+        "name": "Grape juice, canned or bottled, without added vitamin C",
+        "name_en": "Grape juice, canned or bottled, without added vitamin C",
+        "sc": 1,
+        "mc": 6,
+        "core": true,
+        "coverage": {
+          "energy": true,
+          "protein": true,
+          "fat": true,
+          "carbs": true,
+          "fiber": true,
+          "sugars": true
+        }
+      },
+      {
+        "id": 1060,
+        "name": "Grape juice, frozen concentrate, sugar and vitamin C added, diluted",
+        "name_en": "Grape juice, frozen concentrate, sugar and vitamin C added, diluted",
+        "sc": 1,
+        "mc": 6,
+        "core": true,
+        "coverage": {
+          "energy": true,
+          "protein": true,
+          "fat": true,
+          "carbs": true,
+          "fiber": true,
+          "sugars": true
+        }
+      },
+      {
+        "id": 1059,
+        "name": "Grape juice, frozen concentrate, sugar and vitamin C added, undiluted",
+        "name_en": "Grape juice, frozen concentrate, sugar and vitamin C added, undiluted",
+        "sc": 1,
+        "mc": 6,
+        "core": true,
+        "coverage": {
+          "energy": true,
+          "protein": true,
+          "fat": true,
+          "carbs": true,
+          "fiber": true,
+          "sugars": true
+        }
+      },
+      {
+        "id": 3603,
+        "name": "Grape leaves (vine leaves), raw",
+        "name_en": "Grape leaves (vine leaves), raw",
+        "sc": 1,
+        "mc": 6,
+        "core": true,
+        "coverage": {
+          "energy": true,
+          "protein": true,
+          "fat": true,
+          "carbs": true,
+          "fiber": true,
+          "sugars": true
+        }
+      },
+      {
+        "id": 10074,
+        "name": "Grape red juice",
+        "name_en": "Grape red juice",
+        "sc": 1,
+        "mc": 6,
+        "core": true,
+        "coverage": {
+          "energy": true,
+          "protein": true,
+          "fat": true,
+          "carbs": true,
+          "fiber": true,
+          "sugars": true
+        }
+      },
+      {
+        "id": 10235,
+        "name": "Grape syrup",
+        "name_en": "Grape syrup",
+        "sc": 1,
+        "mc": 6,
+        "core": true,
+        "coverage": {
+          "energy": true,
+          "protein": true,
+          "fat": true,
+          "carbs": true,
+          "fiber": true,
+          "sugars": true
+        }
+      },
+      {
+        "id": 13295,
+        "name": "Grape torte (sand cake batter) with vanilla cream and gelatin glaze",
+        "name_en": "Grape torte (sand cake batter) with vanilla cream and gelatin glaze",
+        "sc": 1,
+        "mc": 6,
+        "core": true,
+        "coverage": {
+          "energy": true,
+          "protein": true,
+          "fat": true,
+          "carbs": true,
+          "fiber": true,
+          "sugars": true
+        }
+      },
+      {
+        "id": 9894,
+        "name": "Grape white juice",
+        "name_en": "Grape white juice",
+        "sc": 1,
+        "mc": 6,
+        "core": true,
+        "coverage": {
+          "energy": true,
+          "protein": true,
+          "fat": true,
+          "carbs": true,
+          "fiber": true,
+          "sugars": true
+        }
+      },
+      {
+        "id": 13412,
+        "name": "Grape white, unsweetened, canned, drained",
+        "name_en": "Grape white, unsweetened, canned, drained",
+        "sc": 1,
+        "mc": 6,
+        "core": true,
+        "coverage": {
+          "energy": true,
+          "protein": true,
+          "fat": true,
+          "carbs": true,
+          "fiber": true,
+          "sugars": true
+        }
+      },
+      {
+        "id": 14126,
+        "name": "Grape, green, raw",
+        "name_en": "Grape, green, raw",
+        "sc": 1,
+        "mc": 6,
+        "core": true,
+        "coverage": {
+          "energy": true,
+          "protein": true,
+          "fat": true,
+          "carbs": true,
+          "fiber": true,
+          "sugars": true
+        }
+      },
+      {
+        "id": 920,
+        "name": "Grape, North American type (slip skin), raw",
+        "name_en": "Grape, North American type (slip skin), raw",
+        "sc": 1,
+        "mc": 6,
+        "core": true,
+        "coverage": {
+          "energy": true,
+          "protein": true,
+          "fat": true,
+          "carbs": true,
+          "fiber": true,
+          "sugars": true
+        }
+      },
+      {
+        "id": 1058,
+        "name": "Grape, red or green (European type, such as Thompson seedless), adherent skin, raw",
+        "name_en": "Grape, red or green (European type, such as Thompson seedless), adherent skin, raw",
+        "sc": 1,
+        "mc": 6,
+        "core": true,
+        "coverage": {
+          "energy": true,
+          "protein": true,
+          "fat": true,
+          "carbs": true,
+          "fiber": true,
+          "sugars": true
+        }
+      },
+      {
+        "id": 922,
+        "name": "Grape, thompson seedless, canned, heavy syrup pack, solids and liquid",
+        "name_en": "Grape, thompson seedless, canned, heavy syrup pack, solids and liquid",
+        "sc": 1,
+        "mc": 6,
+        "core": true,
+        "coverage": {
+          "energy": true,
+          "protein": true,
+          "fat": true,
+          "carbs": true,
+          "fiber": true,
+          "sugars": true
+        }
+      },
+      {
+        "id": 921,
+        "name": "Grape, thompson seedless, canned, water pack, solids and liquid",
+        "name_en": "Grape, thompson seedless, canned, water pack, solids and liquid",
+        "sc": 1,
+        "mc": 6,
+        "core": true,
+        "coverage": {
+          "energy": true,
+          "protein": true,
+          "fat": true,
+          "carbs": true,
+          "fiber": true,
+          "sugars": true
+        }
+      },
+      {
+        "id": 28143,
+        "name": "Grapes black w skin",
+        "name_en": "Grapes black w skin",
+        "sc": 1,
+        "mc": 6,
+        "core": true,
+        "coverage": {
+          "energy": true,
+          "protein": true,
+          "fat": true,
+          "carbs": true,
+          "fiber": true,
+          "sugars": true
+        }
+      },
+      {
+        "id": 26863,
+        "name": "Grapes w skin av",
+        "name_en": "Grapes w skin av",
+        "sc": 1,
+        "mc": 6,
+        "core": true,
+        "coverage": {
+          "energy": true,
+          "protein": true,
+          "fat": true,
+          "carbs": true,
+          "fiber": true,
+          "sugars": true
+        }
+      },
+      {
+        "id": 28144,
+        "name": "Grapes white w skin",
+        "name_en": "Grapes white w skin",
+        "sc": 1,
+        "mc": 6,
+        "core": true,
+        "coverage": {
+          "energy": true,
+          "protein": true,
+          "fat": true,
+          "carbs": true,
+          "fiber": true,
+          "sugars": true
+        }
+      },
+      {
+        "id": 35747,
+        "name": "Grapes, average",
+        "name_en": "Grapes, average",
+        "sc": 1,
+        "mc": 6,
+        "core": true,
+        "coverage": {
+          "energy": true,
+          "protein": true,
+          "fat": true,
+          "carbs": true,
+          "fiber": true,
+          "sugars": true
+        }
+      },
+      {
+        "id": 35748,
+        "name": "Grapes, average, weighed with pips",
+        "name_en": "Grapes, average, weighed with pips",
+        "sc": 1,
+        "mc": 6,
+        "core": true,
+        "coverage": {
+          "energy": true,
+          "protein": true,
+          "fat": true,
+          "carbs": true,
+          "fiber": true,
+          "sugars": true
+        }
+      },
+      {
+        "id": 35749,
+        "name": "Grapes, green",
+        "name_en": "Grapes, green",
+        "sc": 1,
+        "mc": 6,
+        "core": true,
+        "coverage": {
+          "energy": true,
+          "protein": true,
+          "fat": true,
+          "carbs": true,
+          "fiber": true,
+          "sugars": true
+        }
+      },
+      {
+        "id": 35750,
+        "name": "Grapes, red",
+        "name_en": "Grapes, red",
+        "sc": 1,
+        "mc": 6,
+        "core": true,
+        "coverage": {
+          "energy": true,
+          "protein": true,
+          "fat": true,
+          "carbs": true,
+          "fiber": true,
+          "sugars": true
+        }
+      },
+      {
+        "id": 4905,
+        "name": "Juice, apple and grape, with added vitamin C",
+        "name_en": "Juice, apple and grape, with added vitamin C",
+        "sc": 1,
+        "mc": 6,
+        "core": true,
+        "coverage": {
+          "energy": true,
+          "protein": true,
+          "fat": true,
+          "carbs": true,
+          "fiber": true,
+          "sugars": true
+        }
+      },
+      {
+        "id": 7405,
+        "name": "Raisin/sultana (grape dried)",
+        "name_en": "Raisin/sultana (grape dried)",
+        "sc": 1,
+        "mc": 6,
+        "core": true,
+        "coverage": {
+          "energy": true,
+          "protein": true,
+          "fat": true,
+          "carbs": true,
+          "fiber": true,
+          "sugars": true
+        }
+      },
+      {
+        "id": 5269,
+        "name": "Salad, grape and apple with yogourt and candied walnuts",
+        "name_en": "Salad, grape and apple with yogourt and candied walnuts",
+        "sc": 1,
+        "mc": 6,
+        "core": true,
+        "coverage": {
+          "energy": true,
+          "protein": true,
+          "fat": true,
+          "carbs": true,
+          "fiber": true,
+          "sugars": true
+        }
+      },
+      {
+        "id": 903,
+        "name": "Fruit cocktail (peach, pear, apricot, pineapple, cherry, grape), canned, extra heavy syrup, solids and liquid",
+        "name_en": "Fruit cocktail (peach, pear, apricot, pineapple, cherry, grape), canned, extra heavy syrup, solids and liquid",
+        "sc": 1,
+        "mc": 5,
+        "core": true,
+        "coverage": {
+          "energy": true,
+          "protein": true,
+          "fat": true,
+          "carbs": true,
+          "fiber": true,
+          "sugars": false
+        }
+      },
+      {
+        "id": 900,
+        "name": "Fruit cocktail (peach, pear, apricot, pineapple, cherry, grape), canned, extra light syrup pack, solids and liquid",
+        "name_en": "Fruit cocktail (peach, pear, apricot, pineapple, cherry, grape), canned, extra light syrup pack, solids and liquid",
+        "sc": 1,
+        "mc": 5,
+        "core": true,
+        "coverage": {
+          "energy": true,
+          "protein": true,
+          "fat": true,
+          "carbs": true,
+          "fiber": true,
+          "sugars": false
+        }
+      },
+      {
+        "id": 25898,
+        "name": "Grape juice, from concentrate",
+        "name_en": "Grape juice, from concentrate",
+        "sc": 1,
+        "mc": 5,
+        "core": true,
+        "coverage": {
+          "energy": true,
+          "protein": true,
+          "fat": true,
+          "carbs": true,
+          "fiber": false,
+          "sugars": true
+        }
+      },
+      {
+        "id": 25896,
+        "name": "Grape juice, pure juice",
+        "name_en": "Grape juice, pure juice",
+        "sc": 1,
+        "mc": 5,
+        "core": true,
+        "coverage": {
+          "energy": true,
+          "protein": true,
+          "fat": true,
+          "carbs": true,
+          "fiber": false,
+          "sugars": true
+        }
+      },
+      {
+        "id": 19447,
+        "name": "Grape nectar",
+        "name_en": "Grape nectar",
+        "sc": 1,
+        "mc": 5,
+        "core": true,
+        "coverage": {
+          "energy": true,
+          "protein": true,
+          "fat": true,
+          "carbs": true,
+          "fiber": false,
+          "sugars": true
+        }
+      },
+      {
+        "id": 24358,
+        "name": "Grape, Chasselas, raw",
+        "name_en": "Grape, Chasselas, raw",
+        "sc": 1,
+        "mc": 5,
+        "core": true,
+        "coverage": {
+          "energy": true,
+          "protein": true,
+          "fat": true,
+          "carbs": true,
+          "fiber": false,
+          "sugars": true
+        }
+      },
+      {
+        "id": 24380,
+        "name": "Grape, raw (average)",
+        "name_en": "Grape, raw (average)",
+        "sc": 1,
+        "mc": 5,
+        "core": true,
+        "coverage": {
+          "energy": true,
+          "protein": true,
+          "fat": true,
+          "carbs": true,
+          "fiber": false,
+          "sugars": true
+        }
+      },
+      {
+        "id": 24395,
+        "name": "Grape, red, Muscat, raw",
+        "name_en": "Grape, red, Muscat, raw",
+        "sc": 1,
+        "mc": 5,
+        "core": true,
+        "coverage": {
+          "energy": true,
+          "protein": true,
+          "fat": true,
+          "carbs": true,
+          "fiber": false,
+          "sugars": true
+        }
+      },
+      {
+        "id": 2065,
+        "name": "Juice drink, cranberry-grape, vitamin C added, bottled",
+        "name_en": "Juice drink, cranberry-grape, vitamin C added, bottled",
+        "sc": 1,
+        "mc": 5,
+        "core": true,
+        "coverage": {
+          "energy": true,
+          "protein": true,
+          "fat": true,
+          "carbs": true,
+          "fiber": true,
+          "sugars": false
+        }
+      }
+    ]
+  },
+  "checksum_files": 66
+}

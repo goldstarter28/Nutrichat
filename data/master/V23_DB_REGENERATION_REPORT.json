@@ -1,0 +1,31 @@
+{
+  "stats": {
+    "backfilled": 13146,
+    "foods_changed": 8363,
+    "rejected_plausibility": 2,
+    "core_complete_foods": 18899
+  },
+  "by_nutrient": {
+    "carbohydrate_available": 1667,
+    "carbohydrate_total": 1069,
+    "sugars_total": 2862,
+    "fat_total": 1294,
+    "protein": 1185,
+    "energy_kcal": 1364,
+    "fiber": 3705
+  },
+  "rejected_samples": [
+    {
+      "id": "34245",
+      "name": "Mango chutney",
+      "nutrient": "carbohydrate_available",
+      "value": 52.0
+    },
+    {
+      "id": "24902",
+      "name": "Pork shoulder, raw",
+      "nutrient": "sugars_total",
+      "value": 2.0
+    }
+  ]
+}
