@@ -43,3 +43,11 @@ Le condizioni/licenze originali restano associate alle sorgenti nel manifest. Il
 - 28.216 N/D espliciti.
 - 1.237 alimenti multi-fonte.
 - 64 chunk statici.
+
+
+## V2.3.1 DB correction
+Runtime regenerated from the corrected v1.0 POST-AUDIT lineage. Source-reported numeric zero is distinct from missing/N.D.; carbohydrate zero values are promoted only when explicitly present in source observations and passing an energy-consistency gate. Missing kcal is deterministically derived from available kJ using 1 kcal = 4.184 kJ. No AI-estimated values are written into the Master runtime.
+
+## V2.3.1 Stage 5C — conservative energy-balance completion
+
+Prima della release finale è stato eseguito un passaggio conservativo sui record con esattamente un macronutriente P/C/F mancante. La ricostruzione per differenza energetica è ammessa solo con fibra numerica disponibile; alcol e polioli sono inclusi quando presenti e viene applicato un budget d'incertezza quando non riportati. I fattori nominali sono 4/4/9 kcal/g per proteine/carboidrati/grassi, 2 kcal/g per fibra, 7 kcal/g per alcol e 2.4 kcal/g per polioli. I valori ricostruiti sono marcati come calcolati, reliability medium, non measured. Su 1.805 candidati, 15 hanno superato i gate d'incertezza; gli altri sono rimasti N/D. Nessun valore numerico sorgente/consensus già valido è stato sovrascritto.

@@ -599,6 +599,7 @@ function parseJsonDataset(source,text){
 }
 
 const MASTER_BASE='./data/master';
+function masterRevision(manifest){ return [manifest?.runtime_version||manifest?.schema||'v1',manifest?.built_at||'',manifest?.numeric_values||''].join('|'); }
 const DEFAULT_APP_CONFIG={
   ui:{
     search:{
@@ -862,7 +863,7 @@ function nutrientEligibleForDeficiency(n){
   return true;
 }
 function masterToFood(row,detail,manifest,alias=''){
-  const f={...emptyFood(),masterId:row.id,masterVersion:manifest?.runtime_version||manifest?.schema||'v1',name:clean(alias)||row.name,officialName:row.name_en||row.name,aliases:[...new Set([row.name,row.name_en,...(row.aliases||[]),clean(alias)].filter(Boolean))],servingGrams:100,nutrientStatus:{}};
+  const f={...emptyFood(),masterId:row.id,masterVersion:masterRevision(manifest),name:clean(alias)||row.name,officialName:row.name_en||row.name,aliases:[...new Set([row.name,row.name_en,...(row.aliases||[]),clean(alias)].filter(Boolean))],servingGrams:100,nutrientStatus:{}};
   const cat=masterNutrientCatalog(manifest); const label=emptyLabel();
   const macro={kcal:['energy_kcal'],protein:['protein'],carbs:['carbohydrate_available','carbohydrate_total'],sugar:['sugars_total'],fat:['fat_total'],saturatedFat:['fat_saturated'],fiber:['fiber'],salt:['salt']};
   for(const [field,ids] of Object.entries(macro)){ const p=masterPick(detail,ids); if(p) label[field]=Number(p.arr[0]); }
@@ -1061,7 +1062,7 @@ function Home(){
   useEffect(()=>{const t=setTimeout(()=>setQuickSearchQuery(quickQuery),220);return()=>clearTimeout(t);},[quickQuery]);
   useEffect(()=>{ let alive=true; loadMasterBundle().then(({manifest,index})=>{ if(!alive)return; setMasterManifest(manifest); setMasterIndex(index); setMasterStatus(`${Number(manifest.food_count||index.length).toLocaleString('it-IT')} alimenti · Runtime ${manifest.runtime_version||'v1'} auditato pronto`); }).catch(e=>alive&&setMasterStatus(`Master DB non disponibile: ${e.message}`)); return()=>{alive=false}; },[]);
   useEffect(()=>{ if(!loaded||!masterManifest||!masterIndex.length||masterMigrationDone)return; let alive=true; (async()=>{
-    const byId=new Map(masterIndex.map(r=>[String(r.id),r])); const stale=foods.filter(f=>f.mergeMeta?.importedFrom==='MASTER'&&f.masterId&&String(f.masterVersion||'')!==String(masterManifest.runtime_version||masterManifest.schema||''));
+    const byId=new Map(masterIndex.map(r=>[String(r.id),r])); const currentRevision=masterRevision(masterManifest); const stale=foods.filter(f=>f.mergeMeta?.importedFrom==='MASTER'&&f.masterId&&String(f.masterVersion||'')!==currentRevision);
     if(!stale.length){if(alive)setMasterMigrationDone(true);return;}
     const refreshed=new Map();
     for(const old of stale){const row=byId.get(String(old.masterId));if(!row)continue;try{const detail=await loadMasterDetail(row);if(detail){const nf=masterToFood(row,detail,masterManifest,old.name);nf.id=old.id;refreshed.set(old.id,nf);}}catch{}}
@@ -1152,9 +1153,13 @@ function Home(){
   function removeFood(id){ const f=foods.find(x=>x.id===id); if(!f) return; const n=logs.filter(l=>l.foodId===id).length; if(!confirm(`Rimuovere “${f.name}” dall'archivio?${n?` Verranno eliminate anche ${n} registrazioni del diario.`:''}`)) return; setFoods(p=>p.filter(x=>x.id!==id)); setLogs(p=>p.filter(l=>l.foodId!==id)); }
   function addFoodLog(foodId,g=grams,extra={}){ if(!foodId||Number(g)<=0) return; setLogs(p=>[...p,{id:newId(),date:selectedDate,foodId,grams:Number(g),...extra}]); }
   async function masterFoodFromResult(r,alias=''){
-    const existing=foods.find(f=>String(f.masterId||'')===String(r.id)); if(existing)return existing;
+    const existing=foods.find(f=>String(f.masterId||'')===String(r.id));
+    const currentRevision=masterRevision(masterManifest);
+    if(existing && String(existing.masterVersion||'')===currentRevision)return existing;
     const detail=await loadMasterDetail(r); if(!detail)throw new Error('Dettaglio alimento Master DB non trovato.');
-    return masterToFood(r,detail,masterManifest,alias);
+    const fresh=masterToFood(r,detail,masterManifest,alias||existing?.name||'');
+    if(existing)fresh.id=existing.id;
+    return fresh;
   }
   async function quickAdd(r){
     let useGrams=Number(grams); let portion=null;

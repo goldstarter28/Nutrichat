@@ -1,0 +1,17 @@
+{
+  "status": "PASS",
+  "food_count": 38230,
+  "energy_bearing_foods": 37801,
+  "macro_distribution": {
+    "0": 72,
+    "1": 913,
+    "2": 1791,
+    "3": 35025
+  },
+  "core_complete_foods": 35025,
+  "random_regression_failures": 0,
+  "source_stratified_failures": 0,
+  "global_invariant_failures": 0,
+  "energy_balance_calculated_values": 15,
+  "energy_balance_policy": "conservative; fibre required; uncertainty-gated; calculated != measured"
+}
